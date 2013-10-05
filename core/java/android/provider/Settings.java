@@ -7688,6 +7688,12 @@ public final class Settings {
         public static final String NOTIFICATION_BADGING = "notification_badging";
 
         /**
+         * The TCP/IP port to run ADB on, or -1 for USB
+         * @hide
+         */
+        public static final String ADB_PORT = "adb_port";
+
+        /**
          * Whether to set a lower brightness level when enabling night mode
          * 0: Disabled
          * 1: Set the brightness to a very low value
