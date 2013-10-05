@@ -60,7 +60,7 @@ public class AdbOverNetworkTile extends QSTileImpl<BooleanState> {
                     R.string.quick_settings_network_adb_toast), Toast.LENGTH_LONG).show();
         } else {
             Settings.Global.putInt(mContext.getContentResolver(),
-                    Settings.Global.WIRELESS_OVER_ADB, isAdbNetworkEnabled() ? 0 : 5555);
+                    Settings.Global.ADB_WIRELESS, isAdbNetworkEnabled() ? 0 : 5555);
         }
         refreshState();
     }
@@ -126,7 +126,7 @@ public class AdbOverNetworkTile extends QSTileImpl<BooleanState> {
 
     private boolean isAdbNetworkEnabled() {
         return Settings.Global.getInt(mContext.getContentResolver(),
-                Settings.Global.WIRELESS_OVER_ADB, 0) > 0;
+                Settings.Global.ADB_WIRELESS, 0) > 0;
     }
 
     private ContentObserver mObserver = new ContentObserver(mHandler) {
@@ -145,7 +145,7 @@ public class AdbOverNetworkTile extends QSTileImpl<BooleanState> {
             mListening = listening;
             if (listening) {
                 mContext.getContentResolver().registerContentObserver(
-                        Settings.Global.getUriFor(Settings.Global.WIRELESS_OVER_ADB),
+                        Settings.Global.getUriFor(Settings.Global.ADB_WIRELESS),
                         false, mObserver);
                 mContext.getContentResolver().registerContentObserver(
                         Settings.Global.getUriFor(Settings.Global.ADB_ENABLED),

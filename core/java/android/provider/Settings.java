@@ -13230,7 +13230,7 @@ public final class Settings {
          * The TCP/IP port to run ADB on, or 0 for USB
          * @hide
          */
-        public static final String WIRELESS_OVER_ADB = "wireless_over_adb";
+        public static final String ADB_WIRELESS = "wireless_over_adb";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
