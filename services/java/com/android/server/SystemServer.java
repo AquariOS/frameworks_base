@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources.Theme;
+import android.database.ContentObserver;
 import android.os.BaseBundle;
 import android.os.Binder;
 import android.os.Build;
@@ -244,19 +245,6 @@ public final class SystemServer {
     private Future<?> mSensorServiceStart;
     private Future<?> mZygotePreload;
 
-    private class AdbPortObserver extends ContentObserver {
-        public AdbPortObserver() {
-            super(null);
-        }
-        @Override
-        public void onChange(boolean selfChange) {
-            int adbPort = Settings.Secure.getInt(mContentResolver,
-                Settings.Secure.ADB_PORT, 0);
-            // setting this will control whether ADB runs on TCP/IP or USB
-            SystemProperties.set("service.adb.tcp.port", Integer.toString(adbPort));
-        }
-    }
-
     /**
      * Start the sensor service. This is a blocking call and can take time.
      */
@@ -280,6 +268,19 @@ public final class SystemServer {
         mFactoryTestMode = FactoryTest.getMode();
         // Remember if it's runtime restart(when sys.boot_completed is already set) or reboot
         mRuntimeRestart = "1".equals(SystemProperties.get("sys.boot_completed"));
+    }
+
+    private class AdbPortObserver extends ContentObserver {
+        public AdbPortObserver() {
+            super(null);
+        }
+        @Override
+        public void onChange(boolean selfChange) {
+            int adbPort = Settings.Secure.getInt(mContentResolver,
+                Settings.Secure.ADB_PORT, 0);
+            // setting this will control whether ADB runs on TCP/IP or USB
+            SystemProperties.set("adb.network.port", Integer.toString(adbPort));
+        }
     }
 
     private void run() {
@@ -1521,6 +1522,8 @@ public final class SystemServer {
                 traceEnd();
             }
         }
+
+        // make sure the ADB_ENABLED setting value matches the secure property value
         Settings.Secure.putInt(mContentResolver, Settings.Secure.ADB_PORT,
                 Integer.parseInt(SystemProperties.get("service.adb.tcp.port", "-1")));
 
