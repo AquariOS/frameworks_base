@@ -5287,6 +5287,12 @@ public final class Settings {
         public static final String SHOW_IME_WITH_HARD_KEYBOARD = "show_ime_with_hard_keyboard";
 
         /**
+         * Whether to include options in power menu for rebooting into recovery or bootloader
+         * @hide
+         */
+        public static final String ADVANCED_REBOOT = "advanced_reboot";
+
+        /**
          * Host name and port for global http proxy. Uses ':' seperator for
          * between host and port.
          *
@@ -7119,7 +7125,8 @@ public final class Settings {
             ASSIST_GESTURE_ENABLED,
             ASSIST_GESTURE_SENSITIVITY,
             VR_DISPLAY_MODE,
-            NOTIFICATION_BADGING
+            NOTIFICATION_BADGING,
+            ADVANCED_REBOOT
         };
 
         /**
