@@ -6628,9 +6628,6 @@ public class StatusBar extends SystemUI implements DemoMode,
                     Settings.System.QS_FOOTER_WARNINGS),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN),
-                    false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_GESTURE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -6673,7 +6670,7 @@ public class StatusBar extends SystemUI implements DemoMode,
         public void onChange(boolean selfChange, Uri uri) {
             if (uri.equals(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_LOCKSCREEN))) {
-                setStatusBarWindowViewOptions();
+                setLockscreenDoubleTapToSleep();
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.LOCKSCREEN_MEDIA_METADATA))) {
                 setLockscreenMediaMetadata();
@@ -6694,11 +6691,8 @@ public class StatusBar extends SystemUI implements DemoMode,
                 updateQsPanelResources();
                 setQsPanelOptions();
             } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN))) {
-                setStatusBarWindowViewOptions();
-            } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_GESTURE))) {
-                setStatusBarWindowViewOptions();
+                setLockscreenDoubleTapToSleep();
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.LESS_BORING_HEADS_UP))) {
                 setUseLessBoringHeadsUp();
@@ -6735,7 +6729,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             setLockscreenMediaMetadata();
             setQsPanelOptions();
             updateQsPanelResources();
-            setStatusBarWindowViewOptions();
+            setLockscreenDoubleTapToSleep();
             setUseLessBoringHeadsUp();
             updateRecentsIconPack();
             updateBatterySettings();
@@ -6759,9 +6753,9 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
     }
 
-    private void setStatusBarWindowViewOptions() {
+    private void setLockscreenDoubleTapToSleep() {
         if (mStatusBarWindow != null) {
-            mStatusBarWindow.setStatusBarWindowViewOptions();
+            mStatusBarWindow.setLockscreenDoubleTapToSleep();
         }
     }
 
