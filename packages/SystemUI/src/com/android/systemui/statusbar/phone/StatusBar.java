@@ -5909,6 +5909,9 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.QS_FOOTER_WARNINGS),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN),
+                    false, this, UserHandle.USER_ALL);
         }
 
         @Override
@@ -5936,6 +5939,9 @@ public class StatusBar extends SystemUI implements DemoMode,
                     uri.equals(Settings.System.getUriFor(Settings.System.QS_COLUMNS_LANDSCAPE)) ||
                     uri.equals(Settings.System.getUriFor(Settings.System.QS_TILE_TITLE_VISIBILITY))) {
                 updateQsPanelResources();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN))) {
+                setStatusBarWindowViewOptions();
             }
         }
 
@@ -5944,12 +5950,13 @@ public class StatusBar extends SystemUI implements DemoMode,
             setQsRowsColumns();
             setQsPanelOptions();
             updateQsPanelResources();
+            setStatusBarWindowViewOptions();
         }
     }
 
-    private void setLockscreenDoubleTapToSleep() {
+    private void setStatusBarWindowViewOptions() {
         if (mStatusBarWindow != null) {
-            mStatusBarWindow.setLockscreenDoubleTapToSleep();
+            mStatusBarWindow.setStatusBarWindowViewOptions();
         }
     }
 
