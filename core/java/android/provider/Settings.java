@@ -9364,7 +9364,6 @@ public final class Settings {
         public static final String DATABASE_DOWNGRADE_REASON = "database_downgrade_reason";
 
         /**
-
          * Beginning of aquarios Global Settings Additions
          * @hide
          */
@@ -9380,7 +9379,6 @@ public final class Settings {
          * @hide
          */
         public static final String POWER_MENU_ACTIONS = "power_menu_actions";
-
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -9416,7 +9414,8 @@ public final class Settings {
             CALL_AUTO_RETRY,
             DOCK_AUDIO_MEDIA_ENABLED,
             ENCODED_SURROUND_OUTPUT,
-            LOW_POWER_MODE_TRIGGER_LEVEL
+            LOW_POWER_MODE_TRIGGER_LEVEL,
+            WAKE_WHEN_PLUGGED_OR_UNPLUGGED
         };
 
         // Populated lazily, guarded by class object:
