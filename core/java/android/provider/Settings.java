@@ -3580,7 +3580,13 @@ public final class Settings {
          * @hide
          */
         public static final String DOUBLE_TAP_SLEEP_ANYWHERE = "double_tap_sleep_anywhere";
-
+           
+        /**
+         * Quick Settings Smart Pulldown
+         * @hide
+         */
+        public static final String QS_SMART_PULLDOWN = "qs_smart_pulldown";         
+         
         /** 
          * Whether to allow one finger quick settings expansion on the right side of the statusbar.
          * @hide
