@@ -4303,7 +4303,7 @@ public final class Settings {
          */
         public static final String STATUS_BAR_CUSTOM_HEADER_IMAGE = "status_bar_custom_header_image";
 
-         /**
+        /**
          * @hide
          */
         public static final String STATUS_BAR_FILE_HEADER_IMAGE = "status_bar_file_header_image";
@@ -4602,6 +4602,12 @@ public final class Settings {
          * @hide
          */
         public static final String POWERMENU_LOCKSCREEN = "powermenu_lockscreen";
+
+        /**
+         * Show the pending notification counts as overlays on the status bar
+         * @hide
+         */
+         public static final String STATUS_BAR_NOTIF_COUNT = "status_bar_notif_count";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -10869,7 +10875,7 @@ public final class Settings {
          */
         public static final String LOW_POWER_MODE_TRIGGER_LEVEL = "low_power_trigger_level";
 
-         /**
+        /**
          * If not 0, the activity manager will aggressively finish activities and
          * processes as soon as they are no longer needed.  If 0, the normal
          * extended lifetime is used.

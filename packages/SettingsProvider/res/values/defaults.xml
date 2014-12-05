@@ -167,10 +167,10 @@
     <!-- Default for Settings.Global.HEADS_UP_NOTIFICATIONS_ENABLED, 1==on -->
     <integer name="def_heads_up_enabled">1</integer>
 
-    <!-- Default for Settings.Global.DEVICE_NAME $1=MANUFACTURER $2=MODEL-->
+    <!-- Default for Settings.Global.DEVICE_NAME $1=MANUFACTURER $2=MODEL -->
     <string name="def_device_name">%1$s %2$s</string>
 
-    <!-- Default for Settings.Global.DEVICE_NAME $1=MODEL-->
+    <!-- Default for Settings.Global.DEVICE_NAME $1=MODEL -->
     <string name="def_device_name_simple">%1$s</string>
 
     <!-- Default for Settings.Secure.WAKE_GESTURE_ENABLED -->
@@ -185,10 +185,10 @@
     <!-- Default setting for ability to add users from the lock screen -->
     <bool name="def_add_users_from_lockscreen">false</bool>
 
-    <!--  default setting for Settings.System.END_BUTTON_BEHAVIOR : END_BUTTON_BEHAVIOR_SLEEP -->
+    <!-- Default setting for Settings.System.END_BUTTON_BEHAVIOR : END_BUTTON_BEHAVIOR_SLEEP -->
     <integer name="def_end_button_behavior">0x2</integer>
 
-    <!-- default setting for Settings.Global.DEFAULT_RESTRICT_BACKGROUND_DATA -->
+    <!-- Default setting for Settings.Global.DEFAULT_RESTRICT_BACKGROUND_DATA -->
     <bool name="def_restrict_background_data">false</bool>
 
     <!-- Default for Settings.Global.TETHER_DUN_REQUIRED -->
@@ -196,4 +196,7 @@
 
     <!-- Charging sounds -->
     <string name="def_battery_plugged_sound">/system/media/audio/ui/BatteryPlugged.ogg</string>
+
+    <!-- Default for Settings.System.STATUS_BAR_NOTIF_COUNT -->
+    <integer name="def_notif_count">0</integer>
 </resources>
