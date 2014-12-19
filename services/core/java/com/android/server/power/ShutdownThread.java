@@ -163,10 +163,19 @@ public final class ShutdownThread extends Thread {
         }
 
         boolean showRebootOption = false;
-        String[] defaultActions = context.getResources().getStringArray(
-                com.android.internal.R.array.config_globalActionsList);
-        for (int i = 0; i < defaultActions.length; i++) {
-            if (defaultActions[i].equals("reboot")) {
+
+        String[] actionsArray;
+        String actions = Settings.Global.getStringForUser(context.getContentResolver(),
+                Settings.Global.POWER_MENU_ACTIONS, UserHandle.USER_CURRENT);
+        if (actions == null) {
+            actionsArray = context.getResources().getStringArray(
+                    com.android.internal.R.array.config_globalActionsList);
+        } else {
+            actionsArray = actions.split("\\|");
+        }
+
+        for (int i = 0; i < actionsArray.length; i++) {
+            if (actionsArray[i].equals("reboot")) {
                 showRebootOption = true;
                 break;
             }
@@ -372,9 +381,13 @@ public final class ShutdownThread extends Thread {
             }
         } else if (mReason != null && mReason.equals(PowerManager.REBOOT_RECOVERY)) {
             // Factory reset path. Set the dialog message accordingly.
-            pd.setTitle(context.getText(com.android.internal.R.string.reboot_to_reset_title));
+            pd.setTitle(context.getText(com.android.internal.R.string.reboot_title));
             pd.setMessage(context.getText(
-                        com.android.internal.R.string.reboot_to_reset_message));
+                        com.android.internal.R.string.reboot_progress));
+            pd.setIndeterminate(true);
+        } else if (mReboot) {
+            pd.setTitle(context.getText(com.android.internal.R.string.reboot_title));
+            pd.setMessage(context.getText(com.android.internal.R.string.reboot_progress));
             pd.setIndeterminate(true);
         } else {
             pd.setTitle(context.getText(com.android.internal.R.string.power_off));
