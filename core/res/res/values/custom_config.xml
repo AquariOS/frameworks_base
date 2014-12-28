@@ -55,4 +55,8 @@
 
     <!-- Name of that key handler class -->
     <string name="config_deviceKeyHandlerClass" translatable="false"></string>
+
+    <!-- If this is true, key chords can be used to take a screen record on the device. -->
+    <bool name="config_enableScreenrecordChord">true</bool>
+
 </resources>
