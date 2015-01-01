@@ -3941,7 +3941,8 @@ public final class Settings {
          * Whether to show the weather info on the lock screen
          * @hide
          */
-        public static final String LOCK_SCREEN_SHOW_WEATHER = "lock_screen_show_weather";+
+        public static final String LOCK_SCREEN_SHOW_WEATHER = "lock_screen_show_weather";
+
         /**
          * Whether to show the weather location lock screen
          * @hide
@@ -3961,12 +3962,14 @@ public final class Settings {
          */
         public static final String SHOW_BATTERY_PERCENT = "status_bar_show_battery_percent";
 
-        /** @hide */
+        /**
+         * @hide
+         */
         private static final Validator SHOW_BATTERY_PERCENT_VALIDATOR = sBooleanValidator;
 
-	/**
+	    /**
          * show the membar in recents
-         *  @hide
+         * @hide
          */
         public static final String SYSTEMUI_RECENTS_MEM_DISPLAY = "systemui_recents_mem_display";
 
@@ -7035,6 +7038,12 @@ public final class Settings {
          * @hide.
          */
         public static final int VR_DISPLAY_MODE_OFF = 1;
+
+        /** Whether to vibrate when quick settings tile is pressed.
+          *
+          * @hide
+          */
+         public static final String QUICK_SETTINGS_TILES_VIBRATE = "quick_settings_vibrate";
 
         /**
          * Whether CarrierAppUtils#disableCarrierAppsUntilPrivileged has been executed at least
