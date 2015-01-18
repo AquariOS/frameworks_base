@@ -86,4 +86,13 @@
     <string name="battery_solid_full" translatable="false">M 12 2 C 17.5228474983 2 22 6.47715250169 22 12 C 22 17.5228474983 17.5228474983 22 12 22 C 6.47715250169 22 2 17.5228474983 2 12 C 2 6.47715250169 6.47715250169 2 12 2 Z</string>
     <string name="battery_solid_empty" translatable="false">M 12 12 C 12 12 12 12 12 12 C 12 12 12 12 12 12 C 12 12 12 12 12 12 C 12 12 12 12 12 12 Z</string>
 
+    <!-- Lockscreen shortcut customization hints -->
+    <string name="left_shortcut_hint">Swipe right for %1$s</string>
+    <string name="right_shortcut_hint">Swipe left for %1$s</string>
+    <string name="lockscreen_message">Tap an icon on the left or right to reassign a lock screen shortcut.</string>
+    <string name="lockscreen_default_target">Default</string>
+    <string name="select_application">Select application</string>
+    <string name="lockscreen_choose_action_title">Choose action</string>
+    <string name="lockscreen_none_target">None</string>
+
 </resources>

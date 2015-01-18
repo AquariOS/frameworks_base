@@ -7183,6 +7183,12 @@ public final class Settings {
         public static final String TEXT_CHARGING_SYMBOL = "text_charging_symbol";
 
         /**
+         * Launch actions for left/right lockscreen targets
+         * @hide
+         */
+        public static final String LOCKSCREEN_TARGETS = "lockscreen_target_actions";
+
+        /**
          * This are the settings to be backed up.
          *
          * NOTE: Settings are backed up and restored in the order they appear
