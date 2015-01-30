@@ -1178,7 +1178,9 @@ public final class ViewTreeObserver {
         }
 
         void add(T item) {
-            getArray().add(item);
+            if (!getArray().contains(item)) {
+                getArray().add(item);
+            }
         }
 
         void addAll(CopyOnWriteArray<T> array) {
