@@ -926,6 +926,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             filter.addAction(Intent.ACTION_CONFIGURATION_CHANGED);
             filter.addAction(Intent.ACTION_SCREEN_OFF);
             filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+            filter.addAction(AudioManager.VOLUME_STEPS_CHANGED_ACTION);
             mContext.registerReceiver(this, filter, null, mWorker);
         }
 
@@ -984,6 +985,9 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             } else if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
                 if (D.BUG) Log.d(TAG, "onReceive ACTION_CLOSE_SYSTEM_DIALOGS");
                 dismiss();
+            }
+            else if (action.equals(AudioManager.VOLUME_STEPS_CHANGED_ACTION)) {
+                getState();
             }
             if (changed) {
                 mCallbacks.onStateChanged(mState);
