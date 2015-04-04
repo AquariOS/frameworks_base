@@ -3928,8 +3928,6 @@ public final class Settings {
         /** @hide */
         private static final Validator SHOW_BATTERY_PERCENT_VALIDATOR = sBooleanValidator;
 
-        /** Beginning of ABC custom setttings**/
-
         /**
          * Use latest screen-on brightness value for Ambient Display
          * @hide
@@ -3943,9 +3941,10 @@ public final class Settings {
         public static final String LAST_DOZE_AUTO_BRIGHTNESS = "last_doze_auto_brightness";
 
         /**
-         * Beginning of Pure System Settings Additions
-         * @hide
+         * show the membar in recents
+         *  @hide
          */
+        public static final String SYSTEMUI_RECENTS_MEM_DISPLAY = "systemui_recents_mem_display";
 
         /**
          * Whether the phone volume up / down effect should be played
