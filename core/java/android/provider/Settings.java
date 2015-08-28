@@ -4410,6 +4410,12 @@ public final class Settings {
         public static final String HEADSET_CONNECT_PLAYER = "headset_connect_player";
 
         /**
+         * Toast icon
+         * @hide
+         */
+        public static final String TOAST_ICON = "toast_icon";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
@@ -4587,6 +4593,8 @@ public final class Settings {
             // Pocket mode handler.
             PRIVATE_SETTINGS.add(POCKET_JUDGE);
             PRIVATE_SETTINGS.add(LOCKSCREEN_MEDIA_METADATA);
+            PRIVATE_SETTINGS.add(HEADSET_CONNECT_PLAYER);
+            PRIVATE_SETTINGS.add(TOAST_ICON);
         }
 
         /**
