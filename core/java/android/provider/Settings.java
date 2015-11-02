@@ -4356,6 +4356,19 @@ public final class Settings {
         public static final String VOLUME_ROCKER_MUSIC_CONTROLS = "volume_rocker_music_controls";
 
         /**
+         * Change volume up and down handlign based on rotation
+         * @hide
+         */
+        public static final String SWAP_VOLUME_BUTTONS = "swap_volume_buttons";
+
+        /**
+         * Volume key controls ringtone or media sound stream
+         * @hide
+         */
+        public static final String VOLUME_KEYS_CONTROL_MEDIA_STREAM =
+                "volume_keys_control_media_stream";
+
+        /**
          * Status bar carrier label
          * 0: Hide
          * 1: Display on keyguard status bar
@@ -4370,12 +4383,6 @@ public final class Settings {
          * @hide
          */
         public static final String FINGERPRINT_SUCCESS_VIB = "fingerprint_success_vib";
-
-        /**
-         * Change volume up and down handlign based on rotation
-         * @hide
-         */
-        public static final String SWAP_VOLUME_BUTTONS = "swap_volume_buttons";
 
         /**
          * Toast icon
