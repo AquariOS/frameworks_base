@@ -83,4 +83,7 @@
   <!-- Wallpaper component -->
   <java-symbol type="string" name="default_wallpaper_component_custom" />
 
+  <!-- Vendor/fingerprint mismatch info -->
+  <java-symbol type="string" name="system_error_vendorprint" />
+  
 </resources>
