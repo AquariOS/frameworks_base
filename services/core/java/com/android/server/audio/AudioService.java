@@ -5092,7 +5092,7 @@ public class AudioService extends IAudioService.Stub {
                         0,
                         null,
                         0);
-                delay = 1000;
+                delay = 700;
             }
         }
 
