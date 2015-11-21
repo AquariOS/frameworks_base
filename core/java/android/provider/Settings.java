@@ -3844,6 +3844,12 @@ public final class Settings {
         public static final String VOLUME_ROCKER_MUSIC_CONTROLS = "volume_rocker_music_controls";
 
         /**
+         * Change volume up and down handlign based on rotation
+         * @hide
+         */
+        public static final String SWAP_VOLUME_BUTTONS = "swap_volume_buttons";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
