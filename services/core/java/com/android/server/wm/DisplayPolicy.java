@@ -137,7 +137,6 @@ import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.ArraySet;
-import android.util.BoostFramework;
 import android.util.Pair;
 import android.util.PrintWriterPrinter;
 import android.util.Slog;
