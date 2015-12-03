@@ -3580,9 +3580,15 @@ public final class Settings {
         };
 
         /**
-         * Beginning of Flash System Settings Additions
+         * Beginning of AquariOS System Settings Additions
          * @hide
          */
+
+        /**
+         * Boolean value whether to link ringtone and notification volume
+         * @hide
+         */
+        public static final String VOLUME_LINK_NOTIFICATION = "volume_link_notification";        
 
         /**
          * Whether the phone volume up / down effect should be played
