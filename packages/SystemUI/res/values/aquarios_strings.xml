@@ -2,5 +2,8 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Screenshot QS tile -->
-    <string name="quick_settings_screenshot_label">Screenshot</string>        
+    <string name="quick_settings_screenshot_label">Screenshot</string>
+    <!-- Expanded Desktop QS Tile -->
+    <string name="quick_settings_expanded_desktop">Expanded</string>
+    <string name="quick_settings_expanded_desktop_off">Normal</string>            
 </resources>
