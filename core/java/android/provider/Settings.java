@@ -3574,8 +3574,25 @@ public final class Settings {
          * Beginning of aquarios System Settings Additions
          * @hide
          */
-        
+         
+        /**
+         * Whether the phone ringtone should be played in an increasing manner
+         * @hide
+         */
+        public static final String INCREASING_RING = "increasing_ring";
 
+        /**
+         * Start volume fraction for increasing ring volume
+         * @hide
+         */
+        public static final String INCREASING_RING_START_VOLUME = "increasing_ring_start_vol";
+
+        /**
+         * Ramp up time (seconds) for increasing ring
+         * @hide
+         */
+        public static final String INCREASING_RING_RAMP_UP_TIME = "increasing_ring_ramp_up_time";         
+        
         /**
          * What color to use for the battery LED while charging - low
          * @hide
@@ -3847,7 +3864,10 @@ public final class Settings {
             RINGTONE,
             LOCK_TO_APP_ENABLED,
             NOTIFICATION_SOUND,
-            ACCELEROMETER_ROTATION
+            ACCELEROMETER_ROTATION,
+            INCREASING_RING,
+            INCREASING_RING_START_VOLUME,
+            INCREASING_RING_RAMP_UP_TIME
         };
 
         /**
@@ -9323,7 +9343,7 @@ public final class Settings {
          * Beginning of aquarios Global Settings Additions
          * @hide
          */
-
+         
         /**
          * Whether to wake the display when plugging or unplugging the charger
          * @hide
