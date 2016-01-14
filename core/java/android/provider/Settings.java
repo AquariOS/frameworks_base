@@ -4053,18 +4053,23 @@ public final class Settings {
         public static final String STATUS_BAR_SHOW_CARRIER = "status_bar_show_carrier";
 
         /**
+         * whether to enable or disable vibration on succesful fingerprint auth
+         * @hide
+         */
+        public static final String FINGERPRINT_SUCCESS_VIB = "fingerprint_success_vib";
+
+        /**
          * Change volume up and down handlign based on rotation
          * @hide
          */
         public static final String SWAP_VOLUME_BUTTONS = "swap_volume_buttons";
 
-         /**
+        /**
          * Quick Settings number of columns
          * @hide
          */
         public static final String QS_LAYOUT_COLUMNS = "qs_layout_columns";
 
-        /**
         /**
          * Number of rows used for the Quick Settings (portrait)
          *
