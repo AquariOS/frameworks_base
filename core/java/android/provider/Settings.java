@@ -3585,13 +3585,19 @@ public final class Settings {
          * location of the clear all recents FAB
          * @hide
          */
-        public static final String  RECENTS_CLEAR_ALL_LOCATION = "recents_clear_all_location";         
-         
+        public static final String  RECENTS_CLEAR_ALL_LOCATION = "recents_clear_all_location";
+
+        /**
+         * whether to enable or disable vibration on succesful fingerprint auth
+         * @hide
+         */
+        public static final String FINGERPRINT_SUCCESS_VIB = "fingerprint_success_vib";
+
         /**
          * Change volume up and down handlign based on rotation
          * @hide
          */
-        public static final String SWAP_VOLUME_BUTTONS = "swap_volume_buttons";         
+        public static final String SWAP_VOLUME_BUTTONS = "swap_volume_buttons";
          
         /**
          * Enable double tap gesture anywhere on the lock screen put device to sleep
@@ -3606,7 +3612,7 @@ public final class Settings {
          * 2 - Volume up/down moves cursor right/left
          * @hide
          */
-        public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";         
+        public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
          
         /**
          * Whether to allow screen record chord to take selectable screenshots
