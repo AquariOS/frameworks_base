@@ -41,4 +41,10 @@
 
     <!-- On-The-Go -->
     <string name="global_action_onthego">On-The-Go</string>
+
+    <!-- Battery fully charged notification -->
+    <string name="notify_battery_fully_charged_title">Battery fully charged</string>
+    <string name="notify_battery_fully_charged_text">Disconnect your device from the charger to maintain battery health.</string>
+    <string name="battery_charged_channel_name">Battery charged</string>
+
 </resources>
