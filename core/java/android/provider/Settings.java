@@ -3383,6 +3383,15 @@ public final class Settings {
         public static final Validator WINDOW_ORIENTATION_LISTENER_LOG_VALIDATOR = sBooleanValidator;
 
         /**
+<<<<<<< HEAD
+=======
+         * Disable Immersive Message
+         * @hide
+         */
+        public static final String DISABLE_IMMERSIVE_MESSAGE = "disable_immersive_message";
+
+        /**
+>>>>>>> ba9663b... Add option to hide lockscreen alarm text & cleanup [1/2]
          * @deprecated Use {@link android.provider.Settings.Global#POWER_SOUNDS_ENABLED}
          * instead
          * @hide
@@ -4122,6 +4131,12 @@ public final class Settings {
         public static final String FP_UNLOCK_KEYSTORE = "fp_unlock_keystore";
 
         /**
+         * Force expanded notifications on all apps that support it.
+         * @hide
+         */
+        public static final String FORCE_EXPANDED_NOTIFICATIONS = "force_expanded_notifications";
+
+        /**
          * Hide lockscreen date
          * @hide
          */
@@ -4132,6 +4147,12 @@ public final class Settings {
          * @hide
          */
         public static final String HIDE_LOCKSCREEN_CLOCK = "hide_lockscreen_clock";
+
+        /**
+         * Hide lockscreen alarm
+         * @hide
+         */
+        public static final String HIDE_LOCKSCREEN_ALARM = "hide_lockscreen_alarm";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
