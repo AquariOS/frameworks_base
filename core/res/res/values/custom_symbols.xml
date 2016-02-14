@@ -73,4 +73,6 @@
   <!-- Whether device has Soli support -->
   <java-symbol type="bool" name="config_has_Soli" />
 
+  <!-- Hardware key binding -->
+  <java-symbol type="integer" name="config_deviceHardwareKeys" />
 </resources>
