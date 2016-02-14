@@ -67,4 +67,7 @@
   <!-- Last app switch animations -->
   <java-symbol type="anim" name="smartaction_app_in" />
   <java-symbol type="anim" name="smartaction_app_out" />
+
+  <!-- Hardware key binding -->
+  <java-symbol type="integer" name="config_deviceHardwareKeys" />
 </resources>
