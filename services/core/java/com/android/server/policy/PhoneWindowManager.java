@@ -212,6 +212,7 @@ import com.android.internal.logging.nano.MetricsProto;
 import com.android.internal.os.RoSystemProperties;
 
 import com.android.internal.os.DeviceKeyHandler;
+import com.android.internal.os.HardwareKeyHandler;
 import com.android.internal.policy.IKeyguardDismissCallback;
 import com.android.internal.policy.PhoneWindow;
 import com.android.internal.policy.IKeyguardService;
@@ -239,6 +240,7 @@ import com.android.server.wm.WindowManagerInternal;
 import com.android.server.wm.WindowManagerInternal.AppTransitionListener;
 import com.android.smartactions.utils.ActionHandler;
 
+import com.android.smartactions.utils.ActionHandler;
 import com.aquarios.support.utils.AquaUtils;
 
 import java.io.File;
@@ -694,6 +696,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private static final int MSG_CLEAR_PROXIMITY = 30;
     private static final int MSG_DISPATCH_VOLKEY_SKIP_TRACK = 31;
 
+    private HardwareKeyHandler mKeyHandler;
+
     private class PolicyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -792,11 +796,17 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 case MSG_CLEAR_PROXIMITY:
                     cleanupProximity();
                     break;
-                case MSG_DISPATCH_VOLKEY_SKIP_TRACK: {
+                case MSG_DISPATCH_VOLKEY_SKIP_TRACK:
                     sendSkipTrackEventToStatusBar(msg.arg1);
                     mVolumeMusicControlActive = true;
                     break;
-                }
+                case HardwareKeyHandler.MSG_FIRE_HOME:
+                    launchHomeFromHotKey(DEFAULT_DISPLAY);
+                    break;
+                case HardwareKeyHandler.MSG_DO_HAPTIC_FB:
+                    performHapticFeedback(HapticFeedbackConstants.LONG_PRESS, false,
+                            "Hwkey action binding");
+                    break;
             }
         }
     }
@@ -1977,6 +1987,24 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         mHandler = new PolicyHandler();
         mWakeGestureListener = new MyWakeGestureListener(mContext, mHandler);
+
+        // only for hwkey devices
+        if (!mContext.getResources().getBoolean(
+                com.android.internal.R.bool.config_showNavigationBar)) {
+            PathClassLoader loader =  new PathClassLoader("/system/app/HwKeyHandler/HwKeyHandler.apk",
+                    getClass().getClassLoader());
+            try {
+                Class<?> klass = loader.loadClass("com.aquarios.hwkey.HardkeyActionHandler");
+                Constructor<?> constructor = klass.getConstructor(Context.class, Handler.class);
+                mKeyHandler = (HardwareKeyHandler) constructor.newInstance(
+                        mContext, mHandler);
+            } catch (Exception e) {
+                Slog.w(TAG, "Could not instantiate hardware key handler "
+                        + "com.aquarios.hwkey.HardkeyActionHandler" + " from class "
+                        + "/system/app/DeviceHandler/HwKeyHandler.apk", e);
+            }
+        }
+
         mSettingsObserver = new SettingsObserver(mHandler);
         mSettingsObserver.observe();
         mShortcutManager = new ShortcutManager(context);
@@ -2866,10 +2894,27 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         final boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
         final boolean canceled = event.isCanceled();
         final int displayId = event.getDisplayId();
+        final boolean longPress = (flags & KeyEvent.FLAG_LONG_PRESS) != 0;
+        final boolean virtualKey = event.getDeviceId() == KeyCharacterMap.VIRTUAL_KEYBOARD;
 
         if (DEBUG_INPUT) {
             Log.d(TAG, "interceptKeyTi keyCode=" + keyCode + " down=" + down + " repeatCount="
                     + repeatCount + " keyguardOn=" + keyguardOn + " canceled=" + canceled);
+        }
+
+        // we only handle events from hardware key devices that originate from
+        // real button
+        // pushes. We ignore virtual key events as well since it didn't come
+        // from a hard key or
+        // it's the key handler synthesizing a back or menu key event for
+        // dispatch
+        // if keyguard is showing and secure, don't intercept and let aosp keycode
+        // implementation handle event
+        if (mKeyHandler != null && !keyguardOn && !virtualKey) {
+            boolean handled = mKeyHandler.handleKeyEvent(win != null ? win.getAttrs() : null, keyCode, repeatCount, down, canceled,
+                    longPress, keyguardOn);
+            if (handled)
+                return -1;
         }
 
         // If we think we might have a volume down & power key chord on the way
