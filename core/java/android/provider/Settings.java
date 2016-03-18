@@ -4126,6 +4126,12 @@ public final class Settings {
          */
         public static final String STATUS_BAR_QUICK_QS_PULLDOWN = "status_bar_quick_qs_pulldown";
 
+        /** Whether to skip music track with volume rocker 
+        /**
+         * @hide
+         */
+        public static final String VOLUME_BUTTON_MUSIC_CONTROL = "volume_button_music_control";
+
         /**
          * Whether the battery light should be enabled (if hardware supports it)
          * The value is boolean (1 or 0).
@@ -4374,6 +4380,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(QS_STYLE_DARK);
             PRIVATE_SETTINGS.add(SWAP_VOLUME_BUTTONS);
             PRIVATE_SETTINGS.add(VOLUME_KEYS_CONTROL_MEDIA_STREAM);
+            PRIVATE_SETTINGS.add(VOLUME_BUTTON_MUSIC_CONTROL);
         }
 
         /**
