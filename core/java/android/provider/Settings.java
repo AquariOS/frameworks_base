@@ -4569,6 +4569,12 @@ public final class Settings {
          */
         public static final String GLOBAL_ACTIONS_FLASHLIGHT = "global_actions_flashlight";
 
+        /** Whether to skip music track with volume rocker 
+        /**
+         * @hide
+         */
+        public static final String VOLUME_BUTTON_MUSIC_CONTROL = "volume_button_music_control";
+
         /**
          * Whether to display the flashlight option in the power menu
          *
