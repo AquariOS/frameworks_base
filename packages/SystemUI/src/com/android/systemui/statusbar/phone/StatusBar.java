@@ -503,7 +503,6 @@ public class StatusBar extends SystemUI implements DemoMode,
     ActivityManager mAm;
     boolean mLessBoringHeadsUp;
 
-    ActivityManager mAm;
     private ArrayList<String> mStoplist = new ArrayList<String>();
     private ArrayList<String> mBlacklist = new ArrayList<String>();
 
