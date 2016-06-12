@@ -3908,6 +3908,24 @@ public final class Settings {
         public static final String NETWORK_TRAFFIC_HIDEARROW = "network_traffic_hidearrow";
 
         /**
+         * show lockscreen alarm
+         *  @hide
+         */
+        public static final String SHOW_LOCKSCREEN_ALARM = "show_lockscreen_alarm";
+
+        /**
+         * show lockscreen clock
+         *  @hide
+         */
+        public static final String SHOW_LOCKSCREEN_CLOCK = "show_lockscreen_clock";
+
+        /**
+         * show lockscreen date
+         *  @hide
+         */
+        public static final String SHOW_LOCKSCREEN_DATE = "show_lockscreen_date";
+
+        /**
          * Whether to control brightness from status bar
          * @hide
          */
