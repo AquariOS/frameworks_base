@@ -4282,6 +4282,13 @@ public final class Settings {
         public static final String SWAP_VOLUME_BUTTONS = "swap_volume_buttons";
 
         /**
+         * Toast icon
+         *
+         * @hide
+         */
+        public static final String TOAST_ICON = "toast_icon";
+
+        /**
          * Quick Settings number of columns
          * @hide
          */
