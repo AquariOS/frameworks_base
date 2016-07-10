@@ -39,4 +39,7 @@
   <!-- Seconds after which power button torch times out when proximity sensor is covered -->
   <integer name="config_flashlightProximityTimeout">300</integer>
 
+  <!-- Whether device has dash charging support -->
+  <bool name="config_hasDashCharger">false</bool>
+
 </resources>
