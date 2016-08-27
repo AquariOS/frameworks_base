@@ -81,4 +81,11 @@
   <java-symbol type="color" name="autofill_save_title_color" />
   <java-symbol type="color" name="autofill_autofill_save_custom_subtitle_color" />
 
+  <!-- Notification icon/text dynamic tint -->
+  <java-symbol type="bool" name="config_allowNotificationIconTextTinting" />
+  <java-symbol type="color" name="notification_text_default_color" />
+
+  <!-- Notification sender text color -->
+  <java-symbol type="color" name="sender_text_color" />
+
 </resources>
