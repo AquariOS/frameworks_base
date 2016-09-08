@@ -273,6 +273,8 @@ public abstract class BaseStatusBar extends SystemUI implements
 
     protected AssistManager mAssistManager;
 
+    private ArrayList<String> mWhitelist = new ArrayList<String>();
+
     protected boolean mVrMode;
 
     private Set<String> mNonBlockablePkgs;
@@ -319,6 +321,32 @@ public abstract class BaseStatusBar extends SystemUI implements
             mUsersAllowingNotifications.clear();
             // ... and refresh all the notifications
             updateNotifications();
+        }
+    };
+
+    private class SettingsObserver extends ContentObserver {
+        public SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        public void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.HEADS_UP_WHITELIST_VALUES), false, this);
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            update();
+        }
+
+        private void update() {
+            ContentResolver resolver = mContext.getContentResolver();
+
+            final String whiteString = Settings.System.getString(resolver,
+                    Settings.System.HEADS_UP_WHITELIST_VALUES);
+            splitAndAddToArrayList(mWhitelist, whiteString, "\\|");
         }
     };
 
@@ -829,6 +857,9 @@ public abstract class BaseStatusBar extends SystemUI implements
         mContext.registerReceiverAsUser(mAllUsersReceiver, UserHandle.ALL, allUsersFilter,
                 null, null);
         updateCurrentProfilesCache();
+
+        SettingsObserver observer = new SettingsObserver(mHandler);
+        observer.observe();
 
         IVrManager vrManager = IVrManager.Stub.asInterface(ServiceManager.getService("vrmanager"));
         try {
@@ -2566,6 +2597,16 @@ public abstract class BaseStatusBar extends SystemUI implements
             return false;
         }
 
+        boolean whitelisted = (isPackageWhitelisted(sbn.getPackageName()))
+                && mPowerManager.isScreenOn()
+                && (!mStatusBarKeyguardViewManager.isShowing()
+                || mStatusBarKeyguardViewManager.isOccluded())
+                && !mStatusBarKeyguardViewManager.isInputRestricted();
+
+        if (whitelisted) {
+    	    return true;
+        }
+
         if (mNotificationData.shouldFilterOut(sbn)) {
             if (DEBUG) Log.d(TAG, "No peeking: filtered notification: " + sbn.getKey());
             return false;
@@ -2620,6 +2661,22 @@ public abstract class BaseStatusBar extends SystemUI implements
     }
 
     protected abstract boolean isSnoozedPackage(StatusBarNotification sbn);
+
+    private boolean isPackageWhitelisted(String packageName) {
+        return mWhitelist.contains(packageName);
+    }
+
+    private void splitAndAddToArrayList(ArrayList<String> arrayList,
+            String baseString, String separator) {
+        // clear first
+        arrayList.clear();
+        if (baseString != null) {
+            final String[] array = TextUtils.split(baseString, separator);
+            for (String item : array) {
+                arrayList.add(item.trim());
+            }
+        }
+    }
 
     public void setInteracting(int barWindow, boolean interacting) {
         // hook for subclasses

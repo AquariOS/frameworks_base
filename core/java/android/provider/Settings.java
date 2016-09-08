@@ -4159,6 +4159,13 @@ public final class Settings {
         public static final String HEADS_UP_TIMEOUT = "heads_up_timeout";
 
         /**
+         * Which applications to enable heads up notifications for
+         *
+         * @hide
+         */
+        public static final String HEADS_UP_WHITELIST_VALUES = "heads_up_whitelist_values";
+
+        /**
          * Defines the global heads up notification snooze
          * @hide
          */
