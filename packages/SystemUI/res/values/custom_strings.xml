@@ -95,4 +95,9 @@
     <!-- [CHAR LIMIT=130] Location detail panel, description for sensors only mode -->
     <string name="quick_settings_location_detail_mode_sensors_only_description">Use GPS to determine location</string>
 
+    <!-- Sound QS Tile -->
+    <string name="quick_settings_sound_label">Sound</string>
+    <string name="quick_settings_sound_ring">Ring</string>
+    <string name="quick_settings_sound_vibrate">Vibrate</string>
+    <string name="quick_settings_sound_dnd">Do not disturb</string>
 </resources>
