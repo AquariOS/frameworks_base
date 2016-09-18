@@ -169,4 +169,10 @@
     <string name="action_save_success">Saved</string>
     <string name="action_save_fault">Saving was unsuccessful</string>
     <string name="action_edit">Edit</string>
+
+    <!-- Sound Tile -->
+    <string name="quick_settings_sound_label">Sound</string>
+    <string name="quick_settings_sound_ring">Ring</string>
+    <string name="quick_settings_sound_vibrate">Vibrate</string>
+    <string name="quick_settings_sound_dnd">Do not disturb</string>
 </resources>
