@@ -314,6 +314,31 @@ final class DefaultPermissionGrantPolicy {
                 grantRuntimePermissionsLPw(cameraPackage, STORAGE_PERMISSIONS, userId);
             }
 
+            // Camera2
+            PackageParser.Package camera2package = getSystemPackageLPr(
+                    "com.android.camera2");
+            if (camera2package != null && doesPackageSupportRuntimePermissions(camera2package)) {
+                grantRuntimePermissionsLPw(camera2package, CAMERA_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(camera2package, LOCATION_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(camera2package, MICROPHONE_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(camera2package, STORAGE_PERMISSIONS, userId);
+            }
+
+            // Clock
+            PackageParser.Package deskclockpackage = getSystemPackageLPr(
+                    "com.android.deskclock");
+            if (deskclockpackage != null && doesPackageSupportRuntimePermissions(deskclockpackage)) {
+                grantRuntimePermissionsLPw(deskclockpackage, PHONE_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(deskclockpackage, STORAGE_PERMISSIONS, userId);
+            }
+
+            // LockClock
+            PackageParser.Package lockClock = getDefaultProviderAuthorityPackageLPr(
+                    "com.cyanogenmod.lockclock", userId);
+            if (lockClock != null) {
+            grantRuntimePermissionsLPw(lockClock, LOCATION_PERMISSIONS, userId);
+            }
+
             // Media provider
             PackageParser.Package mediaStorePackage = getDefaultProviderAuthorityPackageLPr(
                     MediaStore.AUTHORITY, userId);
