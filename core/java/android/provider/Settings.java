@@ -3740,6 +3740,12 @@ public final class Settings {
                 "notification_light_pulse_custom_values";
 
         /**
+         * Whether to control brightness from status bar
+         * @hide
+         */
+        public static final String STATUS_BAR_BRIGHTNESS_CONTROL = "status_bar_brightness_control";
+
+        /**
          * Show or hide clock
          * 0 - hide
          * 1 - show (default)
