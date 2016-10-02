@@ -109,6 +109,10 @@
             android:singleLine="true"
             />
     </com.android.keyguard.AlphaOptimizedLinearLayout>
->>>>>>> 223370d... Statusbar clock and date customizations [1/2]
+
+    <com.android.systemui.statusbar.policy.BatteryBarController
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        systemui:viewLocation="1" />
 
 </com.android.systemui.statusbar.phone.PhoneStatusBarView>
