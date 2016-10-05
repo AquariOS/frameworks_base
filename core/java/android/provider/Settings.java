@@ -3925,6 +3925,7 @@ public final class Settings {
         public static final String QS_LAYOUT_COLUMNS = "qs_layout_columns";
 
         /**
+        /**
          * Number of rows used for the Quick Settings (portrait)
          *
          * @hide
@@ -7023,7 +7024,13 @@ public final class Settings {
         public static final String ADB_NOTIFY = "adb_notify";
         
         /**
-         * This are the settings to be backed up.
+         * Count of small QS tiles.
+         * @hide
+         */
+        public static final String QQS_COUNT = "sysui_qqs_count";
+
+        /**
+         * These are the settings to be backed up.
          *
          * NOTE: Settings are backed up and restored in the order they appear
          *       in this array. If you have one setting depending on another,
