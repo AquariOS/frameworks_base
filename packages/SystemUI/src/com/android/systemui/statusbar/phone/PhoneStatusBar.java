@@ -394,6 +394,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     // qs headers
     private StatusBarHeaderMachine mStatusBarHeaderMachine;
 
+    // show lte/4g switch
+    private boolean mShowLteFourGee;
+
     // top bar
     BaseStatusBarHeader mHeader;
     protected KeyguardStatusBarView mKeyguardStatusBar;
@@ -577,6 +580,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.OMNIJAWS_WEATHER_ICON_PACK),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SHOW_LTE_FOURGEE),
+                    false, this, UserHandle.USER_ALL);
             update();
            resolver.registerContentObserver(Settings.System.getUriFor(
                   Settings.System.STATUS_BAR_CUSTOM_HEADER_SHADOW),
@@ -617,12 +623,21 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.OMNIJAWS_WEATHER_ICON_PACK))) {
                     mHeader.updateVisibilities();
                     mHeader.queryAndUpdateWeather();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.SHOW_LTE_FOURGEE))) {
+                    mShowLteFourGee = Settings.System.getIntForUser(
+                            mContext.getContentResolver(),
+                            Settings.System.SHOW_LTE_FOURGEE,
+                            0, UserHandle.USER_CURRENT) == 1;
+                    mNetworkController.onConfigurationChanged();
             }
             update();
         }
 
         public void update() {
             ContentResolver resolver = mContext.getContentResolver();
+            boolean mShowLteFourGee = Settings.System.getIntForUser(resolver,
+                    Settings.System.SHOW_LTE_FOURGEE, 0, UserHandle.USER_CURRENT) == 1;
             int mode = Settings.System.getIntForUser(resolver,
                             Settings.System.SCREEN_BRIGHTNESS_MODE,
                             Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL,

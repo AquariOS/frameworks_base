@@ -42,6 +42,9 @@ public class TunerFragment extends PreferenceFragment {
 
     private static final String BLUETOOTH_SHOW_BATTERY = "bluetooth_show_battery";
 
+    private static final String SHOW_LTE_FOURGEE = "show_lte_fourgee";
+    private SwitchPreference mShowLteFourGee;
+
     private SwitchPreference mBluetoothBattery;
 
     @Override
@@ -51,6 +54,14 @@ public class TunerFragment extends PreferenceFragment {
 
          PreferenceScreen prefSet = getPreferenceScreen();
          final ContentResolver resolver = getActivity().getContentResolver();
+
+        mShowLteFourGee = (SwitchPreference) findPreference(SHOW_LTE_FOURGEE);
+        if (AquariosUtils.isWifiOnly(getActivity())) {
+            prefSet.removePreference(mShowLteFourGee);
+        } else {
+        mShowLteFourGee.setChecked((Settings.System.getInt(resolver,
+                Settings.System.SHOW_LTE_FOURGEE, 0) == 1));
+        }
 
         mBluetoothBattery = (SwitchPreference) findPreference(BLUETOOTH_SHOW_BATTERY);
         mBluetoothBattery.setChecked((Settings.System.getInt(resolver,
@@ -103,6 +114,12 @@ public class TunerFragment extends PreferenceFragment {
             boolean checked = ((SwitchPreference)preference).isChecked();
             Settings.System.putInt(getActivity().getContentResolver(),
                     Settings.System.BLUETOOTH_SHOW_BATTERY, checked ? 1:0);
+            return true;
+         }
+    else if  (preference == mShowLteFourGee) {
+            boolean checked = ((SwitchPreference)preference).isChecked();
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.SHOW_LTE_FOURGEE, checked ? 1:0);
             return true;
          }
          return super.onPreferenceTreeClick(preference);
