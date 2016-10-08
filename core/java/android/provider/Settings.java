@@ -4165,6 +4165,12 @@ public final class Settings {
         public static final String STATUS_BAR_NOTIF_COUNT = "status_bar_notif_count";
 
         /**
+         * Show the four 4g network icon instead of lte
+         * @hide
+         */
+        public static final String SHOW_LTE_FOURGEE = "show_lte_fourgee";
+
+        /**
          * Whether to wake the screen with the volume keys, the value is boolean.
          * @hide
          */
