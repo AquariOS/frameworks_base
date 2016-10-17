@@ -38,6 +38,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.statusbar.StatusBarIcon;
+import com.android.systemui.BatteryLevelTextView;
 import com.android.systemui.BatteryMeterView;
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.Interpolators;
@@ -108,6 +109,8 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
 
     private final ArraySet<String> mIconBlacklist = new ArraySet<>();
 
+    private BatteryLevelTextView mBatteryLevelView;
+
     private final Runnable mTransitionDeferringDoneRunnable = new Runnable() {
         @Override
         public void run() {
@@ -148,6 +151,7 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mHandler = new Handler();
         mClockController = new ClockController(statusBar, mNotificationIcons, mHandler);
         mCenterClockLayout = statusBar.findViewById(R.id.center_clock_layout);
+        mBatteryLevelView = (BatteryLevelTextView) statusBar.findViewById(R.id.battery_level);
         loadDimens();
 
         TunerService.get(mContext).addTunable(this, ICON_BLACKLIST);
@@ -542,6 +546,7 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mClockController.setTextColor(mIconTint);
         mNetworkTraffic.setDarkIntensity(mDarkIntensity);
         mCarrierLabel.setTextColor(getTint(mTintArea, mCarrierLabel, mIconTint));
+        mBatteryLevelView.setTextColor(getTint(mTintArea, mBatteryLevelView, mIconTint));
     }
 
     public void appTransitionPending() {
