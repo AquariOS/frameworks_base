@@ -7313,6 +7313,13 @@ public final class Settings {
          */
 
         /**
+         * Whether to show the keyguard visualizer.
+         * Boolean setting. 0 = off, 1 = on.
+         * @hide
+         */
+        public static final String LOCKSCREEN_VISUALIZER_ENABLED = "lockscreen_visualizer";         
+         
+        /**
          * Whether to display the ADB notification.
          * @hide
          */
