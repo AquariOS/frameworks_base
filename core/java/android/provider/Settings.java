@@ -3541,11 +3541,20 @@ public final class Settings {
         @Deprecated
         public static final String DOCK_SOUNDS_ENABLED = Global.DOCK_SOUNDS_ENABLED;
 
-	/**
+	    /**
          * Check the proximity sensor during wakeup
          * @hide
          */
         public static final String PROXIMITY_ON_WAKE = "proximity_on_wake";
+
+        /**
+         * Whether allowing pocket service to register sensors and dispatch informations.
+         *   0 = disabled
+         *   1 = enabled
+         * @author Carlo Savignano
+         * @hide
+         */
+        public static final String POCKET_JUDGE = "pocket_judge"
 
         /**
          * Whether to play sounds when the keyguard is shown and dismissed.
@@ -4826,6 +4835,8 @@ public final class Settings {
             PRIVATE_SETTINGS.add(POINTER_SPEED);
             PRIVATE_SETTINGS.add(LOCK_TO_APP_ENABLED);
             PRIVATE_SETTINGS.add(EGG_MODE);
+            // Pocket mode handler.
+            PRIVATE_SETTINGS.add(POCKET_JUDGE);
         }
 
         /**
