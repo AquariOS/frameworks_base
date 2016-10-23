@@ -3998,6 +3998,15 @@ public final class Settings {
          * it to PRIVATE_SETTINGS below. Also add a validator that can validate
          * the setting value. See an example above.
          */
+ 
+        /**
+         * Whether allowing pocket service to register sensors and dispatch informations.
+         *   0 = disabled
+         *   1 = enabled
+         * @author Carlo Savignano
+         * @hide
+         */
+        public static final String POCKET_JUDGE = "pocket_judge";
 
         /**
          * Forces ENTER key to be displayed, rather than Emoji key
@@ -4522,6 +4531,8 @@ public final class Settings {
             PRIVATE_SETTINGS.add(STATUS_BAR_DAYLIGHT_HEADER_PACK);
             PRIVATE_SETTINGS.add(STATUS_BAR_CUSTOM_HEADER_PROVIDER);
             PRIVATE_SETTINGS.add(STATUS_BAR_CUSTOM_HEADER_IMAGE);
+            // Pocket mode handler.
+            PRIVATE_SETTINGS.add(POCKET_JUDGE);
         }
 
         /**
