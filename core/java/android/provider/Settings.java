@@ -3981,8 +3981,17 @@ public final class Settings {
         public static final String LAST_DOZE_AUTO_BRIGHTNESS = "last_doze_auto_brightness";
 
         /**
-         * show the membar in recents
-         *  @hide
+         * Whether allowing pocket service to register sensors and dispatch informations.
+         *   0 = disabled
+         *   1 = enabled
+         * @author Carlo Savignano
+         * @hide
+         */
+        public static final String POCKET_JUDGE = "pocket_judge";
+
+        /**
+         * Whether to use the MTP by default after connecting to PC
+         * @hide
          */
         public static final String SYSTEMUI_RECENTS_MEM_DISPLAY = "systemui_recents_mem_display";
 
