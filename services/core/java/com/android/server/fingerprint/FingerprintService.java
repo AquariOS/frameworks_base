@@ -102,7 +102,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class FingerprintService extends SystemService implements IHwBinder.DeathRecipient {
     static final String TAG = "FingerprintService";
     static final boolean DEBUG = true;
-    private static final boolean CLEANUP_UNUSED_FP = true;
     private static final String FP_DATA_DIR = "fpdata";
     private static final int MSG_USER_SWITCHING = 10;
     private static final String ACTION_LOCKOUT_RESET =
@@ -147,6 +146,8 @@ public class FingerprintService extends SystemService implements IHwBinder.Death
     private ClientMonitor mCurrentClient;
     private ClientMonitor mPendingClient;
     private PerformanceStats mPerformanceStats;
+    private final boolean mNotifyClient;
+    private final boolean mCleanupUnusedFingerprints;
 
     private IBinder mToken = new Binder(); // used for internal FingerprintService enumeration
     private ArrayList<UserFingerprint> mUnknownFingerprints = new ArrayList<>(); // hw fingerprints
@@ -264,7 +265,10 @@ public class FingerprintService extends SystemService implements IHwBinder.Death
                 ServiceManager.getService(Context.STATUS_BAR_SERVICE));
         mActivityManager = ((ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE))
                 .getService();
-        mUsesOnePlusFOD = context.getResources().getBoolean(com.android.internal.R.bool.config_usesOnePlusFOD);
+        mNotifyClient = mContext.getResources().getBoolean(
+                com.android.internal.R.bool.config_notifyClientOnFingerprintCancelSuccess);
+        mCleanupUnusedFingerprints = mContext.getResources().getBoolean(
+                com.android.internal.R.bool.config_cleanupUnusedFingerprints);
     }
 
     @Override
@@ -337,7 +341,7 @@ public class FingerprintService extends SystemService implements IHwBinder.Death
      * @param userId
      */
     private void doFingerprintCleanupForUser(int userId) {
-        if (CLEANUP_UNUSED_FP) {
+        if (mCleanupUnusedFingerprints) {
             enumerateUser(userId);
         }
     }
@@ -1231,7 +1235,11 @@ public class FingerprintService extends SystemService implements IHwBinder.Death
                     if (client instanceof AuthenticationClient) {
                         if (client.getToken() == token) {
                             if (DEBUG) Slog.v(TAG, "stop client " + client.getOwnerString());
-                            client.stop(client.getToken() == token);
+                            final int stopResult = client.stop(client.getToken() == token);
+                            if (mNotifyClient && (stopResult == 0)) {
+                                handleError(mHalDeviceId,
+                                        FingerprintManager.FINGERPRINT_ERROR_CANCELED, 0);
+                            }
                         } else {
                             if (DEBUG) Slog.v(TAG, "can't stop client "
                                     + client.getOwnerString() + " since tokens don't match");
