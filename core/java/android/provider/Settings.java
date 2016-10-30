@@ -3672,6 +3672,12 @@ public final class Settings {
          */
         public static final String BATTERY_LIGHT_MEDIUM_COLOR = "battery_light_medium_color";
 
+          /**
+          * Whether to show the negociated charger current in the lockscreen
+          * @hide
+          */
+         public static final String LOCKSCREEN_CHARGING_CURRENT = "lockscreen_charging_current";
+ 
         /**
          * What color to use for the battery LED while charging - full
          * @hide
