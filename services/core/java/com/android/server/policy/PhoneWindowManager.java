@@ -771,13 +771,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private static final int MSG_REQUEST_TRANSIENT_BARS_ARG_STATUS = 0;
     private static final int MSG_REQUEST_TRANSIENT_BARS_ARG_NAVIGATION = 1;
 
-    private CameraManager mCameraManager;
-    private boolean mTorchEnabled;
-    private boolean mIsTorchActive;
-    private boolean mWasTorchActive;
-
     private boolean mClearedBecauseOfForceShow;
     private boolean mTopWindowIsKeyguard;
+
     private class PolicyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -865,9 +861,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             } else if (ActionHandler.INTENT_SCREENSHOT.equals(action)) {
                 mHandler.removeCallbacks(mScreenshotRunnable);
                 mHandler.post(mScreenshotRunnable);
-            } else if (ActionHandler.INTENT_TOGGLE_SCREENRECORD.equals(action)) {
-                mHandler.removeCallbacks(mScreenrecordRunnable);
-                mHandler.post(mScreenrecordRunnable);
+            // } else if (ActionHandler.INTENT_TOGGLE_SCREENRECORD.equals(action)) {
+            //     mHandler.removeCallbacks(mScreenrecordRunnable);
+            //     mHandler.post(mScreenrecordRunnable);
             }
         }
     };
@@ -1893,7 +1889,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         filter = new IntentFilter();
         filter.addAction(ActionHandler.INTENT_SHOW_POWER_MENU);
         filter.addAction(ActionHandler.INTENT_SCREENSHOT);
-        filter.addAction(ActionHandler.INTENT_TOGGLE_SCREENRECORD);
+        // filter.addAction(ActionHandler.INTENT_TOGGLE_SCREENRECORD);
         context.registerReceiver(mDUReceiver, filter);
 
         // monitor for system gestures
