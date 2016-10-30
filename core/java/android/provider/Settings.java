@@ -3730,6 +3730,12 @@ public final class Settings {
          */
         public static final String PROXIMITY_AUTO_SPEAKER_DELAY = "proximity_auto_speaker_delay";
 
+          /**
+          * Whether to show the negociated charger current in the lockscreen
+          * @hide
+          */
+         public static final String LOCKSCREEN_CHARGING_CURRENT = "lockscreen_charging_current";
+ 
         /**
          * Whether the proximity sensor will adjust call to speaker,
          * only while in call (not while ringing on outgoing call)
