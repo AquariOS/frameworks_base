@@ -22,6 +22,8 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Message;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -546,7 +548,17 @@ public class QSPanel extends LinearLayout implements Tunable, Callback {
         void removeTile(TileRecord tile);
         int getOffsetTop(TileRecord tile);
         boolean updateResources();
+        void updateSettings();
 
         void setListening(boolean listening);
+    }
+
+    public void updateSettings() {
+        if (mTileLayout != null) {
+            mTileLayout.updateSettings();
+        }
+        if (mCustomizePanel != null) {
+            mCustomizePanel.updateSettings();
+        }
     }
 }
