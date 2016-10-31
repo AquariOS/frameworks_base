@@ -3598,6 +3598,11 @@ public final class Settings {
          * Beginning of aquarios System Settings Additions
          * @hide
          */
+
+         * Quick Settings number of columns
+         * @hide
+         */
+        public static final String QS_LAYOUT_COLUMNS = "qs_layout_columns";
          
         /**
          * show clear all recents button
