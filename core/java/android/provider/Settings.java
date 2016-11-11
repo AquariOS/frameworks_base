@@ -3582,6 +3582,12 @@ public final class Settings {
         public static final String DOUBLE_TAP_SLEEP_ANYWHERE = "double_tap_sleep_anywhere";
            
         /**
+         * Whether to allow screen record chord to take selectable screenshots
+         * @hide
+         */
+        public static final String SCREENRECORD_CHORD_TYPE = "screenrecord_chord_type";         
+
+        /**
          * Quick Settings Smart Pulldown
          * @hide
          */
@@ -6903,7 +6909,7 @@ public final class Settings {
          * Beginning of aquarios Secure Settings Additions
          * @hide
          */
-
+         
         /**
          * Whether to display the ADB notification.
          * @hide
