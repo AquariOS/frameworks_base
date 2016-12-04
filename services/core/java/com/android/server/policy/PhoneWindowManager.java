@@ -6208,13 +6208,16 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     + " policyFlags=" + Integer.toHexString(policyFlags));
         }
 
+        final boolean isHomeWakeKey = !isScreenOn()
+                && (keyCode == KeyEvent.KEYCODE_HOME);
+
         // Basic policy based on interactive state.
         final boolean isVolumeRockerWake = !isScreenOn()
                 && mVolumeRockerWake
                 && (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN);
         int result;
         boolean isWakeKey = (policyFlags & WindowManagerPolicy.FLAG_WAKE) != 0
-                || event.isWakeKey() || isVolumeRockerWake;
+                || event.isWakeKey() || isHomeWakeKey;
         if (interactive || (isInjected && !isWakeKey)) {
             // When the device is interactive or the key is injected pass the
             // key to the application.
