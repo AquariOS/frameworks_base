@@ -2,6 +2,7 @@
 <!--
      Copyright (C) 2016 The Pure Nexus Project
      Copyright (C) 2016 Flash ROM
+     Copyright (C) 2016 AquariOS
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -28,5 +29,12 @@
     <!-- Battery - text size small -->
     <dimen name="omni_battery_level_text_size_small">12sp</dimen>
     <dimen name="omni_battery_level_text_size">14sp</dimen>
+    
+    <!-- Clear-All recents FAB -->
+    <dimen name="floating_action_button_height">54dp</dimen>
+    <dimen name="floating_action_button_width">54dp</dimen>
+    <dimen name="floating_action_button_translation_z">12dp</dimen>
+    <dimen name="floating_action_button_margin_side">32dp</dimen>
+    <dimen name="floating_action_button_margin_bottom">46dp</dimen>    
 
 </resources>
