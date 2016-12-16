@@ -3908,6 +3908,12 @@ public final class Settings {
         public static final String CUSTOM_CARRIER_LABEL = "custom_carrier_label";
 
         /**
+         * Dynamic Navbar Switch
+         * @hide
+         */
+        public static final String NAV_BAR_DYNAMIC = "nav_bar_dynamic";
+
+        /**
          * The OpenCNAM paid account ID
          * @hide
          */
