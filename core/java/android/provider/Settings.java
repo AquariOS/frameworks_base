@@ -3914,6 +3914,18 @@ public final class Settings {
         public static final String NAV_BAR_DYNAMIC = "nav_bar_dynamic";
 
         /**
+         * Navbar Button Color Switch
+         * @hide
+         */
+        public static final String NAVBAR_TINT_SWITCH = "navbar_tint_switch";
+        
+         /**
+         * Navbar Button Color
+         * @hide
+         */
+        public static final String NAVBAR_BUTTON_COLOR= "navbar_button_color";
+
+        /*
          * The OpenCNAM paid account ID
          * @hide
          */
