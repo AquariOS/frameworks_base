@@ -76,4 +76,5 @@ interface IStatusBarService
     void remTile(in ComponentName tile);
     void clickTile(in ComponentName tile);
     void handleSystemNavigationKey(in int key);
+    void restartUI();
 }
