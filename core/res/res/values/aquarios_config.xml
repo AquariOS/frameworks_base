@@ -58,5 +58,5 @@
     </integer-array>
 
     <!-- Battery level for when "show battery percent only on low battery" is enabled -->
-    <integer name="config_batteryPercentLowOnlyLevel">25</integer>
+    <integer name="config_batteryPercentLowOnlyLevel">20</integer>
 </resources>
