@@ -16,15 +16,36 @@
 
 package com.android.internal.util.aquarios;
 
+import android.Manifest;
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.hardware.input.InputManager;
+import android.hardware.fingerprint.FingerprintManager;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemClock;
 import android.view.IWindowManager;
 import android.view.WindowManagerGlobal;
+import android.view.InputDevice;
+import android.view.KeyCharacterMap;
+import android.view.KeyEvent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.DisplayMetrics;
+import android.view.DisplayInfo;
+import android.view.WindowManager;
+import com.android.internal.R;
+
+import java.util.List;
 
 import com.android.internal.statusbar.IStatusBarService;
 
@@ -35,6 +56,10 @@ public class AquaUtils {
 
     public static final String INTENT_SCREENSHOT = "action_take_screenshot";
     public static final String INTENT_REGION_SCREENSHOT = "action_take_region_screenshot";
+    private static int sDeviceType = -1;
+    private static final int DEVICE_PHONE = 0;
+    private static final int DEVICE_HYBRID = 1;
+    private static final int DEVICE_TABLET = 2;
 
     public static void switchScreenOff(Context ctx) {
         PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
@@ -43,12 +68,180 @@ public class AquaUtils {
         }
     }
 
+
+    public static boolean isPackageInstalled(Context context, String pkg, boolean ignoreState) {
+        if (pkg != null) {
+            try {
+                PackageInfo pi = context.getPackageManager().getPackageInfo(pkg, 0);
+                if (!pi.applicationInfo.enabled && !ignoreState) {
+                    return false;
+                }
+            } catch (NameNotFoundException e) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean isPackageInstalled(Context context, String pkg) {
+        return isPackageInstalled(context, pkg, true);
+    }
+
+    private static int getScreenType(Context context) {
+        if (sDeviceType == -1) {
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            DisplayInfo outDisplayInfo = new DisplayInfo();
+            wm.getDefaultDisplay().getDisplayInfo(outDisplayInfo);
+            int shortSize = Math.min(outDisplayInfo.logicalHeight, outDisplayInfo.logicalWidth);
+            int shortSizeDp = shortSize * DisplayMetrics.DENSITY_DEFAULT
+                    / outDisplayInfo.logicalDensityDpi;
+            if (shortSizeDp < 600) {
+                // 0-599dp: "phone" UI with a separate status & navigation bar
+                sDeviceType =  DEVICE_PHONE;
+            } else if (shortSizeDp < 720) {
+                // 600-719dp: "phone" UI with modifications for larger screens
+                sDeviceType = DEVICE_HYBRID;
+            } else {
+                // 720dp: "tablet" UI with a single combined status & navigation bar
+                sDeviceType = DEVICE_TABLET;
+            }
+        }
+        return sDeviceType;
+    }
+
+    public static boolean isPhone(Context context) {
+        return getScreenType(context) == DEVICE_PHONE;
+    }
+
+    public static boolean isHybrid(Context context) {
+        return getScreenType(context) == DEVICE_HYBRID;
+    }
+
+    public static boolean isTablet(Context context) {
+        return getScreenType(context) == DEVICE_TABLET;
+    }
+
+    public static boolean isWifiOnly(Context context) {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(
+                Context.CONNECTIVITY_SERVICE);
+        return (cm.isNetworkSupported(ConnectivityManager.TYPE_MOBILE) == false);
+    }
+
+    // Check to see if Wifi is connected
+    public static boolean isWifiConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = null;
+        if (cm != null) {
+            activeNetwork = cm.getActiveNetworkInfo();
+        }
+        NetworkInfo wifi = null;
+        if (cm != null) {
+            wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        }
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting() && wifi.isConnected();
+    }
+
+    // Check to see if Mobile data is connected
+    public static boolean isMobileConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = null;
+        if (cm != null) {
+            activeNetwork = cm.getActiveNetworkInfo();
+        }
+        NetworkInfo mobile = null;
+        if (cm != null) {
+            mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        }
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting() && mobile.isConnected();
+    }
+
+    // Check to see if device supports the Fingerprint scanner
+    public static boolean hasFingerprintSupport(Context context) {
+        FingerprintManager fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
+        return context.getApplicationContext().checkSelfPermission(Manifest.permission.USE_FINGERPRINT) == PackageManager.PERMISSION_GRANTED &&
+                (fingerprintManager != null && fingerprintManager.isHardwareDetected());
+    }
+
+    // Check to see if device not only supports the Fingerprint scanner but also if is enrolled
+    public static boolean hasFingerprintEnrolled(Context context) {
+        FingerprintManager fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
+        return context.getApplicationContext().checkSelfPermission(Manifest.permission.USE_FINGERPRINT) == PackageManager.PERMISSION_GRANTED &&
+                (fingerprintManager != null && fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints());
+    }
+
+    // Check to see if device has a camera
+    public static boolean hasCamera(Context context) {
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
+    }
+
+    // Check to see if device supports NFC
+    public static boolean hasNFC(Context context) {
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC);
+    }
+
+    // Check to see if device supports Wifi
+    public static boolean hasWiFi(Context context) {
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WIFI);
+    }
+
+    // Check to see if device supports Bluetooth
+    public static boolean hasBluetooth(Context context) {
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH);
+    }
+
+    // Check to see if device supports an alterative ambient display package
+    public static boolean hasAltAmbientDisplay(Context context) {
+        return context.getResources().getBoolean(com.android.internal.R.bool.config_alt_ambient_display);
+    }
+
     public static boolean deviceHasFlashlight(Context ctx) {
         return ctx.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
 
     public static void toggleCameraFlash() {
         FireActions.toggleCameraFlash();
+    }
+
+    public static ActivityInfo getRunningActivityInfo(Context context) {
+        final ActivityManager am = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        final PackageManager pm = context.getPackageManager();
+
+        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(1);
+        if (tasks != null && !tasks.isEmpty()) {
+            ActivityManager.RunningTaskInfo top = tasks.get(0);
+            try {
+                return pm.getActivityInfo(top.topActivity, 0);
+            } catch (PackageManager.NameNotFoundException e) {
+            }
+        }
+        return null;
+    }
+
+    public static void sendKeycode(int keycode) {
+        long when = SystemClock.uptimeMillis();
+        final KeyEvent evDown = new KeyEvent(when, when, KeyEvent.ACTION_DOWN, keycode, 0,
+                0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
+                KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY,
+                InputDevice.SOURCE_KEYBOARD);
+        final KeyEvent evUp = KeyEvent.changeAction(evDown, KeyEvent.ACTION_UP);
+
+        final Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                InputManager.getInstance().injectInputEvent(evDown,
+                        InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
+            }
+        });
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputManager.getInstance().injectInputEvent(evUp,
+                        InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
+            }
+        }, 20);
     }
 
     public static void takeScreenshot(boolean full) {
