@@ -4546,11 +4546,16 @@ public final class Settings {
          */
         public static final String ANIM_TILE_INTERPOLATOR = "anim_tile_interpolator";
 
+	    /**
+         * Whether to enable the pixel navbar animation
+         * @hide
+         */
+        public static final String PIXEL_NAV_ANIMATION = "pixel_nav_animation";
+
         /**
          * @hide
          */
         public static final String FULL_GESTURE_NAVBAR = "full_gesture_navbar";
-
 
         /**
          * Apps to skip for Pulse
