@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2017 Benzo Rom
+     Copyright (C) 2017 AquariOS
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -26,5 +26,11 @@
 
     <!-- Membar spacing -->
     <dimen name="recents_membar_spacing">12dp</dimen>
+
+    <dimen name="recents_task_view_header_lock_button_padding">48dp</dimen>
+
+    <!-- Network traffic monitor -->
+    <dimen name="net_traffic_multi_text_size">8dp</dimen>
+    <dimen name="net_traffic_txt_img_padding">2dp</dimen>
 
 </resources>
