@@ -558,7 +558,10 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.QS_LAYOUT_COLUMNS),
                     false, this, UserHandle.USER_ALL);
-           resolver.registerContentObserver(Settings.System.getUriFor(
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_LAYOUT_COLUMNS),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.QS_ROWS_PORTRAIT),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -584,6 +587,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 		            false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_WEATHER_TEMP_STYLE),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_QUICKBAR_SCROLL_ENABLED),
                     false, this, UserHandle.USER_ALL);
             update();
         }
@@ -5058,6 +5064,7 @@ mWeatherTempSize, mWeatherTempFontStyle, mWeatherTempColor);
 
     public void onClosingFinished() {
         runPostCollapseRunnables();
+        mHeader.onClosingFinished();
     }
 
     public void onUnlockHintStarted() {
