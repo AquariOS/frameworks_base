@@ -128,11 +128,6 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
     private int mQsPanelOffsetNormal;
     private int mQsPanelOffsetHeader;
 
-    private boolean hasSettingsIcon;
-    private boolean hasEdit;
-    private boolean hasExpandIndicator;
-    private boolean hasMultiUserSwitch;
-
     public QuickStatusBarHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
