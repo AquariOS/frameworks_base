@@ -33,20 +33,21 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
         try {
-            // Start the load average overlay, if activated
-            ContentResolver res = context.getContentResolver();
-            if (Settings.Global.getInt(res, Settings.Global.SHOW_PROCESSES, 0) != 0) {
-                Intent loadavg = new Intent(context, com.android.systemui.LoadAverageService.class);
-                context.startService(loadavg);
-            }
             // Start the cpu info overlay, if activated
+            ContentResolver res = context.getContentResolver();
             if (Settings.Global.getInt(res, Settings.Global.SHOW_CPU, 0) != 0) {
                 Intent cpuinfo = new Intent(context, com.android.systemui.CPUInfoService.class);
                 context.startService(cpuinfo);
             }
 
+            // start the screen state service if activated
+            if (Settings.System.getInt(res, Settings.System.START_SCREEN_STATE_SERVICE, 0) != 0) {
+                Intent screenstate = new Intent(context, com.android.systemui.screenstate.ScreenStateService.class);
+                context.startService(screenstate);
+            }
+
         } catch (Exception e) {
-            Log.e(TAG, "Can't start load average service", e);
+            Log.e(TAG, "Can't start cpuinfo service", e);
         }
     }
 }
