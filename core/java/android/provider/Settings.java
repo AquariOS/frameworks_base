@@ -3582,12 +3582,6 @@ public final class Settings {
         public static final String VOLUME_LINK_NOTIFICATION = "volume_link_notification";        
 
         /**
-         * Enable statusbar double tap gesture on to put device to sleep
-         * @hide
-         */
-        public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
-
-        /**
          * Show or hide clock
          * 0 - hide
          * 1 - show (default)
@@ -3651,13 +3645,12 @@ public final class Settings {
          * @hide
          */
         public static final String STATUSBAR_CLOCK_DATE_POSITION = "statusbar_clock_date_position";
-
+        
         /**
          * Enable statusbar double tap gesture on to put device to sleep
          * @hide
          */
-        public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
-
+        public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";        
 
         /**
          * IMPORTANT: If you add a new public settings you also have to add it to
