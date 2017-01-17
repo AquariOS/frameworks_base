@@ -113,4 +113,7 @@
     <string name="omnijaws_service_disabled">Service disabled</string>
     <string name="omnijaws_package_not_available">OmniJaws not available</string>
     <string name="omnijaws_service_error_marker" translatable="false">*</string>
+
+    <!-- Recents memory bar -->
+    <string name="recents_free_ram">FREE RAM</string>
 </resources>

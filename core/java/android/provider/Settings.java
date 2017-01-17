@@ -3975,6 +3975,13 @@ public final class Settings {
         public static final String DISABLE_DASHBOARD_CONDITIONS = "disable_dashboard_conditions";
 
         /**
+         * Whether to show or hide the edit icon
+         * show the membar in recents
+         *  @hide
+         */
+        public static final String SYSTEMUI_RECENTS_MEM_DISPLAY = "systemui_recents_mem_display";
+
+        /**
          * show clear all recents button
          * @hide
          */
