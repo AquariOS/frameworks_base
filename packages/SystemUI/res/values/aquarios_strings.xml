@@ -111,4 +111,7 @@
     <string name="omnijaws_current_text">Now</string>
     <string name="omnijaws_service_error_long">Error loading weather data</string>
     <string name="omnijaws_service_disabled">Service disabled</string>
+
+    <!-- Recents memory bar -->
+    <string name="recents_free_ram">FREE RAM</string>
 </resources>

@@ -38,6 +38,8 @@
     <dimen name="floating_action_button_translation_z">6dp</dimen>
     <dimen name="floating_action_button_margin_side">48dp</dimen>
     <dimen name="floating_action_button_margin_bottom">62dp</dimen>
+    <!-- Recents memory bar -->
+    <dimen name="recents_membar_spacing">12dp</dimen>
 
     <!-- QS headers -->
     <dimen name="qs_panel_top_offset_normal">80dp</dimen>
@@ -46,4 +48,5 @@
     <!-- QS scroller -->
     <dimen name="qs_scroller_margin">12dp</dimen>
     <dimen name="qs_scroller_min_tile_gap">4dp</dimen>
+
 </resources>
