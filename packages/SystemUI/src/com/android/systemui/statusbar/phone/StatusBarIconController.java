@@ -88,7 +88,6 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
     private boolean mShowClock;
     private int mClockLocation;
     private LinearLayout mCenterClockLayout;
-    private TextView mClock;
     private NetworkTraffic mNetworkTraffic;
 
     private int mIconSize;
@@ -151,7 +150,6 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mCenterClockLayout = (LinearLayout)statusBar.findViewById(R.id.center_clock_layout);
         mCenterClock = (Clock) statusBar.findViewById(R.id.center_clock);
         mLeftClock = (Clock) statusBar.findViewById(R.id.left_clock);
-        mClock = (TextView) statusBar.findViewById(R.id.clock);
         mNetworkTraffic = (NetworkTraffic) statusBar.findViewById(R.id.networkTraffic);
         mDarkModeIconColorSingleTone = context.getColor(R.color.dark_mode_icon_color_single_tone);
         mLightModeIconColorSingleTone = context.getColor(R.color.light_mode_icon_color_single_tone);
