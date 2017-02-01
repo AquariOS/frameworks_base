@@ -164,10 +164,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.lang.reflect.Constructor;
 
-import org.slim.provider.SlimSettings;
-
 import dalvik.system.PathClassLoader;
-
 /**
  * WindowManagerPolicy implementation for the Android phone UI.  This
  * introduces a new method suffix, Lp, for an internal lock of the
@@ -674,8 +671,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
     Display mDisplay;
 
-    private int mShortSizeDp;
-
     private int mDisplayRotation;
 
     int mLandscapeRotation = 0;  // default landscape rotation
@@ -883,21 +878,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.Global.getUriFor(
                     Settings.Global.POLICY_CONTROL), false, this,
-                    UserHandle.USER_ALL);
-            resolver.registerContentObserver(SlimSettings.System.getUriFor(
-                    SlimSettings.System.NAVIGATION_BAR_CAN_MOVE), false, this,
-                    UserHandle.USER_ALL);
-            resolver.registerContentObserver(SlimSettings.System.getUriFor(
-                    SlimSettings.System.NAVIGATION_BAR_HEIGHT), false, this,
-                    UserHandle.USER_ALL);
-            resolver.registerContentObserver(SlimSettings.System.getUriFor(
-                    SlimSettings.System.NAVIGATION_BAR_HEIGHT_LANDSCAPE), false, this,
-                    UserHandle.USER_ALL);
-            resolver.registerContentObserver(SlimSettings.System.getUriFor(
-                    SlimSettings.System.NAVIGATION_BAR_WIDTH), false, this,
-                    UserHandle.USER_ALL);
-            resolver.registerContentObserver(SlimSettings.System.getUriFor(
-                    SlimSettings.System.NAVIGATION_BAR_SHOW), false, this,
                     UserHandle.USER_ALL);
             updateSettings();
         }
@@ -1937,19 +1917,14 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
 
         // SystemUI (status bar) layout policy
-        mShortSizeDp = shortSize * DisplayMetrics.DENSITY_DEFAULT / density;
+        int shortSizeDp = shortSize * DisplayMetrics.DENSITY_DEFAULT / density;
         int longSizeDp = longSize * DisplayMetrics.DENSITY_DEFAULT / density;
 
-        // Allow the navigation bar to move on small devices (phones).
-        mNavigationBarCanMove = SlimSettings.System.getIntForUser(mContext.getContentResolver(),
-                    SlimSettings.System.NAVIGATION_BAR_CAN_MOVE,
-                    mShortSizeDp < 600 ? 1 : 0, UserHandle.USER_CURRENT) == 1;
+        // Allow the navigation bar to move on non-square small devices (phones).
+        mNavigationBarCanMove = width != height && shortSizeDp < 600;
 
-        final int showByDefault = mContext.getResources().getBoolean(
-                    com.android.internal.R.bool.config_showNavigationBar) ? 1 : 0;
-        mHasNavigationBar = SlimSettings.System.getIntForUser(mContext.getContentResolver(),
-                    SlimSettings.System.NAVIGATION_BAR_SHOW, showByDefault,
-                    UserHandle.USER_CURRENT) == 1;
+        mHasNavigationBar = res.getBoolean(com.android.internal.R.bool.config_showNavigationBar);
+
         // Allow a system property to override this. Used by the emulator.
         // See also hasNavigationBar().
         String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
@@ -1980,7 +1955,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         // Only force the default orientation if the screen is xlarge, at least 960dp x 720dp, per
         // http://developer.android.com/guide/practices/screens_support.html#range
-        mForceDefaultOrientation = longSizeDp >= 960 && mShortSizeDp >= 720 &&
+        mForceDefaultOrientation = longSizeDp >= 960 && shortSizeDp >= 720 &&
                 res.getBoolean(com.android.internal.R.bool.config_forceDefaultOrientation) &&
                 // For debug purposes the next line turns this feature off with:
                 // $ adb shell setprop config.override_forced_orient true
@@ -2050,47 +2025,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 updateRotation = true;
                 updateOrientationListenerLp();
             }
-
-            mNavigationBarCanMove = SlimSettings.System.getIntForUser(resolver,
-                    SlimSettings.System.NAVIGATION_BAR_CAN_MOVE,
-                    mShortSizeDp < 600 ? 1 : 0, UserHandle.USER_CURRENT) == 1;
-
-            final int showByDefault = mContext.getResources().getBoolean(
-                    com.android.internal.R.bool.config_showNavigationBar) ? 1 : 0;
-            mHasNavigationBar = SlimSettings.System.getIntForUser(resolver,
-                    SlimSettings.System.NAVIGATION_BAR_SHOW, showByDefault,
-                    UserHandle.USER_CURRENT) == 1;
-
-            // Height of the navigation bar when presented horizontally at bottom
-            mNavigationBarHeightForRotationDefault[mPortraitRotation] =
-            mNavigationBarHeightForRotationDefault[mUpsideDownRotation] =
-                    SlimSettings.System.getIntForUser(
-                        mContext.getContentResolver(), SlimSettings.System.NAVIGATION_BAR_HEIGHT,
-                        mContext.getResources().getDimensionPixelSize(
-                        com.android.internal.R.dimen.navigation_bar_height),
-                        UserHandle.USER_CURRENT);
-            mNavigationBarHeightForRotationDefault[mLandscapeRotation] =
-            mNavigationBarHeightForRotationDefault[mSeascapeRotation] =
-                    SlimSettings.System.getIntForUser(
-                        mContext.getContentResolver(),
-                        SlimSettings.System.NAVIGATION_BAR_HEIGHT_LANDSCAPE,
-                        mContext.getResources()
-                                .getDimensionPixelSize(
-                                    com.android.internal.R.dimen.navigation_bar_height_landscape),
-                        UserHandle.USER_CURRENT);
-
-            // Width of the navigation bar when presented vertically along one side
-            mNavigationBarWidthForRotationDefault[mPortraitRotation] =
-            mNavigationBarWidthForRotationDefault[mUpsideDownRotation] =
-            mNavigationBarWidthForRotationDefault[mLandscapeRotation] =
-            mNavigationBarWidthForRotationDefault[mSeascapeRotation] =
-                    SlimSettings.System.getIntForUser(
-                        mContext.getContentResolver(),
-                        SlimSettings.System.NAVIGATION_BAR_WIDTH,
-                        mContext.getResources()
-                                .getDimensionPixelSize(
-                                    com.android.internal.R.dimen.navigation_bar_width),
-                        UserHandle.USER_CURRENT);
 
             if (mSystemReady) {
                 int pointerLocation = Settings.System.getIntForUser(resolver,
@@ -2460,7 +2394,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mNavigationBarWidthForRotationDefault[mLandscapeRotation] =
         mNavigationBarWidthForRotationDefault[mSeascapeRotation] =
                 res.getDimensionPixelSize(com.android.internal.R.dimen.navigation_bar_width);
-
         if (ALTERNATE_CAR_MODE_NAV_SIZE) {
             // Height of the navigation bar when presented horizontally at bottom
             mNavigationBarHeightForRotationInCarMode[mPortraitRotation] =
