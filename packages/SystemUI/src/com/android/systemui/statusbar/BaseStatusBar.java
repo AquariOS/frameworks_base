@@ -276,7 +276,7 @@ public abstract class BaseStatusBar extends SystemUI implements
 
     protected boolean mVrMode;
 
-    protected Set<String> mNonBlockablePkgs;
+    private Set<String> mNonBlockablePkgs;
 
     @Override  // NotificationData.Environment
     public boolean isDeviceProvisioned() {
@@ -1034,7 +1034,7 @@ public abstract class BaseStatusBar extends SystemUI implements
     }
 
     // The (i) button in the guts that links to the system notification settings for that app
-    protected void startAppNotificationSettingsActivity(String packageName, final int appUid) {
+    private void startAppNotificationSettingsActivity(String packageName, final int appUid) {
         final Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
         intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName);
         intent.putExtra(Settings.EXTRA_APP_UID, appUid);
@@ -1068,7 +1068,7 @@ public abstract class BaseStatusBar extends SystemUI implements
         }, false /* afterKeyguardGone */);
     }
 
-    protected void bindGuts(final ExpandableNotificationRow row) {
+    private void bindGuts(final ExpandableNotificationRow row) {
         row.inflateGuts();
         final StatusBarNotification sbn = row.getStatusBarNotification();
         PackageManager pmUser = getPackageManagerForUser(mContext, sbn.getUser().getIdentifier());
@@ -1138,7 +1138,7 @@ public abstract class BaseStatusBar extends SystemUI implements
         });
     }
 
-    protected void saveImportanceCloseControls(StatusBarNotification sbn,
+    private void saveImportanceCloseControls(StatusBarNotification sbn,
             ExpandableNotificationRow row, NotificationGuts guts, View done) {
         guts.resetFalsingCheck();
         guts.saveImportance(sbn);
