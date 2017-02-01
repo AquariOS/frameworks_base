@@ -62,7 +62,7 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
 
     private static final float EXPAND_INDICATOR_THRESHOLD = .93f;
 
-    protected ActivityStarter mActivityStarter;
+    private ActivityStarter mActivityStarter;
     private NextAlarmController mNextAlarmController;
     private SettingsButton mSettingsButton;
     protected View mSettingsContainer;
