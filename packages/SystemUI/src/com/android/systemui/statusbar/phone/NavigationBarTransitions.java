@@ -27,12 +27,12 @@ import android.view.animation.AccelerateInterpolator;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.systemui.R;
 
-public class NavigationBarTransitions extends BarTransitions {
+public final class NavigationBarTransitions extends BarTransitions {
 
     private final NavigationBarView mView;
     private final IStatusBarService mBarService;
 
-    protected boolean mLightsOut;
+    private boolean mLightsOut;
 
     public NavigationBarTransitions(NavigationBarView view) {
         super(view, R.drawable.nav_background);
