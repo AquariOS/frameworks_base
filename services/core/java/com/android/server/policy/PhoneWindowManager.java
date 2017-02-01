@@ -166,7 +166,7 @@ import java.util.List;
 import java.lang.reflect.Constructor;
 
 import org.slim.framework.internal.policy.HardwareKeyHandler;
-import slim.provider.SlimSettings;
+import org.slim.provider.SlimSettings;
 
 import dalvik.system.PathClassLoader;
 
