@@ -43,11 +43,6 @@ public class TunerActivity extends SettingsDrawerActivity implements
                     : new TunerFragment();
             getFragmentManager().beginTransaction().replace(R.id.content_frame,
                     fragment, TAG_TUNER).commit();
-
-            String extra = getIntent().getStringExtra(TAG_TUNER);
-            if (extra != null) {
-                startPreferenceScreen(fragment, extra, false);
-            }
         }
     }
 
@@ -77,21 +72,14 @@ public class TunerActivity extends SettingsDrawerActivity implements
 
     @Override
     public boolean onPreferenceStartScreen(PreferenceFragment caller, PreferenceScreen pref) {
-        return startPreferenceScreen(caller, pref.getKey(), true);
-    }
-
-    private boolean startPreferenceScreen(PreferenceFragment caller,
-                String key, boolean backStack) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         SubSettingsFragment fragment = new SubSettingsFragment();
         final Bundle b = new Bundle(1);
-        b.putString(PreferenceFragment.ARG_PREFERENCE_ROOT, key);
+        b.putString(PreferenceFragment.ARG_PREFERENCE_ROOT, pref.getKey());
         fragment.setArguments(b);
         fragment.setTargetFragment(caller, 0);
         transaction.replace(R.id.content_frame, fragment);
-        if (backStack) {
-            transaction.addToBackStack("PreferenceFragment");
-        }
+        transaction.addToBackStack("PreferenceFragment");
         transaction.commit();
         return true;
     }
