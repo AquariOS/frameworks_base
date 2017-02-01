@@ -81,6 +81,9 @@ public final class ObexHelper {
     // The minimum allowed max packet size is 255 according to the OBEX specification
     public static final int LOWER_LIMIT_MAX_PACKET_SIZE = 255;
 
+    // The length of OBEX Byte Sequency Header Id according to the OBEX specification
+    public static final int OBEX_BYTE_SEQ_HEADER_LEN = 0x03;
+
     /**
      * Temporary workaround to be able to push files to Windows 7.
      * TODO: Should be removed as soon as Microsoft updates their driver.
