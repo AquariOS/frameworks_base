@@ -33,4 +33,8 @@
 
     <!-- High Brightness Mode Tile -->
     <string name="quick_settings_high_brightness">High brightness</string>
+
+    <!-- accessibility label for button to open running apps prefscreen [CHAR LIMIT=NONE] -->
+    <string name="accessibility_quick_settings_running_services">Open Running Services screen.</string>
+
 </resources>
