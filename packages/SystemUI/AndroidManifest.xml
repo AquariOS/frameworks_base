@@ -164,6 +164,19 @@
 
     <!-- shortcut manager -->
     <uses-permission android:name="android.permission.RESET_SHORTCUT_MANAGER_THROTTLING" />
+    
+    <!-- Reboot -->
+    <uses-permission android:name="android.permission.REBOOT" />
+    <uses-permission android:name="android.permission.RECOVERY" />    
+
+    <!-- DU permissions -->
+    <uses-permission android:name="android.permission.FORCE_STOP_PACKAGES" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    
+    <!-- Screen recording -->
+    <uses-permission android:name="android.permission.ACCESS_SURFACE_FLINGER" />
 
     <application
         android:name=".SystemUIApplication"
@@ -204,6 +217,12 @@
             android:process=":screenshot"
             android:exported="false" />
 
+        <!-- started from PhoneWindowManager
+             TODO: Should have an android:permission attribute -->
+        <service android:name=".purenexus.screenrecord.TakeScreenrecordService"
+            android:process=":screenrecord"
+            android:exported="false" />
+
         <!-- Called from PhoneWindowManager -->
         <receiver android:name=".screenshot.ScreenshotServiceErrorReceiver"
             android:process=":screenshot"
@@ -218,18 +237,12 @@
                 android:exported="true" />
 
         <activity android:name=".tuner.TunerActivity"
-                  android:enabled="false"
                   android:icon="@drawable/tuner"
                   android:theme="@style/TunerSettings"
-                  android:label="@string/system_ui_tuner"
+                  android:label="@string/statusbar_icons_blacklist"
                   android:process=":tuner"
+                  android:parentActivityName="com.aquarios.settings.fragments.StatusBarSettings"
                   android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.settings.action.EXTRA_SETTINGS" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <meta-data android:name="com.android.settings.category"
-                    android:value="com.android.settings.category.system" />
         </activity>
 
         <activity-alias android:name=".DemoMode"
@@ -244,6 +257,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity-alias>
+
+        <activity android:name=".tuner.PowerNotificationControlsActivity"
+                  android:theme="@style/TunerSettings"
+                  android:label="@string/tuner_notification_control"
+                  android:process=":tuner"
+                  android:parentActivityName="com.aquarios.settings.fragments.NotificationMediaSettings"
+                  android:exported="true">
+        </activity>
 
         <!-- Service used by secondary users to register themselves with the system user. -->
         <service android:name=".recents.RecentsSystemUserService"

@@ -461,11 +461,6 @@
     <!-- Title of dialog to confirm rebooting. -->
     <string name="reboot_title">Reboot</string>
 
-    <!-- Reboot Confirmation Dialog.  When the user chooses to reboot the device, there will
-         be a confirmation dialog.  This is the message. -->
-    <string name="reboot_confirm" product="tablet">Your tablet will reboot.</string>
-    <string name="reboot_confirm" product="default">Your phone will reboot.</string>
-
     <!-- Recent Tasks dialog: title
      TODO: this should move to SystemUI.apk, but the code for the old
             recent dialog is still in the framework
@@ -489,10 +484,6 @@
 
     <!-- label for item that turns off power in phone options dialog -->
     <string name="global_action_power_off">Power off</string>
-
-    <!-- label for item that restarts phone in phone options dialog -->
-    <!-- TODO: promote to separate string-->
-    <string name="global_action_restart" translatable="false">@string/sim_restart_button</string>
 
     <!-- label for item that starts emergency call -->
     <string name="global_action_emergency">Emergency</string>
@@ -1418,6 +1409,11 @@
     <string name="permlab_access_notification_policy">access Do Not Disturb</string>
     <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
     <string name="permdesc_access_notification_policy">Allows the app to read and write Do Not Disturb configuration.</string>
+
+    <!-- Title of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
+    <string name="permlab_modifyOverlays">modify theme overlays</string>
+    <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
+    <string name="permdesc_modifyOverlays">Allows the app to make modifications to theme overlays using OverlayManagerService</string>
 
     <!-- Policy administration -->
 
