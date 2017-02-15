@@ -3780,13 +3780,6 @@ public final class Settings {
         
         /**
          * What color to use for the battery LED while charging - low
-         * Change fonts for the system lockscreen clock widget
-         * @hide
-         */
-        public static final String LOCK_CLOCK_FONTS = "lock_clock_fonts";
-
-        /**
-         * This preference enables showing the power menu on LockScreen.
          * @hide
          */
         public static final String BATTERY_LIGHT_LOW_COLOR = "battery_light_low_color";
