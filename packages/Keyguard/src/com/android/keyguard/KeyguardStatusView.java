@@ -47,7 +47,8 @@ import com.android.internal.widget.LockPatternUtils;
 
 import java.util.Locale;
 
-public class KeyguardStatusView extends GridLayout {
+public class KeyguardStatusView extends GridLayout implements
+        WeatherController.Callback  {
     private static final boolean DEBUG = KeyguardConstants.DEBUG;
     private static final String TAG = "KeyguardStatusView";
 
