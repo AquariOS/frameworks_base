@@ -2319,12 +2319,12 @@ public abstract class BaseStatusBar extends SystemUI implements
     }
 
     private void hideWeatherPanelIfNecessary(int visibleNotifications, int maxKeyguardNotifications) {
-        final ContentResolver resolver = mContext.getContentResolver();
+                 mContext.getContentResolver();
         int notifications = visibleNotifications;
         if (mKeyguardIconOverflowContainer.getIconsView().getChildCount() > 0) {
             notifications += 1;
         }
-        Settings.System.putInt(resolver,
+        Settings.System.putInt(mContext.getContentResolver(),
                 Settings.System.LOCK_SCREEN_VISIBLE_NOTIFICATIONS, notifications);
         maxKeyguardNotifications = getMaxKeyguardNotifications(true);
     }
