@@ -3606,6 +3606,20 @@ public final class Settings {
         public static final String QS_LAYOUT_COLUMNS = "qs_layout_columns";
 
         /**
+         * Number of rows used for the Quick Settings (portrait)
+         *
+         * @hide
+         */
+        public static final String QS_ROWS_PORTRAIT = "qs_rows_portrait";
+
+        /**
+         * Number of rows used for the Quick Settings (landscape)
+         *
+         * @hide
+         */
+        public static final String QS_ROWS_LANDSCAPE = "qs_rows_landscape";
+
+        /**
          * Whether to use the custom status bar header or not
          * @hide
          */
@@ -4164,6 +4178,12 @@ public final class Settings {
          * @hide
          */
         public static final String STATUSBAR_BATTERY_BAR_BLEND_COLORS_REVERSE = "battery_bar_blend_color_reverse";
+
+        /**
+         * Unlock keystore with fingerprint after reboot
+         * @hide
+         */
+        public static final String FP_UNLOCK_KEYSTORE = "fp_unlock_keystore";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -7219,6 +7239,12 @@ public final class Settings {
          * @hide
          */
         public static final String ADB_PORT = "adb_port";
+
+        /**
+         * Whether to use one tap QS tile action to enable or disable mobile data, wifi, and bluetooth
+         * @hide
+         */
+        public static final String QS_EASY_TOGGLE = "qs_easy_toggle";
 
         /**
          * This are the settings to be backed up.
