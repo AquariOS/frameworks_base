@@ -13227,6 +13227,12 @@ public final class Settings {
         public static final String ALLOW_SIGNATURE_FAKE = "allow_signature_fake";
 
         /**
+         * The TCP/IP port to run ADB on, or 0 for USB
+         * @hide
+         */
+        public static final String ADB_OVER_WIRELESS_NETWORK = "adb_over_wireless_network";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
