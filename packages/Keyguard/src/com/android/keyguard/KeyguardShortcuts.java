@@ -33,10 +33,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.android.internal.util.aosip.AppHelper;
-import com.android.internal.util.aosip.ActionHelper;
-import com.android.internal.util.aosip.ActionConfig;
-import com.android.internal.util.aosip.Action;
+import com.android.internal.util.aquarios.AppHelper;
+import com.android.internal.util.aquarios.ActionHelper;
+import com.android.internal.util.aquarios.ActionConfig;
+import com.android.internal.util.aquarios.Action;
 import com.android.internal.widget.LockPatternUtils;
 
 import com.android.keyguard.R;

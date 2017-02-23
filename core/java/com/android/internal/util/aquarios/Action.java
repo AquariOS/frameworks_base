@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package com.android.internal.util.aosip;
+package com.android.internal.util.aquarios;
 
 import android.app.Activity;
 import android.app.ActivityManagerNative;
