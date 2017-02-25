@@ -4607,5 +4607,7 @@ message MetricsEvent {
 
     // AquariOS custom constants
     AQUA = 1400;
+    OMNI_QS_WEATHER = 1401;
+    OMNI_QS_WEATHER_DETAILS = 1402;
   }
 }
