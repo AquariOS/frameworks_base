@@ -127,7 +127,6 @@ import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.LinearLayout;
 import android.text.SpannableString;
 import android.text.TextUtils;
 
@@ -164,7 +163,6 @@ import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.navigation.NavigationController;
 import com.android.systemui.navigation.Navigator;
 import com.android.systemui.qs.QSContainer;
-import com.android.systemui.omni.BatteryViewManager;
 import com.android.systemui.qs.QSPanel;
 import com.android.systemui.recents.ScreenPinningRequest;
 import com.android.systemui.recents.events.EventBus;
@@ -467,9 +465,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
     int[] mAbsPos = new int[2];
     ArrayList<Runnable> mPostCollapseRunnables = new ArrayList<>();
-
-    // omni additions
-    private BatteryViewManager mBatteryViewManager;
 
     private boolean mAutomaticBrightness;
     private boolean mBrightnessControl;
@@ -1226,6 +1221,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         // set the initial view visibility
         setAreThereNotifications();
 
+        createIconController();
+
         // Background thread for any controllers that need it.
         mHandlerThread = new HandlerThread(TAG, Process.THREAD_PRIORITY_BACKGROUND);
         mHandlerThread.start();
@@ -1247,12 +1244,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 // noop
             }
         });
-        
-        // must be before StatusBarIconController
-        LinearLayout batteryContainer = (LinearLayout) mStatusBarView.findViewById(R.id.battery_container);
-        mBatteryViewManager = new BatteryViewManager(mContext, batteryContainer, mStatusBarView.getBarTransitions(), null);
-
-        createIconController();
 
         mNetworkController = new NetworkControllerImpl(mContext, mHandlerThread.getLooper());
         mNetworkController.setUserSetupComplete(mUserSetup);
@@ -1359,9 +1350,8 @@ mWeatherTempSize, mWeatherTempFontStyle, mWeatherTempColor);
         mKeyguardStatusBar.setUserSwitcherController(mUserSwitcherController);
         mUserInfoController.reloadUserInfo();
 
-        mBatteryViewManager.setBatteryController(mBatteryController);
-        mHeader.setBatteryController(mBatteryController);
-        mKeyguardStatusBar.setBatteryController(mBatteryController);
+        ((BatteryMeterView) mStatusBarView.findViewById(R.id.battery)).setBatteryController(
+                mBatteryController);
 
         mReportRejectedTouch = mStatusBarWindow.findViewById(R.id.report_rejected_touch);
         if (mReportRejectedTouch != null) {
@@ -4202,7 +4192,6 @@ mWeatherTempSize, mWeatherTempFontStyle, mWeatherTempColor);
         mLockscreenWallpaper.setCurrentUser(newUserId);
         mScrimController.setCurrentUser(newUserId);
         updateMediaMetaData(true, false);
-        mBatteryViewManager.update();
         mStatusBarHeaderMachine.updateEnablement();
     }
 
@@ -5691,9 +5680,5 @@ mWeatherTempSize, mWeatherTempFontStyle, mWeatherTempColor);
                 }
             }
         }
-    }
-
-    protected BatteryViewManager getBatteryViewManager() {
-        return mBatteryViewManager;
     }
 }

@@ -22,13 +22,6 @@
 
     <!-- Network traffic monitor multi-line text size -->
     <dimen name="net_traffic_multi_text_size">9dp</dimen>
-
-    <!-- Battery - keyguard shortcut item margin  -->
-    <dimen name="keyguard_shortcut_item_margin">10dp</dimen>
-
-    <!-- Battery - text size small -->
-    <dimen name="omni_battery_level_text_size_small">12sp</dimen>
-    <dimen name="omni_battery_level_text_size">14sp</dimen>
     
     <!-- Clear-All recents FAB -->
     <dimen name="floating_action_button_height">56dp</dimen>
@@ -40,5 +33,6 @@
     <!-- QS headers -->
     <dimen name="qs_panel_top_offset_normal">80dp</dimen>
     <dimen name="qs_panel_top_offset_header">110dp</dimen>
+    <dimen name="battery_level_text_size_small">12sp</dimen>
 
 </resources>
