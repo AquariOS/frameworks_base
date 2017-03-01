@@ -75,4 +75,8 @@
          For example, a device with Home, Back and Menu keys would set this
          config to 7. -->
     <integer name="config_deviceHardwareKeys">64</integer>          
+
+    <!-- Wether doze feature is enabled by default in settings. -->
+    <bool name="config_doze_enabled_by_default">true</bool>
+
 </resources>

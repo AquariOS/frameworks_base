@@ -102,4 +102,8 @@
   <java-symbol type="drawable" name="ic_shortcut_action_ring_vib_silent" />
   <java-symbol type="drawable" name="ic_shortcut_action_screenshot" />
   <java-symbol type="drawable" name="ic_shortcut_action_search" />
+
+  <!-- Doze mode -->
+  <java-symbol type="bool" name="config_doze_enabled_by_default" />
+
 </resources>
