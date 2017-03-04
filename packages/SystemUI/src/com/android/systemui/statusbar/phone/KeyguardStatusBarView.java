@@ -19,13 +19,17 @@ package com.android.systemui.statusbar.phone;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -33,12 +37,11 @@ import com.android.systemui.BatteryMeterView;
 import com.android.systemui.Interpolators;
 import com.android.systemui.R;
 import com.android.systemui.qs.QSPanel;
-import com.android.systemui.omni.AbstractBatteryView;
-import com.android.systemui.omni.BatteryViewManager;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.KeyguardUserSwitcher;
 import com.android.systemui.statusbar.policy.UserInfoController;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
+import com.android.systemui.tuner.TunerService;
 
 import java.text.NumberFormat;
 
@@ -46,7 +49,12 @@ import java.text.NumberFormat;
  * The header group on Keyguard.
  */
 public class KeyguardStatusBarView extends RelativeLayout
-        implements BatteryController.BatteryStateChangeCallback {
+        implements BatteryController.BatteryStateChangeCallback, TunerService.Tunable {
+			
+	private static final String STATUS_BAR_SHOW_BATTERY_PERCENT =		
+            Settings.Secure.STATUS_BAR_SHOW_BATTERY_PERCENT;
+    private static final String TEXT_CHARGING_SYMBOL =
+            Settings.Secure.TEXT_CHARGING_SYMBOL;
 
     private boolean mBatteryCharging;
     private boolean mKeyguardUserSwitcherShowing;
@@ -56,7 +64,7 @@ public class KeyguardStatusBarView extends RelativeLayout
     private View mSystemIconsSuperContainer;
     private MultiUserSwitch mMultiUserSwitch;
     private ImageView mMultiUserAvatar;
-    //private TextView mBatteryLevel;
+    private TextView mBatteryLevel;
 
     private BatteryController mBatteryController;
     private KeyguardUserSwitcher mKeyguardUserSwitcher;
@@ -65,7 +73,13 @@ public class KeyguardStatusBarView extends RelativeLayout
     private int mSystemIconsSwitcherHiddenExpandedMargin;
     private int mSystemIconsBaseMargin;
     private View mSystemIconsContainer;
-    private BatteryViewManager mBatteryViewManager;
+    
+    private boolean mShowBatteryText;
+    private boolean mForceBatteryText;
+    private boolean mForceChargeBatteryText;
+    private int mTextChargingSymbol;
+    private int currentLevel;
+    private boolean isPlugged;
 
     public KeyguardStatusBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -78,12 +92,10 @@ public class KeyguardStatusBarView extends RelativeLayout
         mSystemIconsContainer = findViewById(R.id.system_icons_container);
         mMultiUserSwitch = (MultiUserSwitch) findViewById(R.id.multi_user_switch);
         mMultiUserAvatar = (ImageView) findViewById(R.id.multi_user_avatar);
-        //mBatteryLevel = (TextView) findViewById(R.id.battery_level);
+        mBatteryLevel = (TextView) findViewById(R.id.battery_level);
         mCarrierLabel = (TextView) findViewById(R.id.keyguard_carrier_text);
         loadDimens();
         updateUserSwitcher();
-        LinearLayout batteryContainer = (LinearLayout) findViewById(R.id.battery_container);
-        mBatteryViewManager = new BatteryViewManager(mContext, batteryContainer, null, null);
     }
 
     @Override
@@ -117,6 +129,17 @@ public class KeyguardStatusBarView extends RelativeLayout
         lp.height = getResources().getDimensionPixelSize(
                 R.dimen.status_bar_height);
         mSystemIconsContainer.setLayoutParams(lp);
+
+        lp = (MarginLayoutParams) mBatteryLevel.getLayoutParams();
+        lp.setMarginStart(
+                getResources().getDimensionPixelSize(R.dimen.header_battery_margin_keyguard));
+        mBatteryLevel.setLayoutParams(lp);
+        mBatteryLevel.setPaddingRelative(mBatteryLevel.getPaddingStart(),
+                mBatteryLevel.getPaddingTop(),
+                getResources().getDimensionPixelSize(R.dimen.battery_level_padding_end),
+                mBatteryLevel.getPaddingBottom());
+        mBatteryLevel.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimensionPixelSize(R.dimen.battery_level_text_size));
 
         // Respect font size setting.
         mCarrierLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX,
@@ -160,7 +183,10 @@ public class KeyguardStatusBarView extends RelativeLayout
                 mMultiUserSwitch.setVisibility(View.GONE);
             }
         }
-    }
+
+        mBatteryLevel.setVisibility(
+                (mBatteryCharging && mForceChargeBatteryText) || mShowBatteryText || mForceBatteryText ? View.VISIBLE : View.GONE);
+        }
 
     private void updateSystemIconsLayoutParams() {
         RelativeLayout.LayoutParams lp =
@@ -184,9 +210,11 @@ public class KeyguardStatusBarView extends RelativeLayout
         }
         mBatteryListening = listening;
         if (mBatteryListening) {
+            TunerService.get(getContext()).addTunable(this, STATUS_BAR_SHOW_BATTERY_PERCENT, TEXT_CHARGING_SYMBOL);
             mBatteryController.addStateChangedCallback(this);
         } else {
             mBatteryController.removeStateChangedCallback(this);
+            TunerService.get(getContext()).removeTunable(this);
         }
     }
 
@@ -199,7 +227,7 @@ public class KeyguardStatusBarView extends RelativeLayout
 
     public void setBatteryController(BatteryController batteryController) {
         mBatteryController = batteryController;
-        mBatteryViewManager.setBatteryController(mBatteryController);
+        ((BatteryMeterView) findViewById(R.id.battery)).setBatteryController(batteryController);
     }
 
     public void setUserSwitcherController(UserSwitcherController controller) {
@@ -222,10 +250,33 @@ public class KeyguardStatusBarView extends RelativeLayout
 
     @Override
     public void onBatteryLevelChanged(int level, boolean pluggedIn, boolean charging) {
+        currentLevel = level;
+        isPlugged = pluggedIn;
+        updateChargingSymbol(currentLevel, isPlugged);
         boolean changed = mBatteryCharging != charging;
         mBatteryCharging = charging;
         if (changed) {
             updateVisibilities();
+        }
+    }
+
+    private void updateChargingSymbol(int level, boolean pluggedIn) {
+        mTextChargingSymbol = Settings.Secure.getInt(getContext().getContentResolver(),
+                TEXT_CHARGING_SYMBOL, 0);
+        if (pluggedIn) {
+            switch (mTextChargingSymbol) {
+                case 1:
+                    mBatteryLevel.setText("⚡️" + NumberFormat.getPercentInstance().format((double) level / 100.0));
+                    break;
+                case 2:
+                    mBatteryLevel.setText("~" + NumberFormat.getPercentInstance().format((double) level / 100.0));
+                    break;
+                default:
+                    mBatteryLevel.setText(NumberFormat.getPercentInstance().format((double) level / 100.0));
+                    break;
+            }
+        } else {
+            mBatteryLevel.setText(NumberFormat.getPercentInstance().format((double) level / 100.0));
         }
     }
 
@@ -312,5 +363,23 @@ public class KeyguardStatusBarView extends RelativeLayout
     @Override
     public boolean hasOverlappingRendering() {
         return false;
+    }
+
+    @Override
+    public void onTuningChanged(String key, String newValue) {
+        switch (key) {
+            case STATUS_BAR_SHOW_BATTERY_PERCENT:
+                mShowBatteryText = newValue == null ? false : Integer.parseInt(newValue) == 2;
+                mForceBatteryText = Settings.Secure.getInt(getContext().getContentResolver(),
+                        Settings.Secure.STATUS_BAR_BATTERY_STYLE, 2) == 6 ? true : false;
+                mForceChargeBatteryText = Settings.Secure.getInt(getContext().getContentResolver(),
+                        Settings.Secure.FORCE_CHARGE_BATTERY_TEXT, 1) == 1 ? true : false;
+                updateVisibilities();
+            case TEXT_CHARGING_SYMBOL:
+                updateChargingSymbol(currentLevel, isPlugged);
+                break;
+            default:
+                break;
+        }
     }
 }
