@@ -85,6 +85,10 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
     private NetworkTraffic mNetworkTraffic;
     private TextView mCarrierLabel;
 
+    // Statusbar weather
+    private TextView mWeatherTextView;
+    private ImageView mWeatherImageView;
+
     private int mIconSize;
     private int mIconHPadding;
 
@@ -152,6 +156,8 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mClockController = new ClockController(statusBar, mNotificationIcons, mHandler);
         mCenterClockLayout = statusBar.findViewById(R.id.center_clock_layout);
         mBatteryLevelView = (BatteryLevelTextView) statusBar.findViewById(R.id.battery_level);
+        mWeatherTextView = (TextView) statusBar.findViewById(R.id.weather_temp);
+        mWeatherImageView = (ImageView) statusBar.findViewById(R.id.weather_image);
         loadDimens();
 
         TunerService.get(mContext).addTunable(this, ICON_BLACKLIST);
@@ -552,6 +558,8 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mNetworkTraffic.setDarkIntensity(mDarkIntensity);
         mCarrierLabel.setTextColor(getTint(mTintArea, mCarrierLabel, mIconTint));
         mBatteryLevelView.setTextColor(getTint(mTintArea, mBatteryLevelView, mIconTint));
+        mWeatherTextView.setTextColor(mIconTint);
+        mWeatherImageView.setImageTintList(ColorStateList.valueOf(mIconTint));
     }
 
     public void appTransitionPending() {
