@@ -72,6 +72,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private View mClock;
     private View mLeftClock;
     private View mCenterClock;
+    private View mWeather, mWeatherImage, mWeatherRight, mWeatherImageRight;
     private LinearLayout mCenterClockLayout;
 
     private SettingsObserver mSettingsObserver;
@@ -161,6 +162,10 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         mLeftClock = mStatusBar.findViewById(R.id.left_clock);
         mCenterClockLayout = (LinearLayout) mStatusBar.findViewById(R.id.center_clock_layout);
         mCenterClock = mStatusBar.findViewById(R.id.center_clock);
+        mWeather = mStatusBar.findViewById(R.id.weather_temp);
+        mWeatherImage = mStatusBar.findViewById(R.id.weather_image);
+        mWeatherRight = mStatusBar.findViewById(R.id.weather_temp_right);
+        mWeatherImageRight = mStatusBar.findViewById(R.id.weather_image_right);
         Dependency.get(DarkIconDispatcher.class).addDarkReceiver(mSignalClusterView);
         // Default to showing until we know otherwise.
         showSystemIconArea(false);
@@ -264,6 +269,10 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     public void hideSystemIconArea(boolean animate) {
         animateHide(mBatteryBar, animate);
+        animateHide(mWeather, animate);
+        animateHide(mWeatherImage, animate);
+        animateHide(mWeatherRight, animate);
+        animateHide(mWeatherImageRight, animate);
         animateHide(mSystemIconArea, animate);
         if (((Clock)mCenterClock).isEnabled()) {
         animateHide(mCenterClockLayout, animate);
@@ -271,8 +280,12 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     public void showSystemIconArea(boolean animate) {
-        animateShow(mBatteryBar, animate);
         animateShow(mSystemIconArea, animate);
+        animateShow(mWeatherImageRight, animate);
+        animateShow(mWeatherRight, animate);
+        animateShow(mWeatherImage, animate);
+        animateShow(mWeather, animate);
+        animateShow(mBatteryBar, animate);
         if (((Clock)mCenterClock).isEnabled()) {
         animateShow(mCenterClockLayout, animate);
         }
