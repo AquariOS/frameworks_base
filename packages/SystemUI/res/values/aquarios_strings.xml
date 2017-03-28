@@ -52,4 +52,17 @@
     <!-- Path data for Solid battery -->
     <string name="battery_solid_full" translatable="false">M 12 2 C 17.5228474983 2 22 6.47715250169 22 12 C 22 17.5228474983 17.5228474983 22 12 22 C 6.47715250169 22 2 17.5228474983 2 12 C 2 6.47715250169 6.47715250169 2 12 2 Z</string>
     <string name="battery_solid_empty" translatable="false">M 12 12 C 12 12 12 12 12 12 C 12 12 12 12 12 12 C 12 12 12 12 12 12 C 12 12 12 12 12 12 Z</string>
+
+    <!-- Advance location quick setting tile -->
+    <string name="accessibility_quick_settings_location_battery_saving">Location reporting: battery saving mode.</string>
+    <string name="accessibility_quick_settings_location_gps_only">Location reporting: sensors only mode.</string>
+    <string name="accessibility_quick_settings_location_high_accuracy">Location reporting: high accuracy mode.</string>
+    <string name="accessibility_quick_settings_location_changed_battery_saving">Location reporting changed to battery saving mode.</string>
+    <string name="accessibility_quick_settings_location_changed_gps_only">Location reporting changed to sensors only mode.</string>
+    <string name="accessibility_quick_settings_location_changed_high_accuracy">Location reporting changed to high accuracy mode.</string>
+    <string name="quick_settings_location_detail_title">Location mode</string>
+    <string name="quick_settings_location_battery_saving_label">Battery saving</string>
+    <string name="quick_settings_location_gps_only_label">Device only</string>
+    <string name="quick_settings_location_high_accuracy_label">High accuracy</string>
+    <string name="quick_settings_location_off_custom_label">Location</string>
 </resources>
