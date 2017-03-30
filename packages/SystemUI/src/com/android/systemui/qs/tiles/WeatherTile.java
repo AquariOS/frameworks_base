@@ -71,7 +71,7 @@ public class WeatherTile extends QSTile<QSTile.BooleanState> implements OmniJaws
 
     @Override
     public int getMetricsCategory() {
-        return MetricsEvent.TAVERN;
+        return MetricsEvent.AQUARIOS;
     }
 
     @Override
@@ -188,7 +188,7 @@ public class WeatherTile extends QSTile<QSTile.BooleanState> implements OmniJaws
 
         @Override
         public int getMetricsCategory() {
-            return MetricsEvent.TAVERN;
+            return MetricsEvent.AQUARIOS;
         }
 
         @Override
