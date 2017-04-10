@@ -3671,6 +3671,12 @@ public final class Settings {
          */
 
         /**
+         * whether to enable torch on lockscreen
+         * @hide
+         */
+        public static final String KEYGUARD_TOGGLE_TORCH = "keyguard_toggle_torch";
+
+        /**
          * Override and forcefully disable the fullscreen keyboard
          * @hide
          */
