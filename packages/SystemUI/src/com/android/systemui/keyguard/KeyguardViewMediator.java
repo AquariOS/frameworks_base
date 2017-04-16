@@ -1791,7 +1791,7 @@ public class KeyguardViewMediator extends SystemUI {
                 playSounds(false);
             }
 
-			boolean wakeAndUnlocking = mWakeAndUnlocking;
+            boolean wakeAndUnlocking = mWakeAndUnlocking;
             mWakeAndUnlocking = false;
             setShowingLocked(false);
             if (wakeAndUnlocking) {
