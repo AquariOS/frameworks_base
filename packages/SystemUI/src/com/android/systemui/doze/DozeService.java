@@ -19,7 +19,6 @@ package com.android.systemui.doze;
 import android.app.ActivityManager;
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -47,11 +46,8 @@ import android.view.Display;
 import com.android.internal.hardware.AmbientDisplayConfiguration;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.MetricsProto.MetricsEvent;
-import com.android.systemui.R;
 import com.android.systemui.SystemUIApplication;
 import com.android.systemui.statusbar.phone.DozeParameters;
-
-import slim.provider.SlimSettings;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -79,8 +75,6 @@ public class DozeService extends DreamService {
     private SensorManager mSensorManager;
     private TriggerSensor[] mSensors;
     private TriggerSensor mPickupSensor;
-    private TriggerSensor mSigMotionSensor;
-//    private TriggerSensor mDoubleTapSensor;
     private PowerManager mPowerManager;
     private PowerManager.WakeLock mWakeLock;
     private UiModeManager mUiModeManager;
@@ -93,12 +87,6 @@ public class DozeService extends DreamService {
     private long mNotificationPulseTime;
 
     private AmbientDisplayConfiguration mConfig;
-
-    private boolean mDozeEnabled;
-    private boolean mDozeTriggerPickup;
-    private boolean mDozeTriggerSigmotion;
-    private boolean mDozeTriggerNotification;
-//    private boolean mDozeTriggerDoubleTap;
 
     public DozeService() {
         if (DEBUG) Log.d(mTag, "new DozeService()");
@@ -142,7 +130,7 @@ public class DozeService extends DreamService {
         mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
         mConfig = new AmbientDisplayConfiguration(mContext);
         mSensors = new TriggerSensor[] {
-                mSigMotionSensor = new TriggerSensor(
+                new TriggerSensor(
                         mSensorManager.getDefaultSensor(Sensor.TYPE_SIGNIFICANT_MOTION),
                         null /* setting */,
                         mDozeParameters.getPulseOnSigMotion(),
@@ -153,7 +141,6 @@ public class DozeService extends DreamService {
                         Settings.Secure.DOZE_PULSE_ON_PICK_UP,
                         mConfig.pulseOnPickupAvailable(), mDozeParameters.getVibrateOnPickup(),
                         DozeLog.PULSE_REASON_SENSOR_PICKUP),
-//                mDoubleTapSensor = new TriggerSensor(
                 new TriggerSensor(
                         findSensorWithType(mConfig.doubleTapSensorType()),
                         Settings.Secure.DOZE_PULSE_ON_DOUBLE_TAP, true,
@@ -196,10 +183,8 @@ public class DozeService extends DreamService {
             return;
         }
 
-        updateDozeSettings();
-
         mDreaming = true;
-        listenForPulseSignals(mDozeEnabled);
+        listenForPulseSignals(true);
 
         // Ask the host to get things ready to start dozing.
         // Once ready, we call startDozing() at which point the CPU may suspend
@@ -329,39 +314,10 @@ public class DozeService extends DreamService {
     private void listenForPulseSignals(boolean listen) {
         if (DEBUG) Log.d(mTag, "listenForPulseSignals: " + listen);
         for (TriggerSensor s : mSensors) {
-            if ((s == mPickupSensor && !mDozeTriggerPickup) ||
-                    (s == mSigMotionSensor && !mDozeTriggerSigmotion)    ) {
-//                    (s == mSigMotionSensor && !mDozeTriggerSigmotion) ||
-//                    (s == mDoubleTapSensor && !mDozeTriggerDoubleTap)    ) {
-                s.setListening(false);
-                continue;
-            }
             s.setListening(listen);
         }
         listenForBroadcasts(listen);
-        if (mDozeTriggerNotification) {
-            listenForNotifications(listen);
-        }
-    }
-
-    private void updateDozeSettings() {
-        ContentResolver resolver = mContext.getContentResolver();
-
-        // Get preferences
-        mDozeEnabled = (Settings.Secure.getInt(resolver,
-                Settings.Secure.DOZE_ENABLED, 1) == 1);
-        mDozeTriggerPickup = (SlimSettings.System.getIntForUser(resolver,
-                SlimSettings.System.DOZE_TRIGGER_PICKUP, 1,
-                UserHandle.USER_CURRENT) == 1);
-        mDozeTriggerSigmotion = (SlimSettings.System.getIntForUser(resolver,
-                SlimSettings.System.DOZE_TRIGGER_SIGMOTION, 1,
-                UserHandle.USER_CURRENT) == 1);
-        mDozeTriggerNotification = (SlimSettings.System.getIntForUser(resolver,
-                SlimSettings.System.DOZE_TRIGGER_NOTIFICATION, 1,
-                UserHandle.USER_CURRENT) == 1);
-//        mDozeTriggerDoubleTap = (SlimSettings.System.getIntForUser(resolver,
-//                SlimSettings.System.DOZE_TRIGGER_DOUBLETAP, 1,
-//                UserHandle.USER_CURRENT) == 1);
+        listenForNotifications(listen);
     }
 
     private void reregisterAllSensors() {

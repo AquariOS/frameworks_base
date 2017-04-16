@@ -23,10 +23,8 @@ import com.android.server.lights.LightsManager;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
-import android.database.ContentObserver;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -40,8 +38,6 @@ import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.os.Trace;
-import android.os.UserHandle;
-import android.provider.Settings;
 import android.util.MathUtils;
 import android.util.Slog;
 import android.util.Spline;
@@ -50,8 +46,6 @@ import android.view.Display;
 import android.view.WindowManagerPolicy;
 
 import java.io.PrintWriter;
-
-import slim.provider.SlimSettings;
 
 /**
  * Controls the power state of the display.
@@ -143,7 +137,7 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
     private Sensor mProximitySensor;
 
     // The doze screen brightness.
-    private int mScreenBrightnessDozeConfig;
+    private final int mScreenBrightnessDozeConfig;
 
     // The dim screen brightness.
     private final int mScreenBrightnessDimConfig;
@@ -265,10 +259,6 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
     private ObjectAnimator mColorFadeOffAnimator;
     private RampAnimator<DisplayPowerState> mScreenBrightnessRampAnimator;
 
-    private float mDozeBrightnessScale = -0.01f;
-    private final int mDozeBrightnessDefault;
-    private final int mMaxBrightness;
-
     /**
      * Creates the display power controller.
      */
@@ -289,17 +279,8 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
         final int screenBrightnessSettingMinimum = clampAbsoluteBrightness(resources.getInteger(
                 com.android.internal.R.integer.config_screenBrightnessSettingMinimum));
 
-        // Settings observer
-        SettingsObserver observer = new SettingsObserver(mHandler);
-        observer.observe();
-
-        mDozeBrightnessDefault = resources.getInteger(
-                com.android.internal.R.integer.config_screenBrightnessDoze);
-        mMaxBrightness = resources.getInteger(
-                com.android.internal.R.integer.config_screenBrightnessSettingMaximum);
-        mScreenBrightnessDozeConfig = clampAbsoluteBrightness(
-                (mDozeBrightnessScale == -0.01f) ? mDozeBrightnessDefault
-                : (int) (mDozeBrightnessScale * mMaxBrightness));
+        mScreenBrightnessDozeConfig = clampAbsoluteBrightness(resources.getInteger(
+                com.android.internal.R.integer.config_screenBrightnessDoze));
 
         mScreenBrightnessDimConfig = clampAbsoluteBrightness(resources.getInteger(
                 com.android.internal.R.integer.config_screenBrightnessDim));
@@ -433,44 +414,6 @@ final class DisplayPowerController implements AutomaticBrightnessController.Call
         }
 
     }
-        /**
-         * Settingsobserver to take care of the user settings.
-         */
-        private class SettingsObserver extends ContentObserver {
-            SettingsObserver(Handler handler) {
-                super(handler);
-            }
-
-            void observe() {
-                ContentResolver resolver = mContext.getContentResolver();
-                resolver.registerContentObserver(SlimSettings.System.getUriFor(
-                        SlimSettings.System.DOZE_BRIGHTNESS),
-                        false, this, UserHandle.USER_ALL);
-                update();
-            }
-
-            @Override
-            public void onChange(boolean selfChange) {
-                super.onChange(selfChange);
-                update();
-            }
-
-            public void update() {
-                ContentResolver resolver = mContext.getContentResolver();
-
-                // Get doze brightness
-                mDozeBrightnessScale = SlimSettings.System.getFloatForUser(resolver,
-                        SlimSettings.System.DOZE_BRIGHTNESS,
-                        -0.01f, UserHandle.USER_CURRENT);
-                // do not allow zero brightness
-                if (mDozeBrightnessScale == 0.0f) {
-                    mDozeBrightnessScale = 0.005f;
-                }
-                mScreenBrightnessDozeConfig = clampAbsoluteBrightness(
-                        (mDozeBrightnessScale == -0.01f) ? mDozeBrightnessDefault
-                        : (int) (mDozeBrightnessScale * mMaxBrightness));
-            }
-        }
 
     /**
      * Returns true if the proximity sensor screen-off function is available.

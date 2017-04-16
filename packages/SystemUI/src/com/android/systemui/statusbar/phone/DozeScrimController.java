@@ -20,20 +20,14 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.NonNull;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.database.ContentObserver;
 import android.os.Handler;
-import android.os.UserHandle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.animation.Interpolator;
 
 import com.android.systemui.Interpolators;
 import com.android.systemui.doze.DozeHost;
 import com.android.systemui.doze.DozeLog;
-
-import slim.provider.SlimSettings;
 
 /**
  * Controller which handles all the doze animations of the scrims.
@@ -45,7 +39,6 @@ public class DozeScrimController {
     private final DozeParameters mDozeParameters;
     private final Handler mHandler = new Handler();
     private final ScrimController mScrimController;
-    private Context mContext;
 
     private boolean mDozing;
     private DozeHost.PulseCallback mPulseCallback;
@@ -54,20 +47,10 @@ public class DozeScrimController {
     private Animator mBehindAnimator;
     private float mInFrontTarget;
     private float mBehindTarget;
-    private int mCustomFadeInDelayPickup;
-    private int mCustomFadeInDelayDoubleTap;
-    private int mCustomTimeoutDelay;
-    private int mCustomFadeOutDelay;
 
     public DozeScrimController(ScrimController scrimController, Context context) {
         mScrimController = scrimController;
-        mContext = context;
         mDozeParameters = new DozeParameters(context);
-
-        // Settings observer
-        SettingsObserver mSettingsObserver = new SettingsObserver(mHandler);
-        mSettingsObserver.observe();
-        mSettingsObserver.updateSettings();
     }
 
     public void setDozing(boolean dozing, boolean animate) {
@@ -129,7 +112,7 @@ public class DozeScrimController {
             final boolean pickupOrDoubleTap = mPulseReason == DozeLog.PULSE_REASON_SENSOR_PICKUP
                     || mPulseReason == DozeLog.PULSE_REASON_SENSOR_DOUBLE_TAP;
             startScrimAnimation(true /* inFront */, 0f,
-                    pickupOrDoubleTap ? mCustomFadeInDelayPickup : mCustomFadeInDelayDoubleTap,
+                    mDozeParameters.getPulseInDuration(pickupOrDoubleTap),
                     pickupOrDoubleTap ? Interpolators.LINEAR_OUT_SLOW_IN : Interpolators.ALPHA_OUT,
                     mPulseInFinished);
         }
@@ -270,7 +253,7 @@ public class DozeScrimController {
         public void run() {
             if (DEBUG) Log.d(TAG, "Pulse in finished, mDozing=" + mDozing);
             if (!mDozing) return;
-            mHandler.postDelayed(mPulseOut, mCustomTimeoutDelay);
+            mHandler.postDelayed(mPulseOut, mDozeParameters.getPulseVisibleDuration());
         }
     };
 
@@ -279,7 +262,7 @@ public class DozeScrimController {
         public void run() {
             if (DEBUG) Log.d(TAG, "Pulse out, mDozing=" + mDozing);
             if (!mDozing) return;
-            startScrimAnimation(true /* inFront */, 1f, mCustomFadeOutDelay,
+            startScrimAnimation(true /* inFront */, 1f, mDozeParameters.getPulseOutDuration(),
                     Interpolators.ALPHA_IN, mPulseOutFinished);
         }
     };
@@ -294,60 +277,4 @@ public class DozeScrimController {
             pulseFinished();
         }
     };
-
-    /**
-     * Settingsobserver to take care of the user settings.
-     */
-    private class SettingsObserver extends ContentObserver {
-        SettingsObserver(Handler handler) {
-            super(handler);
-        }
-
-        void observe() {
-            ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(SlimSettings.System.getUriFor(
-                    SlimSettings.System.DOZE_FADE_IN_PICKUP),
-                    false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(SlimSettings.System.getUriFor(
-                    SlimSettings.System.DOZE_FADE_IN_DOUBLETAP),
-                    false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(SlimSettings.System.getUriFor(
-                    SlimSettings.System.DOZE_TIMEOUT),
-                    false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(SlimSettings.System.getUriFor(
-                    SlimSettings.System.DOZE_FADE_OUT),
-                    false, this, UserHandle.USER_ALL);
-            updateSettings();
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
-            updateSettings();
-        }
-
-        public void updateSettings() {
-            ContentResolver resolver = mContext.getContentResolver();
-            // Get custom fade in (pickup)
-            mCustomFadeInDelayPickup = SlimSettings.System.getIntForUser(resolver,
-                    SlimSettings.System.DOZE_FADE_IN_PICKUP,
-                    mDozeParameters.getPulseInDuration(true),
-                    UserHandle.USER_CURRENT);
-            // Get custom fade in (DoubleTap)
-            mCustomFadeInDelayDoubleTap = SlimSettings.System.getIntForUser(resolver,
-                    SlimSettings.System.DOZE_FADE_IN_DOUBLETAP,
-                    mDozeParameters.getPulseInDuration(false),
-                    UserHandle.USER_CURRENT);
-            // Get custom timeout
-            mCustomTimeoutDelay = SlimSettings.System.getIntForUser(resolver,
-                    SlimSettings.System.DOZE_TIMEOUT,
-                    mDozeParameters.getPulseVisibleDuration(),
-                    UserHandle.USER_CURRENT);
-            // Get custom fade in
-            mCustomFadeOutDelay = SlimSettings.System.getIntForUser(resolver,
-                    SlimSettings.System.DOZE_FADE_OUT,
-                    mDozeParameters.getPulseOutDuration(),
-                    UserHandle.USER_CURRENT);
-        }
-    }
 }
