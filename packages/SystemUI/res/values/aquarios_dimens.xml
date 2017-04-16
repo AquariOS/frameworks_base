@@ -59,4 +59,9 @@
     <!-- SS Crop & Share -->
     <dimen name="crop_buttons">48dp</dimen>
     <dimen name="crop_buttons_inlet">32dp</dimen>
+
+    <!-- Padding end for weather text -->
+    <dimen name="status_bar_weather_padding_end">16dp</dimen>
+    <!-- weather text -->
+    <dimen name="weather_text_size">12sp</dimen>
 </resources>
