@@ -506,6 +506,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     boolean mHasSoftInput = false;
     boolean mTranslucentDecorEnabled = true;
     boolean mUseTvRouting;
+    boolean mVolumeWakeScreen;
 
     boolean mVolumeRockerWake;
     boolean mVolBtnMusicControls;
@@ -957,6 +958,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.Secure.getUriFor(
                     Settings.Secure.NAVIGATION_BAR_WIDTH), false, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.VOLUME_WAKE_SCREEN), false, this,
                     UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.KEYGUARD_TOGGLE_TORCH), false, this,
@@ -2329,6 +2333,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             if (mImmersiveModeConfirmation != null) {
                 mImmersiveModeConfirmation.loadSetting(mCurrentUserId);
             }
+            // Volume wake
+            mVolumeWakeScreen = (Settings.System.getIntForUser(resolver,
+                    Settings.System.VOLUME_WAKE_SCREEN, 0, UserHandle.USER_CURRENT) == 1);
+            // Lockscreen torch
             mTorchEnabled = (Settings.System.getIntForUser(resolver,
                     Settings.System.KEYGUARD_TOGGLE_TORCH, 0, UserHandle.USER_CURRENT) == 1);
 
@@ -6541,7 +6549,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     return true;
                 }
             case KeyEvent.KEYCODE_VOLUME_MUTE:
-                return mDockMode != Intent.EXTRA_DOCK_STATE_UNDOCKED;
+                return mVolumeWakeScreen || mDockMode != Intent.EXTRA_DOCK_STATE_UNDOCKED;
 
             // ignore media and camera keys
             case KeyEvent.KEYCODE_MUTE:
