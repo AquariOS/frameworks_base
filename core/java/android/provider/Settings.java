@@ -3624,9 +3624,17 @@ public final class Settings {
         };
 
         /**
+         * IMPORTANT: If you add a new public settings you also have to add it to
+         * PUBLIC_SETTINGS below. If the new setting is hidden you have to add
+         * it to PRIVATE_SETTINGS below. Also add a validator that can validate
+         * the setting value. See an example above.
+         */
+         
+        /**
          * Beginning of AquariOS System Settings Additions
          * @hide
          */
+
 
         /**
          * Boolean value whether to link ringtone and notification volume
@@ -3721,24 +3729,6 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_BRIGHTNESS_CONTROL = "status_bar_brightness_control";
-
-        /**
-         * IMPORTANT: If you add a new public settings you also have to add it to
-         * PUBLIC_SETTINGS below. If the new setting is hidden you have to add
-         * it to PRIVATE_SETTINGS below. Also add a validator that can validate
-         * the setting value. See an example above.
-         */
-         
-        /**
-         * Beginning of Cardinal-AOSP System Settings Additions
-         * @hide
-         */
-
-        /**
-         * Enable statusbar double tap gesture on to put device to sleep
-         * @hide
-         */
-        public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
 
         /**
          * whether to enable torch on lockscreen
