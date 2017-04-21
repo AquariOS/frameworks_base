@@ -410,8 +410,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     private TextView mCarrierLabel;
     boolean mExpandedVisible;
 
-    private int mQsLayoutColumns;
-
     private int mNavigationBarWindowState = WINDOW_STATE_SHOWING;
 
     private int mStatusBarHeaderHeight;
@@ -567,7 +565,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             }
 
             if (mHeader != null) {
-                mHeader.updateSettings();
+                mHeader.update();
             }
         }
     }
@@ -2183,14 +2181,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
     public void requestNotificationUpdate() {
         updateNotifications();
-    }
-
-    protected boolean hasActiveVisibleNotifications() {
-        return mNotificationData.hasActiveVisibleNotifications();
-    }
-
-    protected boolean hasActiveOngoingNotifications() {
-        return mNotificationData.hasActiveOngoingNotifications();
     }
 
     private void updateCarrier() {
