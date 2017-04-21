@@ -970,8 +970,8 @@ public class ResourcesManager {
                             key.mDisplayId,
                             key.mOverrideConfiguration,
                             key.mCompatInfo));
-                }
             }
+              }
 
             invalidatePath("/");
 
@@ -1004,7 +1004,6 @@ public class ResourcesManager {
                 }
             }
         }
-
         // Update any references to ResourcesImpl that require reloading for each Activity.
         for (final ActivityResources activityResources : mActivityResourceReferences.values()) {
             final int resCount = activityResources.activityResources.size();

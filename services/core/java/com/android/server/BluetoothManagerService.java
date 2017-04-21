@@ -68,6 +68,7 @@ import android.app.AppOpsManager;
 import android.os.SystemProperties;
 
 
+
 class BluetoothManagerService extends IBluetoothManager.Stub {
     private static final String TAG = "BluetoothManagerService";
     private static final boolean DBG = true;
@@ -1917,7 +1918,6 @@ class BluetoothManagerService extends IBluetoothManager.Stub {
             mActiveLogs.add(new ActiveLog(packageName, enable, System.currentTimeMillis()));
         }
     }
-
     private void recoverBluetoothServiceFromError(boolean clearBle) {
         Slog.e(TAG,"recoverBluetoothServiceFromError");
         try {

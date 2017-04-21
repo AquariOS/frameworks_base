@@ -343,6 +343,7 @@ status_t BootAnimation::initTexture(FileMap* map, int* width, int* height)
     // Release it now as the texture is already loaded and the memory used for
     // the packed resource can be released.
     delete map;
+
     // ensure we can call getPixels(). No need to call unlock, since the
     // bitmap will go out of scope when we return from this method.
     bitmap.lockPixels();

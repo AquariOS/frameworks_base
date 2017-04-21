@@ -484,7 +484,6 @@ public interface WindowManagerPolicy {
         public void switchInputMethod(boolean forwardDirection);
 
         public void shutdown(boolean confirm);
-        public void reboot(boolean confirm);
         public void rebootSafeMode(boolean confirm);
 
         /**
@@ -512,6 +511,8 @@ public interface WindowManagerPolicy {
          * Overrides all currently playing app animations with {@param a}.
          */
         void overridePlayingAppAnimationsLw(Animation a);
+
+        void addSystemUIVisibilityFlag(int flags);
     }
 
     public interface PointerEventListener {
@@ -1319,6 +1320,11 @@ public interface WindowManagerPolicy {
      * Specifies whether there is an on-screen navigation bar separate from the status bar.
      */
     public boolean hasNavigationBar();
+
+    /**
+     * Device requires a software navigation bar.
+     */
+    public boolean needsNavigationBar();
 
     /**
      * Lock the device now.
