@@ -47,6 +47,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Process;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -58,6 +59,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.internal.messages.SystemMessageProto.SystemMessage;
 import com.android.systemui.R;
@@ -710,6 +712,7 @@ class GlobalScreenshot {
             @Override
             public void run() {
                 // Play the shutter sound to notify that we've taken a screenshot
+                if (Settings.System.getInt(mContext.getContentResolver(), Settings.System.SCREENSHOT_SOUND, 1) == 1)
                 mCameraSound.play(MediaActionSound.SHUTTER_CLICK);
 
                 mScreenshotView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -899,10 +902,11 @@ class GlobalScreenshot {
             }
 
             // Clear the notification
-            final NotificationManager nm =
-                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            final NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             final Uri uri = Uri.parse(intent.getStringExtra(SCREENSHOT_URI_ID));
             nm.cancel(SystemMessage.NOTE_GLOBAL_SCREENSHOT);
+
+            Toast.makeText(context, R.string.delete_screenshot_toast, Toast.LENGTH_SHORT).show();
 
             // And delete the image from the media store
             new DeleteImageInBackgroundTask(context).execute(uri);

@@ -2252,5 +2252,8 @@ message MetricsEvent {
 
     // AquariOS Metrics
     AQUARIOS = 420;
+
+    // Quick setting tiles
+    QUICK_SETTINGS = 412;
   }
 }
