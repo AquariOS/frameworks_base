@@ -54,7 +54,7 @@ public class WeatherTile extends QSTile<QSTile.BooleanState> implements OmniJaws
 
     @Override
     public int getMetricsCategory() {
-        return MetricsEvent.FLASH;
+        return MetricsEvent.AQUARIOS;
     }
 
     @Override
@@ -82,6 +82,15 @@ public class WeatherTile extends QSTile<QSTile.BooleanState> implements OmniJaws
     @Override
     public void weatherUpdated() {
         queryAndUpdateWeather();
+    }
+
+    @Override
+    public void weatherError() {
+        mWeatherLabel = mContext.getResources().getString(R.string.omnijaws_service_error);
+        refreshState();
+        if (mDetailedView != null) {
+            mDetailedView.weatherError();
+        }
     }
 
     @Override
