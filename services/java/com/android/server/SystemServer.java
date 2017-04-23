@@ -115,6 +115,9 @@ import java.lang.reflect.Method;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -1264,6 +1267,12 @@ public final class SystemServer {
 
         // MMS service broker
         mmsService = mSystemServiceManager.startService(MmsServiceBroker.class);
+
+        if (Settings.Global.getInt(mContentResolver, Settings.Global.DEVICE_PROVISIONED, 0) == 0 ||
+                UserManager.isDeviceInDemoMode(mSystemContext)) {
+            mSystemServiceManager.startService(RetailDemoModeService.class);
+        }
+
         // It is now time to start up the app processes...
 
         Trace.traceBegin(Trace.TRACE_TAG_SYSTEM_SERVER, "MakeVibratorServiceReady");
@@ -1319,6 +1328,12 @@ public final class SystemServer {
 
         if (safeMode) {
             mActivityManagerService.showSafeModeOverlay();
+        }
+
+        // Let's check whether we should disable all theme overlays
+        final boolean disableOverlays = wm.detectDisableOverlays();
+        if (disableOverlays) {
+            mActivityManagerService.disableOverlays();
         }
 
         // Update the configuration for this context by hand, because we're going

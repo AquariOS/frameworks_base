@@ -528,14 +528,6 @@ public final class OverlayManagerService extends SystemService {
         }
 
         @Override
-        public void onShellCommand(@NonNull final FileDescriptor in,
-                @NonNull final FileDescriptor out, @NonNull final FileDescriptor err,
-                @NonNull final String[] args, @NonNull final ResultReceiver resultReceiver) {
-            (new OverlayManagerShellCommand(this)).exec(
-                    this, in, out, err, args, resultReceiver);
-        }
-
-        @Override
         protected void dump(@NonNull final FileDescriptor fd, @NonNull final PrintWriter pw,
                 @NonNull final String[] argv) {
             enforceDumpPermission("dump");
@@ -558,11 +550,8 @@ public final class OverlayManagerService extends SystemService {
          * @param message message for any SecurityException
          */
         private int handleIncomingUser(final int userId, @NonNull final String message) {
-            return ActivityManager.handleIncomingUser(Binder.getCallingPid(),
-                    Binder.getCallingUid(), userId, false, true, message, null);
-
-            if (getContext().checkCallingOrSelfPermission(
-                    android.Manifest.permission.MODIFY_OVERLAYS) == PackageManager.PERMISSION_GRANTED) {
+           if (getContext().checkCallingOrSelfPermission(
+                     android.Manifest.permission.MODIFY_OVERLAYS) == PackageManager.PERMISSION_GRANTED) {
                 return userId;
             } else {
                 return ActivityManager.handleIncomingUser(Binder.getCallingPid(),
@@ -579,12 +568,11 @@ public final class OverlayManagerService extends SystemService {
          */
         private void enforceChangeConfigurationPermission(@NonNull final String message) {
             final int callingUid = Binder.getCallingUid();
-
-            if (getContext().checkCallingOrSelfPermission(
-                    android.Manifest.permission.MODIFY_OVERLAYS) != PackageManager.PERMISSION_GRANTED) {
-                if (callingUid != Process.SYSTEM_UID && callingUid != 0) {
-                    getContext().enforceCallingOrSelfPermission(
-                            android.Manifest.permission.CHANGE_CONFIGURATION, message);
+               if (getContext().checkCallingOrSelfPermission(
+                     android.Manifest.permission.MODIFY_OVERLAYS) != PackageManager.PERMISSION_GRANTED) {
+               if (callingUid != Process.SYSTEM_UID && callingUid != 0) {
+                     getContext().enforceCallingOrSelfPermission(
+                     android.Manifest.permission.CHANGE_CONFIGURATION, message);
                 }
             }
         }

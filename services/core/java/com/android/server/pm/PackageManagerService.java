@@ -21140,11 +21140,6 @@ Slog.v(TAG, ":: stepped forward, applying functor at tag " + parser.getName());
         }
 
         @Override
-        public String getNameForUid(int uid) {
-            return PackageManagerService.this.getNameForUid(uid);
-        }
-
-        @Override
         public List<PackageInfo> getOverlayPackages(int userId) {
             final ArrayList<PackageInfo> overlayPackages = new ArrayList<PackageInfo>();
             synchronized (mPackages) {

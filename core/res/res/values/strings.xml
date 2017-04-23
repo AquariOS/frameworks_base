@@ -4477,6 +4477,4 @@
     <!-- Label used by Telephony code, assigned as the display name for conference calls [CHAR LIMIT=60] -->
     <string name="conference_call">Conference Call</string>
 
-    <!-- Vendor mismatched fingerprint warning [CHAR LIMIT=NONE] -->
-    <string name="system_error_vendorprint">Wrong vendor image detected. The required vendor image for this ROM is <xliff:g id="string">%s</xliff:g>. Please flash the matching vendor image to remove this message and ensure your system will be working reliably.</string>
 </resources>
