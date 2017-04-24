@@ -3554,7 +3554,7 @@ public final class Settings {
          * @author Carlo Savignano
          * @hide
          */
-        public static final String POCKET_JUDGE = "pocket_judge"
+        public static final String POCKET_JUDGE = "pocket_judge";
 
         /**
          * Whether to play sounds when the keyguard is shown and dismissed.
