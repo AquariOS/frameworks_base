@@ -231,7 +231,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     static final String TAG = "PhoneStatusBar";
     public static final boolean DEBUG = BaseStatusBar.DEBUG;
     public static final boolean SPEW = false;
-    public static final boolean DUMPTRUCK = true; // extra dumpsys info
+    public static final boolean DUMPTRUCK = false; // extra dumpsys info
     public static final boolean DEBUG_GESTURES = false;
     public static final boolean DEBUG_MEDIA = false;
     public static final boolean DEBUG_MEDIA_FAKE_ARTWORK = false;
@@ -1099,7 +1099,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     mUserSwitcherController, mUserInfoController, mKeyguardMonitor,
                     mSecurityController, mBatteryController, mIconController,
                     mNextAlarmController);
-            mBrightnessMirrorController = new BrightnessMirrorController(mStatusBarWindow);
+            mBrightnessMirrorController = new BrightnessMirrorController(mContext, mStatusBarWindow);
             container.addInflateListener(new InflateListener() {
                 @Override
                 public void onInflated(View v) {
@@ -4869,19 +4869,12 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mKeyguardIndicationController.hideTransientIndicationDelayed(HINT_RESET_DELAY_MS);
     }
 
-    public void onCameraHintStarted() {
-        mFalsingManager.onCameraHintStarted();
-        mKeyguardIndicationController.showTransientIndication(R.string.camera_hint);
+    public void onCameraHintStarted(String hint) {
+        mKeyguardIndicationController.showTransientIndication(hint);
     }
 
-    public void onVoiceAssistHintStarted() {
-        mFalsingManager.onLeftAffordanceHintStarted();
-        mKeyguardIndicationController.showTransientIndication(R.string.voice_hint);
-    }
-
-    public void onPhoneHintStarted() {
-        mFalsingManager.onLeftAffordanceHintStarted();
-        mKeyguardIndicationController.showTransientIndication(R.string.phone_hint);
+    public void onLeftHintStarted(String hint) {
+        mKeyguardIndicationController.showTransientIndication(hint);
     }
 
     public void onTrackingStopped(boolean expand) {

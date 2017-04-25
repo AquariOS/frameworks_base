@@ -68,11 +68,14 @@ import com.android.internal.widget.ILockSettings;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
  * The Settings provider contains global system-level device preferences.
@@ -785,22 +788,6 @@ public final class Settings {
     @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
     public static final String ACTION_APP_OPS_SETTINGS =
             "android.settings.APP_OPS_SETTINGS";
-
-    /**
-     * Activity Action: Show settings for system update functionality.
-     * <p>
-     * In some cases, a matching Activity may not exist, so ensure you
-     * safeguard against this.
-     * <p>
-     * Input: Nothing.
-     * <p>
-     * Output: Nothing.
-     *
-     * @hide
-     */
-    @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
-    public static final String ACTION_SYSTEM_UPDATE_SETTINGS =
-            "android.settings.SYSTEM_UPDATE_SETTINGS";
 
     /**
      * Activity Action: Show settings to allow configuration of sync settings.
@@ -1911,6 +1898,44 @@ public final class Settings {
                 return value.length() <= MAX_IPV6_LENGTH;
             }
         };
+
+        /**
+         * Put a delimited list as a string
+         * @param resolver to access the database with
+         * @param name to store
+         * @param delimiter to split
+         * @param list to join and store
+         * @hide
+         */
+        public static void putListAsDelimitedString(ContentResolver resolver, String name,
+                                                    String delimiter, List<String> list) {
+            String store = TextUtils.join(delimiter, list);
+            putString(resolver, name, store);
+        }
+
+        /**
+         * Get a delimited string returned as a list
+         * @param resolver to access the database with
+         * @param name to store
+         * @param delimiter to split the list with
+         * @return list of strings for a specific Settings.Secure item
+         * @hide
+         */
+        public static List<String> getDelimitedStringAsList(ContentResolver resolver, String name,
+                                                            String delimiter) {
+            String baseString = getString(resolver, name);
+            List<String> list = new ArrayList<String>();
+            if (!TextUtils.isEmpty(baseString)) {
+                final String[] array = TextUtils.split(baseString, Pattern.quote(delimiter));
+                for (String item : array) {
+                    if (TextUtils.isEmpty(item)) {
+                        continue;
+                    }
+                    list.add(item);
+                }
+            }
+            return list;
+        }
 
         /** @hide */
         public static void getMovedToGlobalSettings(Set<String> outKeySet) {
@@ -3912,6 +3937,24 @@ public final class Settings {
                 "notification_light_screen_on_enable";
 
         /**
+         * Disable dashboard suggestions in settings
+         * @hide
+         */
+        public static final String DISABLE_SUGGESTIONS = "disable_suggestions";
+
+        /**
+         * Remove tile summaries in settings
+         * @hide
+         */
+        public static final String REMOVE_TILE_SUMMARY = "remove_tile_summary";
+
+        /**
+         * Disable dashboard conditions in settings
+         * @hide
+         */
+        public static final String DISABLE_DASHBOARD_CONDITIONS = "disable_dashboard_conditions";
+
+        /**
          * Whether to control brightness from status bar
          * @hide
          */
@@ -3934,6 +3977,12 @@ public final class Settings {
          * @hide
          */
         public static final String VOLUME_ROCKER_WAKE = "volume_rocker_wake";
+
+        /**
+         * Whether to show Brightness Icon On Brightness Slider
+         * @hide
+         */
+        public static final String QS_SHOW_BRIGHTNESS_ICON = "qs_show_brightness_icon";
 
         /**
          * Whether to vibrate when quick settings tile is pressed.
@@ -4053,6 +4102,12 @@ public final class Settings {
          * @hide
          */
         public static final String QS_ROWS_LANDSCAPE = "qs_rows_landscape";
+
+        /**
+         * Enable\Disable Bluetooth Battery bar
+         * @hide
+         */
+        public static final String BLUETOOTH_SHOW_BATTERY = "bluetooth_show_battery";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -4713,6 +4768,44 @@ public final class Settings {
             MOVED_TO_GLOBAL.add(Settings.Global.PREFERRED_NETWORK_MODE);
             MOVED_TO_GLOBAL.add(Settings.Global.WEBVIEW_DATA_REDUCTION_PROXY_KEY);
             MOVED_TO_GLOBAL.add(Settings.Global.WIFI_AUTO_CONNECT_TYPE);
+        }
+
+        /**
+         * Put a delimited list as a string
+         * @param resolver to access the database with
+         * @param name to store
+         * @param delimiter to split
+         * @param list to join and store
+         * @hide
+         */
+        public static void putListAsDelimitedString(ContentResolver resolver, String name,
+                                                    String delimiter, List<String> list) {
+            String store = TextUtils.join(delimiter, list);
+            putString(resolver, name, store);
+        }
+
+        /**
+         * Get a delimited string returned as a list
+         * @param resolver to access the database with
+         * @param name to store
+         * @param delimiter to split the list with
+         * @return list of strings for a specific Settings.Secure item
+         * @hide
+         */
+        public static List<String> getDelimitedStringAsList(ContentResolver resolver, String name,
+                                                            String delimiter) {
+            String baseString = getString(resolver, name);
+            List<String> list = new ArrayList<String>();
+            if (!TextUtils.isEmpty(baseString)) {
+                final String[] array = TextUtils.split(baseString, Pattern.quote(delimiter));
+                for (String item : array) {
+                    if (TextUtils.isEmpty(item)) {
+                        continue;
+                    }
+                    list.add(item);
+                }
+            }
+            return list;
         }
 
         /** @hide */
@@ -7213,6 +7306,12 @@ public final class Settings {
          * @hide
          */
         public static final String TEXT_CHARGING_SYMBOL = "text_charging_symbol";
+
+        /**
+         * Launch actions for left/right lockscreen targets
+         * @hide
+         */
+        public static final String LOCKSCREEN_TARGETS = "lockscreen_target_actions";
 
         /**
          * This are the settings to be backed up.
@@ -9878,6 +9977,44 @@ public final class Settings {
         /** @hide */
         public static void getMovedToSecureSettings(Set<String> outKeySet) {
             outKeySet.addAll(MOVED_TO_SECURE);
+        }
+
+        /**
+         * Put a delimited list as a string
+         * @param resolver to access the database with
+         * @param name to store
+         * @param delimiter to split
+         * @param list to join and store
+         * @hide
+         */
+        public static void putListAsDelimitedString(ContentResolver resolver, String name,
+                                                    String delimiter, List<String> list) {
+            String store = TextUtils.join(delimiter, list);
+            putString(resolver, name, store);
+        }
+
+        /**
+         * Get a delimited string returned as a list
+         * @param resolver to access the database with
+         * @param name to store
+         * @param delimiter to split the list with
+         * @return list of strings for a specific Settings.Secure item
+         * @hide
+         */
+        public static List<String> getDelimitedStringAsList(ContentResolver resolver, String name,
+                                                            String delimiter) {
+            String baseString = getString(resolver, name);
+            List<String> list = new ArrayList<String>();
+            if (!TextUtils.isEmpty(baseString)) {
+                final String[] array = TextUtils.split(baseString, Pattern.quote(delimiter));
+                for (String item : array) {
+                    if (TextUtils.isEmpty(item)) {
+                        continue;
+                    }
+                    list.add(item);
+                }
+            }
+            return list;
         }
 
         /**

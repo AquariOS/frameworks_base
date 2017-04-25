@@ -507,6 +507,7 @@ bool BootAnimation::threadLoop()
     mFlingerSurface.clear();
     mFlingerSurfaceControl.clear();
     eglTerminate(mDisplay);
+    eglReleaseThread();
     IPCThreadState::self()->stopProcess();
     return r;
 }
@@ -1159,7 +1160,16 @@ bool BootAnimation::playAnimation(const Animation& animation)
                 checkExit();
             }
 
-            usleep(part.pause * ns2us(frameDuration));
+            // part.pause is the number of frames to pause for so total sleep will be
+            // part.pause * frameDuration.  Instead of a single sleep call, sleep for
+            // frameDuration and then check if surface flinger is done.
+            const nsecs_t frameDurationUs = ns2us(frameDuration);
+            for (int k = 0; k < part.pause; k++) {
+                usleep(frameDurationUs);
+                checkExit();
+                if(exitPending())
+                    break;
+            }
 
 #ifdef MULTITHREAD_DECODE
             if (frameManager) {

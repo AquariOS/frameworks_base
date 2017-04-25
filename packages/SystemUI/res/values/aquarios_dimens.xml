@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Copyright (C) 2016 The Pure Nexus Project
-     Copyright (C) 2016 Flash ROM
+     Copyright (C) 2017 AquariOS
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -24,4 +23,12 @@
 
     <!-- carrier label text height -->
     <dimen name="status_bar_carrier_height">14dp</dimen>
+
+    <!-- lockscreen shortcuts -->
+    <dimen name="lockscreen_icon_side_padding">10dp</dimen>
+    <dimen name="lockscreen_icon_size">35dp</dimen>
+    <dimen name="phone_side_padding">10dp</dimen>
+    <dimen name="phone_bottom_padding">40dp</dimen>
+    <dimen name="phone_width">320dp</dimen>
+    <dimen name="phone_height">420dp</dimen>
 </resources>

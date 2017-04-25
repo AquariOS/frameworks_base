@@ -174,7 +174,8 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
-    
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
+
     <!-- Screen recording -->
     <uses-permission android:name="android.permission.ACCESS_SURFACE_FLINGER" />
 
@@ -271,6 +272,14 @@
                   android:process=":tuner"
                   android:parentActivityName="com.aquarios.settings.fragments.NotificationMediaSettings"
                   android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".aquarios.LockscreenShortcutsActivity"
+            android:icon="@drawable/tuner"
+            android:label="@string/lockscreen_targets_message"
+            android:theme="@android:style/Theme.Material.Settings"
+            android:exported="true">
         </activity>
 
         <!-- Service used by secondary users to register themselves with the system user. -->

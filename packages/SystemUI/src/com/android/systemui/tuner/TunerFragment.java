@@ -15,6 +15,7 @@
  */
 package com.android.systemui.tuner;
 
+import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,22 +26,35 @@ import android.support.v14.preference.PreferenceFragment;
 import android.support.v14.preference.SwitchPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.Preference.OnPreferenceChangeListener;
+import android.support.v7.preference.PreferenceScreen;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.MetricsProto.MetricsEvent;
+import com.android.internal.util.aquarios.AquariosUtils;
 import com.android.systemui.R;
 
 public class TunerFragment extends PreferenceFragment {
 
     private static final String TAG = "TunerFragment";
 
+    private static final String BLUETOOTH_SHOW_BATTERY = "bluetooth_show_battery";
+
+    private SwitchPreference mBluetoothBattery;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+         PreferenceScreen prefSet = getPreferenceScreen();
+         final ContentResolver resolver = getActivity().getContentResolver();
+
+        mBluetoothBattery = (SwitchPreference) findPreference(BLUETOOTH_SHOW_BATTERY);
+        mBluetoothBattery.setChecked((Settings.System.getInt(resolver,
+                Settings.System.BLUETOOTH_SHOW_BATTERY, 0) == 1));
     }
 
     @Override
@@ -83,4 +97,14 @@ public class TunerFragment extends PreferenceFragment {
         return super.onOptionsItemSelected(item);
     }
 
+     @Override
+     public boolean onPreferenceTreeClick(Preference preference) {
+		 if (preference == mBluetoothBattery) {
+            boolean checked = ((SwitchPreference)preference).isChecked();
+            Settings.System.putInt(getActivity().getContentResolver(),
+                    Settings.System.BLUETOOTH_SHOW_BATTERY, checked ? 1:0);
+            return true;
+         }
+         return super.onPreferenceTreeClick(preference);
+     }
 }

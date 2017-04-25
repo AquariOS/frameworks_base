@@ -364,6 +364,14 @@ class AppErrors {
             task = data.task;
             msg.obj = data;
             mService.mUiHandler.sendMessage(msg);
+
+            // Send broadcast intent to alert Substratum
+            Intent intent = new Intent("projekt.substratum.APP_CRASHED");
+            intent.putExtra("projekt.substratum.EXTRA_PACKAGE_NAME", r.info.packageName);
+            intent.putExtra("projekt.substratum.EXTRA_CRASH_REPEATING", data.repeating);
+            intent.putExtra("projekt.substratum.EXTRA_EXCEPTION_CLASS_NAME",
+                            crashInfo.exceptionClassName);
+            mContext.sendBroadcast(intent);
         }
 
         int res = result.get();
@@ -772,6 +780,12 @@ class AppErrors {
                 return;
             } else if (app.crashing) {
                 Slog.i(TAG, "Crashing app skipping ANR: " + app + " " + annotation);
+                return;
+            } else if (app.killedByAm) {
+                Slog.i(TAG, "App already killed by AM skipping ANR: " + app + " " + annotation);
+                return;
+            } else if (app.killed) {
+                Slog.i(TAG, "Skipping died app ANR: " + app + " " + annotation);
                 return;
             }
 
