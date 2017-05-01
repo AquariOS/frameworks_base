@@ -22,6 +22,7 @@ import android.os.BatteryStats;
 import android.os.ResultReceiver;
 import android.os.ShellCommand;
 import com.android.internal.app.IBatteryStats;
+import com.android.internal.util.aquarios.AquariosUtils;
 import com.android.server.am.BatteryStatsService;
 import com.android.server.lights.Light;
 import com.android.server.lights.LightsManager;
@@ -153,6 +154,8 @@ public final class BatteryService extends SystemService {
     private int mBatteryMediumARGB;
     private int mBatteryFullARGB;
     private int mBatteryReallyFullARGB;
+    private boolean mBatteryBlendColors;
+    private boolean mBatteryBlendColorsReverse;
     private boolean mMultiColorLed;
 
     private boolean mSentLowBatteryBroadcast = false;
@@ -859,7 +862,12 @@ public final class BatteryService extends SystemService {
                 }
             } else if (status == BatteryManager.BATTERY_STATUS_CHARGING
                     || status == BatteryManager.BATTERY_STATUS_FULL) {
-                if (status == BatteryManager.BATTERY_STATUS_FULL || level >= 90) {
+                if (mBatteryBlendColors) {
+                    mBatteryLight.setColor(
+                        AquariosUtils.getBlendColorForPercent(mBatteryReallyFullARGB,
+                                mBatteryLowARGB, mBatteryBlendColorsReverse, level)
+                    );
+                } else if (status == BatteryManager.BATTERY_STATUS_FULL || level >= 90) {
                     if (level == 100) {
                         // Battery is really full
                         mBatteryLight.setColor(mBatteryReallyFullARGB);
@@ -977,6 +985,12 @@ public final class BatteryService extends SystemService {
                 resolver.registerContentObserver(
                         Settings.System.getUriFor(Settings.System.BATTERY_LIGHT_REALLY_FULL_COLOR),
                         false, this, UserHandle.USER_ALL);
+                resolver.registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.BATTERY_LIGHT_BLEND_COLOR),
+                        false, this, UserHandle.USER_ALL);
+                resolver.registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.BATTERY_LIGHT_BLEND_COLOR_REVERSE),
+                        false, this, UserHandle.USER_ALL);
             }
 
             update();
@@ -1011,7 +1025,10 @@ public final class BatteryService extends SystemService {
             mBatteryReallyFullARGB = Settings.System.getInt(resolver,
                     Settings.System.BATTERY_LIGHT_REALLY_FULL_COLOR, res.getInteger(
                     com.android.internal.R.integer.config_notificationsBatteryReallyFullARGB));
-
+            mBatteryBlendColors = Settings.System.getInt(resolver,
+                    Settings.System.BATTERY_LIGHT_BLEND_COLOR, 0) != 0;
+            mBatteryBlendColorsReverse = Settings.System.getInt(resolver,
+                    Settings.System.BATTERY_LIGHT_BLEND_COLOR_REVERSE, 0) != 0;
             updateLedPulse();
         }
     }
