@@ -394,7 +394,7 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
     private void startSettingsLongClickActivity() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
 	intent.setClassName("com.android.settings",
-            "com.android.settings.Settings$FlashSettingsActivity");
+            "com.android.settings.Settings$CoralReefActivity");
         mActivityStarter.startActivity(intent, true /* dismissShade */);
     }
 
