@@ -424,7 +424,8 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
 	intent.setClassName("com.android.settings",
             "com.android.settings.Settings$FlashSettingsActivity",
             "com.android.settings.Settings$PureNexusSettingsActivity",
-            "com.android.settings.Settings$AquariosSettingsActivity");
+            "com.android.settings.Settings$AquariosSettingsActivity",
+            "com.android.settings.Settings$CoralReefActivity");
         mActivityStarter.startActivity(intent, true /* dismissShade */);
     }
 
