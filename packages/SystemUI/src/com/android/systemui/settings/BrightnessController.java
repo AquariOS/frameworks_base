@@ -34,6 +34,7 @@ import android.service.vr.IVrManager;
 import android.service.vr.IVrStateCallbacks;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.android.internal.logging.MetricsLogger;
