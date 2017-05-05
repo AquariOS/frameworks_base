@@ -295,7 +295,7 @@ public class QuickQSPanel extends QSPanel {
         }
 
         @Override
-        public void update() {
+        public void updateSettings() {
         }
 
         public int calcNumTiles() {

@@ -535,9 +535,9 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
        }
 
     @Override
-    public void update() {
+    public void updateSettings() {
         if (mQsPanel != null) {
-            mQsPanel.update();
+            mQsPanel.updateSettings();
 
             // if header is active we want to push the qs panel a little bit further down
             // to have more space for the header image
@@ -548,7 +548,7 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
             });
         }
         if (mHeaderQsPanel != null) {
-            mHeaderQsPanel.update();
+            mHeaderQsPanel.updateSettings();
         }
         applyHeaderBackgroundShadow();
     }
