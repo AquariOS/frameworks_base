@@ -336,9 +336,9 @@ public class PagedTileLayout extends ViewPager implements QSTileLayout {
     }
 
     @Override
-    public void update() {
+    public void updateSettings() {
         for (int i = 0; i < mPages.size(); i++) {
-            mPages.get(i).update();
+            mPages.get(i).updateSettings();
         }
         postDistributeTiles();
     }
