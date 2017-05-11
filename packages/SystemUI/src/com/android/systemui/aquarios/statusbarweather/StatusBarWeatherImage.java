@@ -34,6 +34,9 @@ import com.android.systemui.omni.OmniJawsClient;
 public class StatusBarWeatherImage extends ImageView implements
         OmniJawsClient.OmniJawsObserver {
 
+    public void weatherError(int errorReason) {
+	}
+
     private String TAG = StatusBarWeatherImage.class.getSimpleName();
 
     private static final boolean DEBUG = false;
