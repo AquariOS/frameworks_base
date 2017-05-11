@@ -37,6 +37,9 @@ import java.util.Arrays;
 public class StatusBarWeather extends TextView implements
         OmniJawsClient.OmniJawsObserver {
 
+    public void weatherError(int errorReason) {
+	}
+
     private static final String TAG = StatusBarWeather.class.getSimpleName();
 
     private static final boolean DEBUG = false;
