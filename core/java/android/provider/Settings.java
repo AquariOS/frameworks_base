@@ -3781,12 +3781,6 @@ public final class Settings {
          * @hide
          */
         public static final String VOLUME_LINK_NOTIFICATION = "volume_link_notification";        
-
-        /**
-         * Whether the phone volume up / down effect should be played
-         * @hide
-         */
-        public static final String VOLUME_ADJUST_SOUNDS_ENABLED = "volume_adjust_sounds_enabled";
         
         /**
          * custom carrier label. The value is
