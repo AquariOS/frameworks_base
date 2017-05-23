@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2014 The Android Open Source Project
  * Copyright (C) 2012-2015 The CyanogenMod Project
- * Copyright (C) 2014-2015 The Euphoria-OS Project
+ * Copyright 2014-2015 The Euphoria-OS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.os.UserHandle;
-import android.provider.Settings;
 import android.view.View;
 
 import com.android.systemui.R;
@@ -43,8 +41,6 @@ public class ScreenshotTile extends QSTile<QSTile.BooleanState> {
     private boolean mListening;
     private final Object mScreenshotLock = new Object();
     private ServiceConnection mScreenshotConnection = null;
-
-    private int mScreenshotDelay;
 
     public ScreenshotTile(Host host) {
         super(host);
@@ -63,32 +59,19 @@ public class ScreenshotTile extends QSTile<QSTile.BooleanState> {
     @Override
     public void handleClick() {
         mHost.collapsePanels();
-        checkSettings();
         /* wait for the panel to close */
         try {
-             Thread.sleep(mScreenshotDelay);
+             Thread.sleep(2000);
         } catch (InterruptedException ie) {
              // Do nothing
         }
-        takeScreenshot(1);
-    }
-
-    @Override
-    public void handleLongClick() {
-        mHost.collapsePanels();
-        checkSettings();
-        /* wait for the panel to close */
-        try {
-             Thread.sleep(mScreenshotDelay);
-        } catch (InterruptedException ie) {
-             // Do nothing
-        }
-        takeScreenshot(2);
+        takeScreenshot();
     }
 
     @Override
     public Intent getLongClickIntent() {
-        return null;
+        return new Intent().setComponent(new ComponentName(
+            "com.android.gallery3d", "com.android.gallery3d.app.GalleryActivity"));
     }
 
     @Override
@@ -104,7 +87,7 @@ public class ScreenshotTile extends QSTile<QSTile.BooleanState> {
 
     @Override
     public int getMetricsCategory() {
-        return MetricsEvent.SCREEN;
+        return MetricsEvent.QUICK_SETTINGS;
     }
 
     final Runnable mScreenshotTimeout = new Runnable() {
@@ -119,7 +102,7 @@ public class ScreenshotTile extends QSTile<QSTile.BooleanState> {
         }
     };
 
-    private void takeScreenshot(int type) {
+    private void takeScreenshot() {
         synchronized (mScreenshotLock) {
             if (mScreenshotConnection != null) {
                 return;
@@ -135,7 +118,7 @@ public class ScreenshotTile extends QSTile<QSTile.BooleanState> {
                         }
 
                         Messenger messenger = new Messenger(service);
-                        Message msg = Message.obtain(null, type);
+                        Message msg = Message.obtain(null, 1);
                         final ServiceConnection myConn = this;
                         Handler h = new Handler(mHandler.getLooper()) {
                             @Override
@@ -172,10 +155,5 @@ public class ScreenshotTile extends QSTile<QSTile.BooleanState> {
                 mHandler.postDelayed(mScreenshotTimeout, 10000);
             }
         }
-    }
-
-    private void checkSettings() {
-        mScreenshotDelay = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.SCREENSHOT_DELAY, 1000);
     }
 }
