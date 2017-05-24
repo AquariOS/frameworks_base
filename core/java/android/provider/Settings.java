@@ -3881,18 +3881,6 @@ public final class Settings {
          */
         public static final String PROXIMITY_AUTO_SPEAKER_DELAY = "proximity_auto_speaker_delay";
 
-        /**
-         * Change the delay when a screenshot is taken
-         * @hide
-         */
-        public static final String SCREENSHOT_DELAY = "screenshot_delay";
-
-        /**
-         * Whether to allow screen record chord to take selectable screenshots
-         * @hide
-         */
-        public static final String SCREENRECORD_CHORD_TYPE = "screenrecord_chord_type";
-
           /**
           * Whether to show the battery info on the lockscreen while charging
           * @hide

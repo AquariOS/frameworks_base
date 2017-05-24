@@ -33,7 +33,7 @@
   <string name="reboot_system" product="default">Reiniciar telemóvel</string>
   <string name="permlab_preventpower">substituir o botão de ligar</string>
   <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
-  <string name="permdesc_preventpower">Permite que uma aplicação use o botão de ligar.</string>>
+  <string name="permdesc_preventpower">Permite que uma aplicação use o botão de ligar.</string>
   <!-- Reboot Progress Dialog. This is shown if the user chooses to reboot the phone. -->
   <string name="reboot_progress">Reiniciando\u2026</string>
   <!-- Global Actions -->
