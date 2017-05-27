@@ -57,11 +57,13 @@ import com.android.server.pm.PackageManagerService;
 
 import android.util.Log;
 import android.view.WindowManager;
-
+import android.view.Gravity;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
+import com.android.internal.R;
 
 public final class ShutdownThread extends Thread {
     // constants
@@ -239,11 +241,64 @@ public final class ShutdownThread extends Thread {
 
             closer.dialog = sConfirmDialog;
             sConfirmDialog.setOnDismissListener(closer);
+            WindowManager.LayoutParams attrs = sConfirmDialog.getWindow().getAttributes();
+         
+            boolean isPrimary = UserHandle.getCallingUserId() == UserHandle.USER_OWNER;
+            int powermenuAnimations = isPrimary ? getPowermenuAnimations(context) : 0;
+
+            if (powermenuAnimations == 0) {
+            // default AOSP action
+            }
+            if (powermenuAnimations == 1) {
+                attrs.windowAnimations = R.style.PowerMenuBottomAnimation;
+                attrs.gravity = Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
+            }
+            if (powermenuAnimations == 2) {
+                attrs.windowAnimations = R.style.PowerMenuTopAnimation;
+                attrs.gravity = Gravity.TOP|Gravity.CENTER_HORIZONTAL;
+            }
+            if (powermenuAnimations == 3) {
+                attrs.windowAnimations = R.style.PowerMenuRotateAnimation;
+                attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+            }
+            if (powermenuAnimations == 4) {
+                attrs.windowAnimations = R.style.PowerMenuXylonAnimation;
+                attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+            }
+            if (powermenuAnimations == 5) {
+                attrs.windowAnimations = R.style.PowerMenuTranslucentAnimation;
+                attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+            }
+            if (powermenuAnimations == 6) {
+                attrs.windowAnimations = R.style.PowerMenuTnAnimation;
+                attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+            }
+            if (powermenuAnimations == 7) {
+                attrs.windowAnimations = R.style.PowerMenuflyAnimation;
+                attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+            }
+            if (powermenuAnimations == 8) {
+                attrs.windowAnimations = R.style.PowerMenuCardAnimation;
+                attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+            }
+            if (powermenuAnimations == 9) {
+                attrs.windowAnimations = R.style.PowerMenuTranslucentAnimation;
+                attrs.gravity = Gravity.TOP|Gravity.CENTER_HORIZONTAL;
+            }
+            if (powermenuAnimations == 10) {
+                attrs.windowAnimations = R.style.PowerMenuTranslucentAnimation;
+                attrs.gravity = Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
+            }
             sConfirmDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
             sConfirmDialog.show();
         } else {
             beginShutdownSequence(context);
         }
+    }
+
+    private static int getPowermenuAnimations(Context context) {
+        return Settings.System.getInt(context.getContentResolver(),
+                Settings.System.POWER_MENU_ANIMATIONS, 0);
     }
 
     private static void doSoftReboot() {
@@ -384,6 +439,54 @@ public final class ShutdownThread extends Thread {
         }
         pd.setCancelable(false);
         pd.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
+        WindowManager.LayoutParams attrs = pd.getWindow().getAttributes();
+
+        boolean isPrimary = UserHandle.getCallingUserId() == UserHandle.USER_OWNER;
+        int powermenuAnimations = isPrimary ? getPowermenuAnimations(context) : 0;
+
+        if (powermenuAnimations == 0) {
+        // default AOSP action
+        }
+        if (powermenuAnimations == 1) {
+            attrs.windowAnimations = R.style.PowerMenuBottomAnimation;
+            attrs.gravity = Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
+        }
+        if (powermenuAnimations == 2) {
+            attrs.windowAnimations = R.style.PowerMenuTopAnimation;
+            attrs.gravity = Gravity.TOP|Gravity.CENTER_HORIZONTAL;
+        }
+        if (powermenuAnimations == 3) {
+            attrs.windowAnimations = R.style.PowerMenuRotateAnimation;
+            attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+        }
+        if (powermenuAnimations == 4) {
+            attrs.windowAnimations = R.style.PowerMenuXylonAnimation;
+            attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+        }
+        if (powermenuAnimations == 5) {
+            attrs.windowAnimations = R.style.PowerMenuTranslucentAnimation;
+            attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+        }
+        if (powermenuAnimations == 6) {
+            attrs.windowAnimations = R.style.PowerMenuTnAnimation;
+            attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+        }
+        if (powermenuAnimations == 7) {
+            attrs.windowAnimations = R.style.PowerMenuflyAnimation;
+            attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+        }
+        if (powermenuAnimations == 8) {
+            attrs.windowAnimations = R.style.PowerMenuCardAnimation;
+            attrs.gravity = Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL;
+        }
+        if (powermenuAnimations == 9) {
+            attrs.windowAnimations = R.style.PowerMenuTranslucentAnimation;
+            attrs.gravity = Gravity.TOP|Gravity.CENTER_HORIZONTAL;
+        }
+        if (powermenuAnimations == 10) {
+            attrs.windowAnimations = R.style.PowerMenuTranslucentAnimation;
+            attrs.gravity = Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL;
+        }
 
         pd.show();
 
