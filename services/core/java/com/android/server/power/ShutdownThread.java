@@ -60,12 +60,14 @@ import android.util.Log;
 import android.view.IWindowManager;
 import android.view.Gravity;
 import android.view.WindowManager;
-
+import android.view.Gravity;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 	
+import com.android.internal.R;
+
 import com.android.internal.R;
 
 public final class ShutdownThread extends Thread {
