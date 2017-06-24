@@ -126,8 +126,9 @@ public final class KeyguardMonitor extends KeyguardUpdateMonitorCallback {
         mCanSkipBouncer = mKeyguardUpdateMonitor.getUserCanSkipBouncer(mCurrentUser);
     }
 
-    private synchronized void notifyKeyguardChanged() {
-        for (Callback callback : mCallbacks) {
+    private void notifyKeyguardChanged() {
+        for (int i = 0; i < mCallbacks.size(); i++) {
+            Callback callback = mCallbacks.get(i);
             callback.onKeyguardChanged();
         }
     }
