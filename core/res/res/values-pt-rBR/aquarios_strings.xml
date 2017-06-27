@@ -44,5 +44,5 @@
   <string name="global_action_torch">Lanterna</string>
   <string name="global_action_voicesearch">Pesquisa por voz</string>
   <!-- Vendor mismatched fingerprint warning [CHAR LIMIT=NONE] -->
-  <string name="system_error_vendorprint">Sua imagem de fornecedor não coincide com o sistema. Por favor atualize a imagem de fornecedor para a versão <xliff:g id="string">%s</xliff:g> do seu dispositivo</string>
+  <string name="system_error_vendorprint">Foi detectada uma imagem ROM errada para este fabricante. A imagem correta para esta ROM é <xliff:g id="string">%s</xliff:g>. Por favor, faça um flash da imagem correta para remover esta mensagem e certifique-se de que o seu sistema está funcionando corretamente.</string>
 </resources>
