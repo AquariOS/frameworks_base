@@ -150,6 +150,8 @@
  <java-symbol type="style" name="PowerMenuflyAnimation" />
  <java-symbol type="style" name="PowerMenuCardAnimation" />
 
+ <java-symbol type="bool" name="config_fingerprintRemoveClientOnCancel" />
+
  <!-- Notification panel fingerprint gesture -->
  <java-symbol type="bool" name="config_needsFingerprintAxisInversion" />
 </resources>
