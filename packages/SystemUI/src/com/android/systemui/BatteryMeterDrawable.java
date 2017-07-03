@@ -266,8 +266,10 @@ public class BatteryMeterDrawable extends Drawable implements
             isPctToBeWhiteOrRed = true;
         }
 
-        if (mStyle == BATTERY_STYLE_SOLID) {
-            animateSolidBattery(level, pluggedIn, charging);
+        if (Settings.Secure.getInt(mContext.getContentResolver(),
+                Settings.Secure.STATUS_BAR_PULSE_CHARGING_BATTERY, 0) == 1 ||
+                mStyle == BATTERY_STYLE_SOLID) {
+            pulseBatteryIcon(level, pluggedIn, charging);
         }
 
         postInvalidate();
@@ -360,6 +362,37 @@ public class BatteryMeterDrawable extends Drawable implements
     }
 
     public void animateSolidBattery(int level, boolean pluggedIn, boolean charging) {
+        if (charging) {
+            if (mAnimator != null) mAnimator.cancel();
+
+            final int defaultAlpha = mLevelDrawable.getAlpha();
+            mAnimator = ValueAnimator.ofInt(defaultAlpha, 0, defaultAlpha);
+            mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    mLevelDrawable.setAlpha((int) animation.getAnimatedValue());
+                    invalidateSelf();
+                }
+            });
+            mAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    mLevelDrawable.setAlpha(defaultAlpha);
+                    mAnimator = null;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mLevelDrawable.setAlpha(defaultAlpha);
+                    mAnimator = null;
+                }
+            });
+            mAnimator.setDuration(2000);
+            mAnimator.start();
+        }
+    }
+
+    public void pulseBatteryIcon(int level, boolean pluggedIn, boolean charging) {
         if (charging) {
             if (mAnimator != null) mAnimator.cancel();
 

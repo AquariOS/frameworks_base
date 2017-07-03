@@ -368,6 +368,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     protected PhoneStatusBarView mStatusBarView;
     private int mStatusBarWindowState = WINDOW_STATE_SHOWING;
     protected StatusBarWindowManager mStatusBarWindowManager;
+    private TelecomManager mTm;
     private UnlockMethodCache mUnlockMethodCache;
     private DozeServiceHost mDozeServiceHost;
     private boolean mWakeUpComingFromTouch;
@@ -435,12 +436,16 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     private boolean mAutomaticBrightness;
     private boolean mBrightnessControl;
     private boolean mBrightnessChanged;
+    private boolean mFingerprintQuickPulldown;
     private float mScreenWidth;
     private int mMinBrightness;
     private boolean mJustPeeked;
     int mLinger;
     int mInitialTouchX;
     int mInitialTouchY;
+
+    private boolean mSystemNavigationKeysEnabled;
+    private int mFpSwipeCallActions;
 
     // for disabling the status bar
     int mDisabled1 = 0;
@@ -542,8 +547,17 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.STATUS_BAR_CUSTOM_HEADER),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN_FP),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.QS_QUICKBAR_SCROLL_ENABLED),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                  Settings.Secure.SYSTEM_NAVIGATION_KEYS_ENABLED),
+                  false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                  Settings.System.FP_SWIPE_CALL_ACTIONS),
+                  false, this, UserHandle.USER_ALL);
             update();
            resolver.registerContentObserver(Settings.System.getUriFor(
                   Settings.System.STATUS_BAR_CUSTOM_HEADER_SHADOW),
@@ -553,6 +567,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                   false, this, UserHandle.USER_ALL);
            update();
         }
+
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
@@ -572,7 +587,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         public void update() {
             ContentResolver resolver = mContext.getContentResolver();
-            int mode = Settings.System.getIntForUser(mContext.getContentResolver(),
+            int mode = Settings.System.getIntForUser(resolver,
                             Settings.System.SCREEN_BRIGHTNESS_MODE,
                             Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL,
                             UserHandle.USER_CURRENT);
@@ -584,6 +599,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.STATUS_BAR_SHOW_CARRIER, 1, UserHandle.USER_CURRENT);
             mQsLayoutColumns = Settings.System.getIntForUser(resolver,
                     Settings.System.QS_LAYOUT_COLUMNS, 3, mCurrentUserId);
+            mFingerprintQuickPulldown = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN_FP, 0, UserHandle.USER_CURRENT) == 1;
 
             if (mNotificationPanel != null) {
                 mNotificationPanel.update();
@@ -592,6 +609,11 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             if (mHeader != null) {
                 mHeader.updateSettings();
             }
+            mSystemNavigationKeysEnabled = Settings.Secure.getIntForUser(mContext.getContentResolver(),
+                    Settings.Secure.SYSTEM_NAVIGATION_KEYS_ENABLED, 0, UserHandle.USER_CURRENT) == 1;
+            mFpSwipeCallActions = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.FP_SWIPE_CALL_ACTIONS, 0, UserHandle.USER_CURRENT);
+
         }
     }
 
@@ -920,6 +942,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         mScreenPinningRequest = new ScreenPinningRequest(mContext);
         mFalsingManager = FalsingManager.getInstance(mContext);
+
+        mTm = mContext.getSystemService(TelecomManager.class);
     }
 
     protected void createIconController() {
@@ -1623,8 +1647,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mBlockedThisTouch = false;
-                    TelecomManager telecomManager = mContext.getSystemService(TelecomManager.class);
-                    if (telecomManager != null && telecomManager.isRinging()) {
+                    if (mTm != null && mTm.isRinging()) {
                         if (mStatusBarKeyguardViewManager.isShowing()) {
                             Log.i(TAG, "Ignoring HOME; there's a ringing incoming call. " +
                                     "No heads up");
@@ -3016,24 +3039,46 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 com.android.internal.R.bool.config_needsFingerprintAxisInversion);
         final boolean isRotated = (mDisplay.getRotation() == Surface.ROTATION_90
                 || mDisplay.getRotation() == Surface.ROTATION_270) && needsAxisInversion;
+
         if (key ==  (!isRotated ? KeyEvent.KEYCODE_SYSTEM_NAVIGATION_UP
                 : KeyEvent.KEYCODE_SYSTEM_NAVIGATION_DOWN)) {
             MetricsLogger.action(mContext, !isRotated ? MetricsEvent.ACTION_SYSTEM_NAVIGATION_KEY_UP
                     : MetricsEvent.ACTION_SYSTEM_NAVIGATION_KEY_DOWN);
-            mNotificationPanel.collapse(false /* delayed */, 1.0f /* speedUpFactor */);
+            if (mTm != null && mTm.isRinging() && mFpSwipeCallActions != 0) {
+                mTm.acceptRingingCall();
+                return;
+            }
+            if (mSystemNavigationKeysEnabled) {
+                mNotificationPanel.collapse(false /* delayed */, 1.0f /* speedUpFactor */);
+            }
         } else if (key ==  (!isRotated ? KeyEvent.KEYCODE_SYSTEM_NAVIGATION_DOWN
                 : KeyEvent.KEYCODE_SYSTEM_NAVIGATION_UP)) {
             MetricsLogger.action(mContext, !isRotated ? MetricsEvent.ACTION_SYSTEM_NAVIGATION_KEY_DOWN
                     : MetricsEvent.ACTION_SYSTEM_NAVIGATION_KEY_DOWN);
-            if (mNotificationPanel.isFullyCollapsed()) {
-                mNotificationPanel.expand(true /* animate */);
-                MetricsLogger.count(mContext, NotificationPanelView.COUNTER_PANEL_OPEN, 1);
-            } else if (!mNotificationPanel.isInSettings() && !mNotificationPanel.isExpanding()){
-                mNotificationPanel.flingSettings(0 /* velocity */, true /* expand */);
-                MetricsLogger.count(mContext, NotificationPanelView.COUNTER_PANEL_OPEN_QS, 1);
+            if (mTm != null && mTm.isRinging() && mFpSwipeCallActions != 0) {
+                if (mFpSwipeCallActions == 1) {
+                    mTm.acceptRingingCall();
+                    return;
+                } else if (mFpSwipeCallActions == 2) {
+                    mTm.silenceRinger();
+                    return;
+                }
+            }
+            if (mSystemNavigationKeysEnabled) {
+                if (mNotificationPanel.isFullyCollapsed()) {
+                    if (mFingerprintQuickPulldown) {
+                        mNotificationPanel.expandWithQs();
+                        MetricsLogger.count(mContext, NotificationPanelView.COUNTER_PANEL_OPEN_QS, 1);
+                    } else {
+                        mNotificationPanel.expand(true /* animate */);
+                        MetricsLogger.count(mContext, NotificationPanelView.COUNTER_PANEL_OPEN, 1);
+                    }
+                } else if (!mNotificationPanel.isInSettings() && !mNotificationPanel.isExpanding()){
+                    mNotificationPanel.flingSettings(0 /* velocity */, true /* expand */);
+                    MetricsLogger.count(mContext, NotificationPanelView.COUNTER_PANEL_OPEN_QS, 1);
+                }
             }
         }
-
     }
 
     boolean panelsEnabled() {

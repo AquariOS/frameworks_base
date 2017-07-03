@@ -261,7 +261,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         mCameraImageView.setContentDescription(contentDescription);
         mCameraImageView.setDefaultFilter(shouldGrayScale ? mGrayScaleFilter : null);
         updateCameraVisibility();
-        updateLeftButtonVisibility();
     }
 
     private void initAccessibility() {
@@ -332,6 +331,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     public void setUserSetupComplete(boolean userSetupComplete) {
         mUserSetupComplete = userSetupComplete;
         updateCameraVisibility();
+        updateRightAffordanceIcon();
         updateLeftButtonVisibility();
         updateLeftAffordanceIcon();
     }
@@ -831,8 +831,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
 
         @Override
         public void onUserUnlocked() {
-            inflateCameraPreview();
-            updateCameraVisibility();
+            updateRightAffordance();
             updateLeftAffordance();
         }
     };
@@ -852,9 +851,14 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         updateLeftPreview();
     }
 
+    public void updateRightAffordance() {
+        updateRightAffordanceIcon();
+        inflateCameraPreview();
+    }
+
     public void onKeyguardShowingChanged() {
         updateLeftAffordance();
-        inflateCameraPreview();
+        updateRightAffordance();
     }
 
     private String getIndexHint(LockscreenShortcutsHelper.Shortcuts shortcut) {

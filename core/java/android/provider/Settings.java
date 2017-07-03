@@ -3839,6 +3839,12 @@ public final class Settings {
         public static final String ANIM_TILE_INTERPOLATOR = "anim_tile_interpolator";
 
         /**
+         * Whether or not to allow quick settings expansion with one swipe on the fingerprint sensor.
+         * @hide
+         */
+        public static final String STATUS_BAR_QUICK_QS_PULLDOWN_FP = "status_bar_quick_qs_pulldown_fp";
+
+        /**
          * Whether to display qs tile titles in the qs panel
          * @hide
          */
@@ -4538,6 +4544,15 @@ public final class Settings {
 
         /** @hide */ public static final int HEADS_UP_USER_OFF = 0;
         /** @hide */ public static final int HEADS_UP_USER_ON = 1;
+
+        /**
+         * Whether to answer or silence an incoming call with a swipe action on fingerprint scanner
+         * 0 = don't do anything (default)
+         * 1 = answer call with both swipe up and swipe down actions
+         * 2 = swipe up to answer, swipe down to silence the call
+         * @hide
+         */
+        public static final String FP_SWIPE_CALL_ACTIONS = "fp_swipe_call_actions";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -7568,6 +7583,13 @@ public final class Settings {
          * @hide
          */
         public static final String NIGHT_DISPLAY_CUSTOM_END_TIME = "night_display_custom_end_time";
+
+        /**
+         * Whether to pulse the battery icon when charging
+         *
+         * @hide
+         */
+        public static final String STATUS_BAR_PULSE_CHARGING_BATTERY = "status_bar_pulse_charging_battery";
 
         /**
          * Names of the service components that the current user has explicitly allowed to
