@@ -740,6 +740,13 @@ final class DefaultPermissionGrantPolicy {
                         STORAGE_PERMISSIONS, true, userId);
             }
 
+            // OmniJaws
+            PackageParser.Package omnijawspackage = getSystemPackageLPr(
+                    "org.omnirom.omnijaws");
+            if (omnijawspackage != null && doesPackageSupportRuntimePermissions(omnijawspackage)) {
+                grantRuntimePermissionsLPw(omnijawspackage, LOCATION_PERMISSIONS, userId);
+            }
+
             // Chromium Sign-in
             PackageParser.Package chromiumPackage = getDefaultProviderAuthorityPackageLPr(
                     "org.chromium.chrome", userId);
