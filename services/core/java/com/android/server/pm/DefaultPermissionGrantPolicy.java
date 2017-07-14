@@ -307,6 +307,17 @@ final class DefaultPermissionGrantPolicy {
                 grantRuntimePermissionsLPw(setupPackage, CAMERA_PERMISSIONS, userId);
             }
 
+            // Browser
+            PackageParser.Package browserpackage = getSystemPackageLPr(
+                    "com.android.browser");
+            if (browserpackage != null && doesPackageSupportRuntimePermissions(browserpackage)) {
+                grantRuntimePermissionsLPw(browserpackage, CAMERA_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(browserpackage, CONTACTS_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(browserpackage, LOCATION_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(browserpackage, MICROPHONE_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(browserpackage, STORAGE_PERMISSIONS, userId);
+            }
+
             // Camera
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             PackageParser.Package cameraPackage = getDefaultSystemHandlerActivityPackageLPr(
