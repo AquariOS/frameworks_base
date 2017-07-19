@@ -655,17 +655,15 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mUseHeadsUp = ENABLE_HEADS_UP && !mDisableNotificationAlerts
                     && Settings.Global.HEADS_UP_OFF != Settings.Global.getInt(
                     mContext.getContentResolver(), Settings.Global.HEADS_UP_NOTIFICATIONS_ENABLED,
-                    Settings.Global.HEADS_UP_OFF);
+                    Settings.Global.HEADS_UP_OFF)
+                    && Settings.Global.HEADS_UP_OFF != Settings.System.getIntForUser(
+                    mContext.getContentResolver(), Settings.System.HEADS_UP_NOTIFICATIONS_USER_ENABLED,
+                    Settings.Global.HEADS_UP_ON, mCurrentUserId);
             mHeadsUpTicker = mUseHeadsUp && 0 != Settings.Global.getInt(
                     mContext.getContentResolver(), SETTING_HEADS_UP_TICKER, 0);
             Log.d(TAG, "heads up is " + (mUseHeadsUp ? "enabled" : "disabled"));
-            mHeadsUpUserEnabled = 0 != Settings.System.getIntForUser(
-                    mContext.getContentResolver(), Settings.System.HEADS_UP_USER_ENABLED,
-                    Settings.System.HEADS_UP_USER_ON,
-                    UserHandle.USER_CURRENT);
-            Log.d(TAG, "heads up is " + (mUseHeadsUp && mHeadsUpUserEnabled ? "enabled" : "disabled"));
             if (wasUsing != mUseHeadsUp) {
-                if (!mUseHeadsUp || !mHeadsUpUserEnabled) {
+                if (!mUseHeadsUp) {
                     Log.d(TAG, "dismissing any existing heads up notification on disable event");
                     mHeadsUpManager.releaseAllImmediately();
                 }
@@ -924,7 +922,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.Global.getUriFor(SETTING_HEADS_UP_TICKER), true,
                     mHeadsUpObserver);
             mContext.getContentResolver().registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.HEADS_UP_USER_ENABLED), true,
+                    Settings.System.getUriFor(Settings.System.HEADS_UP_NOTIFICATIONS_USER_ENABLED), true,
                     mHeadsUpObserver);
         }
         mUnlockMethodCache = UnlockMethodCache.getInstance(mContext);

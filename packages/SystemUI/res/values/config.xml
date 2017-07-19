@@ -105,7 +105,7 @@
 
     <!-- Tiles native to System UI. Order should match "quick_settings_tiles_default" -->
     <string name="quick_settings_tiles_stock" translatable="false">
-        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,location,hotspot,inversion,saver,work,cast,night,screenshot,sync,music,ime,caffeine,ambient,weather,expanded_desktop,heads_up
+        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,location,hotspot,inversion,saver,work,cast,night,screenshot,sync,music,ime,caffeine,ambient,weather,expanded_desktop,heads_up,compass
     </string>
 
     <!-- The tiles to display in QuickSettings -->
@@ -124,7 +124,7 @@
     <integer name="quick_settings_brightness_dialog_long_timeout">4000</integer>
 
     <!-- Should "4G" be shown instead of "LTE" when the network is NETWORK_TYPE_LTE? -->
-    <bool name="config_show4GForLTE">true</bool>
+    <bool name="config_show4GForLTE">false</bool>
 
     <!-- Should "LTE"/"4G" be shown instead of "LTE+"/"4G+" when on NETWORK_TYPE_LTE_CA? -->
     <bool name="config_hideLtePlus">false</bool>

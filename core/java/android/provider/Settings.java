@@ -4183,6 +4183,25 @@ public final class Settings {
         public static final String QUICK_SETTINGS_TILES_VIBRATE = "quick_settings_vibrate";
 
         /**
+         * Heads up timeout configuration
+         * @hide
+         */
+        public static final String HEADS_UP_TIMEOUT = "heads_up_timeout";
+
+        /**
+         * Which applications to enable heads up notifications for
+         *
+         * @hide
+         */
+        public static final String HEADS_UP_WHITELIST_VALUES = "heads_up_whitelist_values";
+
+        /**
+         * Defines the global heads up notification snooze
+         * @hide
+         */
+        public static final String HEADS_UP_NOTIFICATION_SNOOZE = "heads_up_notification_snooze";
+
+        /**
          * whether to enable torch on lockscreen
          * @hide
          */
@@ -4291,6 +4310,13 @@ public final class Settings {
          * @hide
          */
         public static final String SWAP_VOLUME_BUTTONS = "swap_volume_buttons";
+
+        /**
+         * Toast icon
+         *
+         * @hide
+         */
+        public static final String TOAST_ICON = "toast_icon";
 
         /**
          * Quick Settings number of columns
@@ -4529,23 +4555,6 @@ public final class Settings {
         public static final String STATUS_BAR_SHOW_WEATHER_TEMP = "status_bar_show_weather_temp";
 
         /**
-         * Whether the user has enabled headsup (Default 1)
-         * HeadsUp is enabled by default within its Settings.Global.HEADS_UP_NOTIFICATIONS_ENABLED
-         * setting. Avoid changing low level implementations and use a System setting to
-         * override per-user heads up on/off preference.
-         *
-         * Enable headsup = 1 (on by default)
-         * Disable headsup = 0
-         *
-         * @see com.android.systemui.statusbar.BaseStatusBar#addNotification
-         * @hide
-         */
-        public static final String HEADS_UP_USER_ENABLED = "heads_up_user_enabled";
-
-        /** @hide */ public static final int HEADS_UP_USER_OFF = 0;
-        /** @hide */ public static final int HEADS_UP_USER_ON = 1;
-
-        /**
          * Whether to answer or silence an incoming call with a swipe action on fingerprint scanner
          * 0 = don't do anything (default)
          * 1 = answer call with both swipe up and swipe down actions
@@ -4553,6 +4562,13 @@ public final class Settings {
          * @hide
          */
         public static final String FP_SWIPE_CALL_ACTIONS = "fp_swipe_call_actions";
+
+        /**
+         * @hide One of HEADS_UP_OFF, HEADS_UP_ON
+         * user specific value for HEADS_UP_NOTIFICATIONS_ENABLED
+         * global one will overrule this
+         */
+        public static final String HEADS_UP_NOTIFICATIONS_USER_ENABLED = "heads_up_notifications_user_enabled";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -6107,6 +6123,15 @@ public final class Settings {
          * @hide
          */
         public static final String PULSE_CUSTOM_BUTTONS_OPACITY = "pulse_custom_buttons_opacity";
+
+        /**
+         * Long press delay for smartbar buttons
+         * @hide
+         * 0: Default (fast)
+         * 1: Normal delay
+         * 2: Long delay
+         */
+        public static final String SMARTBAR_LONGPRESS_DELAY = "smartbar_longpress_delay";
 
         /**
          * A flag containing settings used for biometric weak

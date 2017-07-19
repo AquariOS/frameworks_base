@@ -307,6 +307,17 @@ final class DefaultPermissionGrantPolicy {
                 grantRuntimePermissionsLPw(setupPackage, CAMERA_PERMISSIONS, userId);
             }
 
+            // Browser
+            PackageParser.Package browserpackage = getSystemPackageLPr(
+                    "com.android.browser");
+            if (browserpackage != null && doesPackageSupportRuntimePermissions(browserpackage)) {
+                grantRuntimePermissionsLPw(browserpackage, CAMERA_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(browserpackage, CONTACTS_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(browserpackage, LOCATION_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(browserpackage, MICROPHONE_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(browserpackage, STORAGE_PERMISSIONS, userId);
+            }
+
             // Camera
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             PackageParser.Package cameraPackage = getDefaultSystemHandlerActivityPackageLPr(
@@ -792,6 +803,18 @@ final class DefaultPermissionGrantPolicy {
                 grantRuntimePermissionsLPw(vendingPackage, SMS_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(vendingPackage, STORAGE_PERMISSIONS, userId);
             }
+
+            // Project Fi
+            PackageParser.Package fiPackage = getDefaultProviderAuthorityPackageLPr(
+                    "com.google.android.apps.tycho", userId);
+            if (fiPackage != null) {
+                grantRuntimePermissionsLPw(fiPackage, CONTACTS_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(fiPackage, PHONE_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(fiPackage, MICROPHONE_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(fiPackage, LOCATION_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(fiPackage, SMS_PERMISSIONS, userId);
+            }
+            mService.mSettings.onDefaultRuntimePermissionsGrantedLPr(userId);
         }
     }
 
@@ -1118,8 +1141,8 @@ final class DefaultPermissionGrantPolicy {
                         permissions.clear();
                     }
                     permissions.add(permissionGrant.name);
-                    grantRuntimePermissionsLPw(pkg, permissions, false,
-                            permissionGrant.fixed, userId);
+                    grantRuntimePermissionsLPw(pkg, permissions,
+                            permissionGrant.fixed, false, userId);
                 }
             }
         }
