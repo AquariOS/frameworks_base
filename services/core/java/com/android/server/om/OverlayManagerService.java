@@ -194,6 +194,8 @@ public final class OverlayManagerService extends SystemService {
 
     static final String TAG = "OverlayManager";
 
+    static final String PERMISSION_MODIFY_OVERLAYS = "oms.permission.MODIFY_OVERLAYS";
+
     static final boolean DEBUG = false;
 
     private final Object mLock = new Object();
@@ -550,8 +552,8 @@ public final class OverlayManagerService extends SystemService {
          * @param message message for any SecurityException
          */
         private int handleIncomingUser(final int userId, @NonNull final String message) {
-           if (getContext().checkCallingOrSelfPermission(
-                     android.Manifest.permission.MODIFY_OVERLAYS) == PackageManager.PERMISSION_GRANTED) {
+            if (getContext().checkCallingOrSelfPermission(
+                    PERMISSION_MODIFY_OVERLAYS) == PackageManager.PERMISSION_GRANTED) {
                 return userId;
             } else {
                 return ActivityManager.handleIncomingUser(Binder.getCallingPid(),
@@ -568,11 +570,12 @@ public final class OverlayManagerService extends SystemService {
          */
         private void enforceChangeConfigurationPermission(@NonNull final String message) {
             final int callingUid = Binder.getCallingUid();
-               if (getContext().checkCallingOrSelfPermission(
-                     android.Manifest.permission.MODIFY_OVERLAYS) != PackageManager.PERMISSION_GRANTED) {
-               if (callingUid != Process.SYSTEM_UID && callingUid != 0) {
-                     getContext().enforceCallingOrSelfPermission(
-                     android.Manifest.permission.CHANGE_CONFIGURATION, message);
+
+            if (getContext().checkCallingOrSelfPermission(
+                    PERMISSION_MODIFY_OVERLAYS) != PackageManager.PERMISSION_GRANTED) {
+                if (callingUid != Process.SYSTEM_UID && callingUid != 0) {
+                    getContext().enforceCallingOrSelfPermission(
+                            android.Manifest.permission.CHANGE_CONFIGURATION, message);
                 }
             }
         }

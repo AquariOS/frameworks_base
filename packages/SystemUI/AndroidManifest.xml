@@ -185,6 +185,9 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
 
+    <!-- Suspend actions -->
+    <protected-broadcast android:name="android.intent.action.SCREEN_STATE_SERVICE_UPDATE" />
+
     <!-- Device gestures -->
     <protected-broadcast android:name="com.android.systemui.doze.pulse" />
 
@@ -248,6 +251,19 @@
                 <action android:name="com.android.systemui.screenshot.SHOW_ERROR" />
             </intent-filter>
         </receiver>
+
+        <service android:name=".LoadAverageService"
+                android:exported="true" />
+
+        <service android:name=".CPUInfoService"
+                android:exported="true" />
+
+        <service android:name=".screenstate.ScreenStateService"
+                android:exported="true" >
+            <intent-filter>
+               <android name="android.intent.action.SCREEN_STATE_SERVICE_UPDATE"/>
+            </intent-filter>
+        </service>
 
         <service android:name=".ImageWallpaper"
                 android:permission="android.permission.BIND_WALLPAPER"
@@ -345,6 +361,13 @@
         <receiver android:name=".screenshot.GlobalScreenshot$DeleteScreenshotReceiver"
                   android:process=":screenshot"
                   android:exported="false" />
+
+        <!-- Callback for editing screenshot notification -->
+        <activity android:name=".screenshot.GlobalScreenshot$EditScreenshotActivity"
+                  android:process=":screenshot"
+                  android:exported="false"
+                  android:taskAffinity=""
+                  android:excludeFromRecents="true" />
 
         <!-- started from UsbDeviceSettingsManager -->
         <activity android:name=".usb.UsbConfirmActivity"
@@ -560,5 +583,10 @@
                 <action android:name="android.intent.action.SHOW_KEYBOARD_SHORTCUTS" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".screenshot.ScreenshotEditor"
+            android:theme="@style/ScreenshotEditorStyle" />
+
     </application>
 </manifest>
