@@ -2536,6 +2536,12 @@ public final class Settings {
         public static final int END_BUTTON_BEHAVIOR_DEFAULT = END_BUTTON_BEHAVIOR_SLEEP;
 
         /**
+        * List of Apps hidden from recents
+        * @hide
+        */
+        public static final String HIDE_FROM_RECENTS_LIST = "hide_from_recents_list";
+
+        /**
          * Is advanced settings mode turned on. 0 == no, 1 == yes
          * @hide
          */
@@ -3938,6 +3944,24 @@ public final class Settings {
         public static final String CUSTOM_CARRIER_LABEL = "custom_carrier_label";
 
         /**
+         * Dynamic Navbar Switch
+         * @hide
+         */
+        public static final String NAV_BAR_DYNAMIC = "nav_bar_dynamic";
+
+        /**
+         * Navbar Button Color Switch
+         * @hide
+         */
+        public static final String NAVBAR_TINT_SWITCH = "navbar_tint_switch";
+        
+         /**
+         * Navbar Button Color
+         * @hide
+         */
+        public static final String NAVBAR_BUTTON_COLOR= "navbar_button_color";
+
+        /*
          * The OpenCNAM paid account ID
          * @hide
          */
@@ -4488,6 +4512,18 @@ public final class Settings {
          * @hide
          */
         public static final String STATUSBAR_BATTERY_BAR_BLEND_COLORS_REVERSE = "battery_bar_blend_color_reverse";
+
+        /**
+         * Whether to show or hide Weather panel in expanded header
+         * @hide
+         */
+        public static final String HEADER_WEATHER_ENABLED = "header_weather_enabled";
+
+        /**
+         * Whether to show or hide Weather panel image in expanded header
+         * @hide
+         */
+        public static final String HEADER_WEATHER_IMAGE_ENABLED = "header_weather_image_enabled";
 
         /**
          * Whether to show the weather info on the lock screen
@@ -6179,6 +6215,11 @@ public final class Settings {
          * 2: Long delay
          */
         public static final String SMARTBAR_LONGPRESS_DELAY = "smartbar_longpress_delay";
+
+        /**
+         * Scaling value for smartbar custom button icon
+         */
+        public static final String SMARTBAR_CUSTOM_ICON_SIZE = "smartbar_custom_icon_size";
 
         /**
          * A flag containing settings used for biometric weak

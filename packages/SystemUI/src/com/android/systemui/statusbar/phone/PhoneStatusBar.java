@@ -554,11 +554,29 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.QS_QUICKBAR_SCROLL_ENABLED),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.Secure.getUriFor(
-                  Settings.Secure.SYSTEM_NAVIGATION_KEYS_ENABLED),
-                  false, this, UserHandle.USER_ALL);
+                    Settings.Secure.SYSTEM_NAVIGATION_KEYS_ENABLED),
+                    false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                  Settings.System.FP_SWIPE_CALL_ACTIONS),
-                  false, this, UserHandle.USER_ALL);
+                    Settings.System.FP_SWIPE_CALL_ACTIONS),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAV_BAR_DYNAMIC),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                    Settings.System.NAVBAR_TINT_SWITCH),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVBAR_BUTTON_COLOR),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.HEADER_WEATHER_ENABLED),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.HEADER_WEATHER_IMAGE_ENABLED),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.OMNIJAWS_WEATHER_ICON_PACK),
+                    false, this, UserHandle.USER_ALL);
             update();
            resolver.registerContentObserver(Settings.System.getUriFor(
                   Settings.System.STATUS_BAR_CUSTOM_HEADER_SHADOW),
@@ -569,9 +587,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
            update();
         }
 
-
         @Override
         public void onChange(boolean selfChange, Uri uri) {
+        ContentResolver resolver = mContext.getContentResolver();
             super.onChange(selfChange, uri);
             if (uri.equals(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_SHOW_CARRIER))) {
@@ -582,6 +600,23 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     || uri.equals(Settings.System.getUriFor(
                     Settings.System.QS_ROWS_LANDSCAPE))) {
                     updateResources();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.NAV_BAR_DYNAMIC))) {
+                    mNavigationController.updateNavbarOverlay(mContext.getResources());
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.NAVBAR_TINT_SWITCH))) {
+                    mNavigationController.updateNavbarOverlay(mContext.getResources());
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.NAVBAR_BUTTON_COLOR))) {
+                    mNavigationController.updateNavbarOverlay(mContext.getResources());
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.HEADER_WEATHER_ENABLED))
+                    || uri.equals(Settings.System.getUriFor(
+                    Settings.System.HEADER_WEATHER_IMAGE_ENABLED))
+                    || uri.equals(Settings.System.getUriFor(
+                    Settings.System.OMNIJAWS_WEATHER_ICON_PACK))) {
+                    mHeader.updateVisibilities();
+                    mHeader.queryAndUpdateWeather();
             }
             update();
         }
