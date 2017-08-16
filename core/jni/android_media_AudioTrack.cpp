@@ -38,8 +38,6 @@
 #include "android_media_PlaybackParams.h"
 #include "android_media_DeviceCallback.h"
 
-#include <cinttypes>
-
 // ----------------------------------------------------------------------------
 
 using namespace android;
@@ -221,7 +219,7 @@ android_media_AudioTrack_setup(JNIEnv *env, jobject thiz, jobject weak_this, job
         jlong nativeAudioTrack) {
 
     ALOGV("sampleRates=%p, channel mask=%x, index mask=%x, audioFormat(Java)=%d, buffSize=%d"
-        "nativeAudioTrack=0x%" PRIX64,
+        "nativeAudioTrack=0x%llX",
         jSampleRate, channelPositionMask, channelIndexMask, audioFormat, buffSizeInBytes,
         nativeAudioTrack);
 
@@ -727,8 +725,8 @@ static jint android_media_AudioTrack_get_buffer_size_frames(JNIEnv *env,  jobjec
 
     ssize_t result = lpTrack->getBufferSizeInFrames();
     if (result < 0) {
-        jniThrowExceptionFmt(env, "java/lang/IllegalStateException",
-            "Internal error detected in getBufferSizeInFrames() = %zd", result);
+        jniThrowException(env, "java/lang/IllegalStateException",
+            "Internal error detected in getBufferSizeInFrames() = " + result);
         return (jint)AUDIO_JAVA_ERROR;
     }
     return (jint)result;
@@ -751,8 +749,8 @@ static jint android_media_AudioTrack_set_buffer_size_frames(JNIEnv *env,
     }
     ssize_t result = lpTrack->setBufferSizeInFrames(bufferSizeInFrames);
     if (result < 0) {
-        jniThrowExceptionFmt(env, "java/lang/IllegalStateException",
-            "Internal error detected in setBufferSizeInFrames() = %zd", result);
+        jniThrowException(env, "java/lang/IllegalStateException",
+            "Internal error detected in setBufferSizeInFrames() = " + result);
         return (jint)AUDIO_JAVA_ERROR;
     }
     return (jint)result;

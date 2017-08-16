@@ -36,6 +36,11 @@
 
 namespace android {
 
+// Number of events to read at a time from the DisplayEventReceiver pipe.
+// The value should be large enough that we can quickly drain the pipe
+// using just a few large reads.
+static const size_t EVENT_BUFFER_SIZE = 100;
+
 static struct {
     jclass clazz;
 
@@ -58,6 +63,7 @@ private:
     jobject mReceiverWeakGlobal;
     sp<MessageQueue> mMessageQueue;
     DisplayEventReceiver mReceiver;
+    bool mWaitingForVsync;
 
     virtual void dispatchVsync(nsecs_t timestamp, int32_t id, uint32_t count);
     virtual void dispatchHotplug(nsecs_t timestamp, int32_t id, bool connected);
@@ -68,7 +74,7 @@ NativeDisplayEventReceiver::NativeDisplayEventReceiver(JNIEnv* env,
         jobject receiverWeak, const sp<MessageQueue>& messageQueue) :
         DisplayEventDispatcher(messageQueue->getLooper()),
         mReceiverWeakGlobal(env->NewGlobalRef(receiverWeak)),
-        mMessageQueue(messageQueue) {
+        mMessageQueue(messageQueue), mWaitingForVsync(false) {
     ALOGV("receiver %p ~ Initializing display event receiver.", this);
 }
 

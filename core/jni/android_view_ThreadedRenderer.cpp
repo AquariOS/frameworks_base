@@ -572,6 +572,7 @@ private:
 
     JavaVM* const mVm;
     jweak mObserverWeak;
+    jobject mJavaBufferGlobal;
 
     sp<MessageQueue> mMessageQueue;
     sp<NotifyHandler> mMessageHandler;
