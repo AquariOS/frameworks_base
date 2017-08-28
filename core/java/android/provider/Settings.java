@@ -4378,7 +4378,15 @@ public final class Settings {
         public static final String VIBRATE_ON_DISCONNECT = "vibrate_on_disconnect";
 
         /**
-         * whether to enable torch on lockscreen
+         * Whether to use the MTP by default after connecting to PC
+         * @hide
+         */
+        public static final String MTP_DIRTY_HACK = "mtp_dirty_hack";
+        /** @hide */
+        public static final String MTP_DIRTY_HACK_SAVE = "mtp_dirty_hack_save";
+
+        /**
+	 * whether to enable torch on lockscreen
          * @hide
          */
         public static final String KEYGUARD_TOGGLE_TORCH = "keyguard_toggle_torch";
