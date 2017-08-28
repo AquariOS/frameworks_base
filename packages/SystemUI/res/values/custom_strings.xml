@@ -61,4 +61,9 @@
     <string name="screenrecord_notif_error">Unable to record screen</string>
     <string name="notification_channel_screenrecord">Screenrecords</string>
 
+    <!-- Power menu options -->
+    <string name="global_action_restart_advanced">Advanced reboot</string>
+    <string name="global_action_restart_recovery">Go to recovery</string>
+    <string name="global_action_restart_bootloader">Go to bootloader</string>
+
 </resources>
