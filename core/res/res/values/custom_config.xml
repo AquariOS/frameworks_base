@@ -37,4 +37,8 @@
     <add-resource type="bool" name="config_supportHighBrightness"></add-resource>
     <bool name="config_supportHighBrightness">false</bool>
 
+    <!-- backlight brightness -->
+    <integer name="config_buttonBrightnessSettingDefault">255</integer>
+    <bool name="config_deviceHasVariableButtonBrightness">false</bool>
+
 </resources>
