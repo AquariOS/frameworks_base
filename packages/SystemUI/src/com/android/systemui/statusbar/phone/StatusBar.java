@@ -174,6 +174,7 @@ import com.android.systemui.doze.DozeLog;
 import com.android.systemui.fragments.FragmentHostManager;
 import com.android.systemui.fragments.PluginFragmentListener;
 import com.android.systemui.keyguard.KeyguardViewMediator;
+import com.android.systemui.omni.StatusBarHeaderMachine;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin.MenuItem;
@@ -785,6 +786,8 @@ public class StatusBar extends SystemUI implements DemoMode,
     private NavigationBarFragment mNavigationBar;
     private View mNavigationBarView;
 
+    private StatusBarHeaderMachine mStatusBarHeaderMachine;
+
     @Override
     public void start() {
         mNetworkController = Dependency.get(NetworkController.class);
@@ -1168,6 +1171,8 @@ public class StatusBar extends SystemUI implements DemoMode,
             createUserSwitcher();
         }
 
+        mStatusBarHeaderMachine = new StatusBarHeaderMachine(mContext);
+
         // Set up the quick settings tile panel
         View container = mStatusBarWindow.findViewById(R.id.qs_frame);
         if (container != null) {
@@ -1188,6 +1193,8 @@ public class StatusBar extends SystemUI implements DemoMode,
                     mQSPanel.setBrightnessMirror(mBrightnessMirrorController);
                     mKeyguardStatusBar.setQSPanel(mQSPanel);
                     mQuickStatusBarHeader = ((QSFragment) qs).getQuickStatusBarHeader();
+                    mStatusBarHeaderMachine.addObserver(mQuickStatusBarHeader);
+                    mStatusBarHeaderMachine.updateEnablement();
                 }
             });
         }
