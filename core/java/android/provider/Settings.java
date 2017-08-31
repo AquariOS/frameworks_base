@@ -4050,6 +4050,16 @@ public final class Settings {
         public static final String BATTERY_BAR_STYLE = "battery_bar_style";
 
         /**
+         * Double tap on navbar to sleep
+         * @hide
+         */
+        public static final String DOUBLE_TAP_SLEEP_NAVBAR = "double_tap_sleep_navbar";
+
+        /**
+         * Setting to determine whether or not to show the battery percentage in the status bar.
+         *    0 - Don't show percentage
+         *    1 - Show percentage
+         * 
          * @hide
          */
         public static final String BATTERY_BAR_ANIMATE = "battery_bar_animate";
@@ -4260,10 +4270,14 @@ public final class Settings {
             PRIVATE_SETTINGS.add(LOCK_TO_APP_ENABLED);
             PRIVATE_SETTINGS.add(EGG_MODE);
             PRIVATE_SETTINGS.add(SHOW_BATTERY_PERCENT);
+<<<<<<< HEAD
             PRIVATE_SETTINGS.add(QS_ROWS_PORTRAIT);
             PRIVATE_SETTINGS.add(QS_ROWS_LANDSCAPE);
             PRIVATE_SETTINGS.add(QS_COLUMNS_PORTRAIT);
             PRIVATE_SETTINGS.add(QS_COLUMNS_LANDSCAPE);
+=======
+            PRIVATE_SETTINGS.add(DOUBLE_TAP_SLEEP_NAVBAR);
+>>>>>>> 2cc0f57... Add navbar double tap to sleep [1/2]
         }
 
         /**
