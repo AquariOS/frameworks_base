@@ -304,6 +304,8 @@ import com.android.server.wm.DisplayFrames;
 import com.android.server.wm.WindowManagerInternal;
 import com.android.server.wm.WindowManagerInternal.AppTransitionListener;
 
+import dalvik.system.PathClassLoader;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -644,6 +646,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     int mVeryLongPressTimeout;
     boolean mAllowStartActivityForLongPressOnPowerDuringSetup;
     MetricsLogger mLogger;
+    private DeviceKeyHandler mDeviceKeyHandler;
 
     private boolean mHandleVolumeKeysInWM;
 
@@ -2528,6 +2531,27 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
         }
         if (DEBUG) Slog.d(TAG, "" + mDeviceKeyHandlers.size() + " device key handlers loaded");
+
+        String deviceKeyHandlerLib = mContext.getResources().getString(
+                com.android.internal.R.string.config_deviceKeyHandlerLib);
+         String deviceKeyHandlerClass = mContext.getResources().getString(
+                com.android.internal.R.string.config_deviceKeyHandlerClass);
+         if (!deviceKeyHandlerLib.isEmpty() && !deviceKeyHandlerClass.isEmpty()) {
+            try {
+                PathClassLoader loader =  new PathClassLoader(deviceKeyHandlerLib,
+                        getClass().getClassLoader());
+                 Class<?> klass = loader.loadClass(deviceKeyHandlerClass);
+                Constructor<?> constructor = klass.getConstructor(Context.class);
+                mDeviceKeyHandler = (DeviceKeyHandler) constructor.newInstance(
+                        mContext);
+                if(DEBUG) Slog.d(TAG, "Device key handler loaded");
+            } catch (Exception e) {
+                Slog.w(TAG, "Could not instantiate device key handler "
+                        + deviceKeyHandlerClass + " from class "
+                        + deviceKeyHandlerLib, e);
+            }
+        }
+
     }
 
     /**
@@ -4270,6 +4294,16 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         // Specific device key handling
         if (dispatchKeyToKeyHandlers(event)) {
             return -1;
+        }
+        if (mDeviceKeyHandler != null) {
+            try {
+                // The device only will consume known keys.
+                if (mDeviceKeyHandler.canHandleKeyEvent(event)) {
+                    return -1;
+                }
+            } catch (Exception e) {
+                Slog.w(TAG, "Could not dispatch event to device key handler", e);
+            }
         }
 
         if (down) {
@@ -6425,6 +6459,52 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         // Specific device key handling
         if (dispatchKeyToKeyHandlers(event)) {
             return 0;
+        }
+
+        if (mDeviceKeyHandler != null) {
+            try {
+                // The device says if we should ignore this event.
+                if (mDeviceKeyHandler.isDisabledKeyEvent(event)) {
+                    result &= ~ACTION_PASS_TO_USER;
+                    return result;
+                }
+                if (!interactive && mDeviceKeyHandler.isCameraLaunchEvent(event)) {
+                    if (DEBUG_INPUT) {
+                        Slog.i(TAG, "isCameraLaunchEvent from DeviceKeyHandler");
+                    }
+                    GestureLauncherService gestureService = LocalServices.getService(
+                            GestureLauncherService.class);
+                    if (gestureService != null) {
+                        gestureService.doCameraLaunchGesture();
+                    }
+                    result &= ~ACTION_PASS_TO_USER;
+                    return result;
+                }
+                if (!interactive && mDeviceKeyHandler.isWakeEvent(event)) {
+                    if (DEBUG_INPUT) {
+                        Slog.i(TAG, "isWakeEvent from DeviceKeyHandler");
+                    }
+                    wakeUp(event.getEventTime(), mAllowTheaterModeWakeFromKey, "android.policy:KEY");
+                    result &= ~ACTION_PASS_TO_USER;
+                    return result;
+                }
+                final Intent eventLaunchActivity = mDeviceKeyHandler.isActivityLaunchEvent(event);
+                if (!interactive && eventLaunchActivity != null) {
+                    if (DEBUG_INPUT) {
+                        Slog.i(TAG, "isActivityLaunchEvent from DeviceKeyHandler " + eventLaunchActivity);
+                    }
+                    wakeUp(event.getEventTime(), mAllowTheaterModeWakeFromKey, "android.policy:KEY");
+                    LiquidUtils.launchKeyguardDismissIntent(mContext, UserHandle.CURRENT, eventLaunchActivity);
+                    result &= ~ACTION_PASS_TO_USER;
+                    return result;
+                }
+                if (mDeviceKeyHandler.handleKeyEvent(event)) {
+                    result &= ~ACTION_PASS_TO_USER;
+                    return result;
+                }
+            } catch (Exception e) {
+                Slog.w(TAG, "Could not dispatch event to device key handler", e);
+            }
         }
 
         // Handle special keys.
