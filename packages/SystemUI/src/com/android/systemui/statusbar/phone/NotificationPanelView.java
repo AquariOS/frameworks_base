@@ -241,6 +241,7 @@ public class NotificationPanelView extends PanelView implements
     private boolean mQsTracking;
 
     private GestureDetector mLockscreenDoubleTapToSleep;
+    private boolean mIsLockscreenDoubleTapEnabled;
 
     /**
      * If set, the ongoing touch gesture might both trigger the expansion in {@link PanelView} and
@@ -1258,7 +1259,7 @@ public class NotificationPanelView extends PanelView implements
         if (mLastEventSynthesizedDown && event.getAction() == MotionEvent.ACTION_UP) {
             expand(true /* animate */);
         }
-        if (!mPulsing && !mDozing
+        if (mIsLockscreenDoubleTapEnabled && !mPulsing && !mDozing
                 && mBarState == StatusBarState.KEYGUARD) {
             mLockscreenDoubleTapToSleep.onTouchEvent(event);
         }
@@ -3507,4 +3508,7 @@ public class NotificationPanelView extends PanelView implements
         mOnReinflationListener = onReinflationListener;
     }
 
+    public void setLockscreenDoubleTapToSleep(boolean isDoubleTapEnabled) {
+        mIsLockscreenDoubleTapEnabled = isDoubleTapEnabled;
+    }
 }
