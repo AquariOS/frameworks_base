@@ -28,4 +28,6 @@
     <string name="global_action_restart_hot">Soft</string>
     <string name="global_action_screenshot">Screenshot</string>
 
+    <string name="screenshot_abort_title">No screenshot taken</string>
+    <string name="screenshot_abort_text">Operation aborted.</string>
 </resources>
