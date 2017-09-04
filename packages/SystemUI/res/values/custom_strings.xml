@@ -90,4 +90,7 @@
 
     <!-- dui -->
     <string name="systemui_tuner_navbar_title">Stock settings</string>
+
+    <string name="summary_empty" translatable="false"></string>
+
 </resources>
