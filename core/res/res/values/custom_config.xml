@@ -67,4 +67,13 @@
     <!-- Ambient display music ticker -->
     <bool name="config_canForceDozeNotifications">true</bool>
 
+    <!-- Is the battery LED intrusive? Used to decide if there should be a disable option -->
+    <bool name="config_intrusiveBatteryLed">false</bool>
+
+    <!-- Does the battery LED support multiple colors? -->
+    <bool name="config_multiColorBatteryLed">false</bool>
+
+    <!-- Do the battery/notification LEDs support pulsing? -->
+    <bool name="config_ledCanPulse">false</bool>
+
 </resources>
