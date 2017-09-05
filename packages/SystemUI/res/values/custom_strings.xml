@@ -161,4 +161,9 @@
     <!-- Always on Display Tile -->
     <string name="quick_settings_always_on_display_label">Always on display</string>
 
+    <!-- LTE QS Tile -->
+    <string name="qs_lte_label">LTE</string>
+    <string name="lte_on">LTE On</string>
+    <string name="lte_off">LTE Off</string>
+
 </resources>
