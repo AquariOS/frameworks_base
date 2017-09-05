@@ -39,6 +39,7 @@ import com.android.systemui.qs.tiles.FontTile;
 import com.android.systemui.qs.tiles.HotspotTile;
 import com.android.systemui.qs.tiles.IntentTile;
 import com.android.systemui.qs.tiles.LocationTile;
+import com.android.systemui.qs.tiles.LteTile;
 import com.android.systemui.qs.tiles.NfcTile;
 import com.android.systemui.qs.tiles.NightDisplayTile;
 import com.android.systemui.qs.tiles.OnTheGoTile;
@@ -134,6 +135,8 @@ public class QSFactoryImpl implements QSFactory {
                 return new AlwaysOnDisplayTile(mHost);
             case "smartpixels":
                 return new SmartPixelsTile(mHost);
+            case "lte":
+                return new LteTile(mHost);
         }
 
         // Intent tiles.
