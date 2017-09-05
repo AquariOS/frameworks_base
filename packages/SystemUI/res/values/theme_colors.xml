@@ -69,4 +69,8 @@
     <color name="screenshot_flash_color">#b3adadad</color> <!-- light grey with some transparency -->
     <color name="screenshot_background_color">@android:color/black</color>
 
+    <!-- Floating action button -->
+    <color name="fab_color">@*android:color/material_deep_teal_500</color>
+    <color name="floating_action_button_icon_color">@android:color/white</color>
+
 </resources>
