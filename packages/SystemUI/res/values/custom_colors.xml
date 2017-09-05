@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-/*
- * Copyright 2010, The Android Open Source Project
+ *  Copyright (c) 2017 AquariOS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,4 +17,8 @@
 -->
 <resources>
     <color name="powersave_warning_color">#ff8e0101</color><!-- rgb 142 1 1 -->
+
+    <!-- Floating action button -->
+    <color name="fab_color">@*android:color/material_deep_teal_500</color>
+    <color name="floating_action_button_icon_color">#ffffff</color>
 </resources>
