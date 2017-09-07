@@ -4161,6 +4161,18 @@ public final class Settings {
         public static final String ANBI_ENABLED = "anbi_enabled";
 
         /**
+         * Custom brightness value for Ambient Display
+         * @hide
+         */
+        public static final String AMBIENT_DOZE_CUSTOM_BRIGHTNESS = "ambient_doze_custom_brightness";
+
+        /**
+         * Use latest screen-on brightness value for Ambient Display
+         * @hide
+         */
+        public static final String AMBIENT_DOZE_AUTO_BRIGHTNESS = "ambient_doze_auto_brightness";
+
+        /**
          * Whether the battery light should be enabled (if hardware supports it)
          * The value is boolean (1 or 0).
          * @hide
@@ -4595,6 +4607,8 @@ public final class Settings {
             PRIVATE_SETTINGS.add(LOCKSCREEN_MEDIA_METADATA);
             PRIVATE_SETTINGS.add(HEADSET_CONNECT_PLAYER);
             PRIVATE_SETTINGS.add(TOAST_ICON);
+            PRIVATE_SETTINGS.add(AMBIENT_DOZE_CUSTOM_BRIGHTNESS);
+            PRIVATE_SETTINGS.add(AMBIENT_DOZE_AUTO_BRIGHTNESS);
         }
 
         /**
