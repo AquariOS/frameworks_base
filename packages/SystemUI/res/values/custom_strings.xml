@@ -19,4 +19,8 @@
     <string name="task_unlocked_desc">Lock %1$s. Currently unlocked</string>
     <!-- Content description for Accessibility on locked tasks in recents -->
     <string name="task_locked_desc">Unlock %1$s. Currently locked</string>
+
+    <!-- PiP Tile -->
+    <string name="quick_settings_pip_label">PiP</string>
+
 </resources>
