@@ -20,6 +20,10 @@ This XML file declares which signature|privileged permissions should be granted 
 applications that come with the platform
 -->
 <permissions>
+    <privapp-permissions package="com.android.apps.tag">
+        <permission name="android.permission.WRITE_SECURE_SETTINGS" />
+    </privapp-permissions>
+
     <privapp-permissions package="com.android.backupconfirm">
         <permission name="android.permission.BACKUP"/>
         <permission name="android.permission.CRYPT_KEEPER"/>
@@ -50,6 +54,7 @@ applications that come with the platform
         <permission name="android.permission.CONTROL_INCALL_EXPERIENCE"/>
         <permission name="android.permission.GET_ACCOUNTS_PRIVILEGED"/>
         <permission name="android.permission.MODIFY_PHONE_STATE"/>
+        <permission name="android.permission.STATUS_BAR"/>
         <permission name="android.permission.STOP_APP_SWITCHES"/>
         <permission name="com.android.voicemail.permission.READ_VOICEMAIL"/>
         <permission name="com.android.voicemail.permission.WRITE_VOICEMAIL"/>
@@ -66,7 +71,6 @@ applications that come with the platform
 
     <privapp-permissions package="com.android.launcher3">
         <permission name="android.permission.BIND_APPWIDGET"/>
-        <permission name="android.permission.GET_ACCOUNTS_PRIVILEGED"/>
     </privapp-permissions>
 
     <privapp-permissions package="com.android.location.fused">
@@ -364,7 +368,7 @@ applications that come with the platform
         <permission name="android.permission.CONTROL_VPN"/>
     </privapp-permissions>
 
-    <privapp-permissions package="com.google.android.ext.services">
+    <privapp-permissions package="android.ext.services">
         <permission name="android.permission.PROVIDE_RESOLVER_RANKER_SERVICE" />
     </privapp-permissions>
 
