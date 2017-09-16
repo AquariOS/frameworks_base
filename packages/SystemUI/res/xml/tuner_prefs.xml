@@ -171,4 +171,8 @@
         android:selectable="false"
         android:icon="@drawable/ic_info_outline_24dp" />
 
+    <com.android.systemui.tuner.StatusBarSwitch
+        android:key="volte"
+        android:title="@string/status_bar_volte" />
+
 </PreferenceScreen>
