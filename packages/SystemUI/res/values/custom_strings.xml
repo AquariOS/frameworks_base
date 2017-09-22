@@ -140,4 +140,9 @@
 
     <!-- Battery saver tile -->
     <string name="battery_saver_qs_tile_fully_charged">Fully Charged</string>
+
+	<!-- Lockscreen Shortcuts -->
+    <string name="lockscreen_default">Default</string>
+    <string name="lockscreen_hidden">None</string>
+
 </resources>
