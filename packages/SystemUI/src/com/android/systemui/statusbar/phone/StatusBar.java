@@ -467,6 +467,9 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
     private final int[] mAbsPos = new int[2];
     private final ArrayList<Runnable> mPostCollapseRunnables = new ArrayList<>();
 
+    // the tracker view
+    int mTrackingPosition; // the position of the top of the tracking view.
+
     private NotificationGutsManager mGutsManager;
     protected NotificationLogger mNotificationLogger;
     protected NotificationEntryManager mEntryManager;
@@ -5033,21 +5036,31 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
 
     private NosSettingsObserver mNosSettingsObserver = new NosSettingsObserver(mHandler);
     private class NosSettingsObserver extends ContentObserver {
+        
         NosSettingsObserver(Handler handler) {
             super(handler);
         }
-         void observe() {
+
+        void observe() {
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.HEADS_UP_STOPLIST_VALUES), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.HEADS_UP_BLACKLIST_VALUES), false, this);
         }
-         @Override
+
+        @Override
         public void onChange(boolean selfChange, Uri uri) {
+            if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.HEADS_UP_STOPLIST_VALUES))) {
+                final String stopString = Settings.System.getString(mContext.getContentResolver(),
+                        Settings.System.HEADS_UP_STOPLIST_VALUES);
+                splitAndAddToArrayList(mStoplist, stopString, "\\|");
+            }
             update();
         }
-         public void update() {
+
+        public void update() {
             setHeadsUpStoplist();
             setHeadsUpBlacklist();
         }
@@ -6221,6 +6234,15 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
 
     protected void notifyHeadsUpGoingToSleep() {
         maybeEscalateHeadsUp();
+    }
+
+    private boolean alertAgain(Entry oldEntry, Notification newNotification) {
+        return oldEntry == null || !oldEntry.hasInterrupted()
+                || (newNotification.flags & Notification.FLAG_ONLY_ALERT_ONCE) == 0;
+    }
+
+    protected boolean shouldPeek(Entry entry) {
+        return shouldPeek(entry, entry.notification);
     }
 
     /**
