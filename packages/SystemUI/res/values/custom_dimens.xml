@@ -37,4 +37,7 @@
     <!-- Screen Recorder -->
     <dimen name="screenrecord_hint_size">48dp</dimen>
 
+    <!-- QuickSettingHeader scrollbar-->
+    <dimen name="qs_scroller_margin">8dp</dimen>
+
 </resources>
