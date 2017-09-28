@@ -70,8 +70,10 @@
     <string name="quick_settings_screenshot_label">Screenshot</string>
     <string name="quick_settings_region_screenshot_label">Partial screenshot</string>
 
-    <!-- Tuner elements -->
+  <!-- Tuner elements -->
     <string name="lockscreen_default">Default</string>
     <string name="lockscreen_hidden">None</string>
+    <!-- Shows when people have clicked on the custom lockscreen shortcut [CHAR LIMIT=60] -->
+    <string name="custom_hint">Swipe from icon to launch</string>
 
 </resources>
