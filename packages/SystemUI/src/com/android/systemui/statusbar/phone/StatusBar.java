@@ -1846,6 +1846,10 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.QS_FOOTER_WARNINGS),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.HEADS_UP_STOPLIST_VALUES), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.HEADS_UP_BLACKLIST_VALUES), false, this);
         }
 
         @Override
@@ -1869,6 +1873,7 @@ public class StatusBar extends SystemUI implements DemoMode,
                     Settings.System.QS_FOOTER_WARNINGS))) {
                 setQsPanelOptions();
             }
+            update();
         }
 
         public void update() {
@@ -1878,6 +1883,8 @@ public class StatusBar extends SystemUI implements DemoMode,
             setLockscreenDoubleTapToSleep();
             setStatusBarWindowViewOptions();
             setQsPanelOptions();
+            setHeadsUpStoplist();
+            setHeadsUpBlacklist();
         }
     }
 
@@ -1918,6 +1925,16 @@ public class StatusBar extends SystemUI implements DemoMode,
         if (mQSPanel != null) {
             mQSPanel.updateSettings();
         }
+    }
+
+    private void setHeadsUpStoplist() {
+        if (mPresenter != null)
+            mPresenter.setHeadsUpStoplist();
+    }
+
+    private void setHeadsUpBlacklist() {
+        if (mPresenter != null)
+            mPresenter.setHeadsUpBlacklist();
     }
 
     /**
