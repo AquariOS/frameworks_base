@@ -57,6 +57,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)material/notifications/Duet.ogg:system/media/audio/notifications/Duet.ogg \
     $(LOCAL_PATH)material/notifications/End_note.ogg:system/media/audio/notifications/End_note.ogg \
     $(LOCAL_PATH)material/notifications/Gentle_gong.ogg:system/media/audio/notifications/Gentle_gong.ogg \
+    $(LOCAL_PATH)material/notifications/Knock.ogg:system/media/audio/notifications/Knock.ogg \
     $(LOCAL_PATH)material/notifications/Mallet.ogg:system/media/audio/notifications/Mallet.ogg \
     $(LOCAL_PATH)material/notifications/Orders_up.ogg:system/media/audio/notifications/Orders_up.ogg \
     $(LOCAL_PATH)material/notifications/Ping.ogg:system/media/audio/notifications/Ping.ogg \
