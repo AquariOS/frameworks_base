@@ -70,6 +70,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)material/notifications/Hey.ogg:system/media/audio/notifications/Hey.ogg \
     $(LOCAL_PATH)material/notifications/Iapetus.ogg:system/media/audio/notifications/Iapetus.ogg \
     $(LOCAL_PATH)material/notifications/Io.ogg:system/media/audio/notifications/Io.ogg \
+    $(LOCAL_PATH)material/notifications/Knock.ogg:system/media/audio/notifications/Knock.ogg \
     $(LOCAL_PATH)material/notifications/Note.ogg:system/media/audio/notifications/Note.ogg \
     $(LOCAL_PATH)material/notifications/Rhea.ogg:system/media/audio/notifications/Rhea.ogg \
     $(LOCAL_PATH)material/notifications/Salacia.ogg:system/media/audio/notifications/Salacia.ogg \
@@ -85,6 +86,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)material/ringtones/Early_bird.ogg:system/media/audio/ringtones/Early_bird.ogg \
     $(LOCAL_PATH)material/ringtones/Ganymede.ogg:system/media/audio/ringtones/Ganymede.ogg \
     $(LOCAL_PATH)material/ringtones/Hey_hey.ogg:system/media/audio/ringtones/Hey_hey.ogg \
+    $(LOCAL_PATH)material/ringtones/Lollipop.ogg:system/media/audio/ringtones/Lollipop.ogg \
     $(LOCAL_PATH)material/ringtones/Luna.ogg:system/media/audio/ringtones/Luna.ogg \
     $(LOCAL_PATH)material/ringtones/Oberon.ogg:system/media/audio/ringtones/Oberon.ogg \
     $(LOCAL_PATH)material/ringtones/Phobos.ogg:system/media/audio/ringtones/Phobos.ogg \
