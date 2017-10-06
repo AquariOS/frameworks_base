@@ -116,5 +116,9 @@
     <string name="battery_level_good_sound" translatable="false">/system/media/audio/ui/GoodBattery.ogg</string>
     <string name="notification_channel_charge_alert">Optimal battery charge level</string>
 
+	<!-- Tuner Stuff -->
+    <string name="tuner_quick_settings">Quick settings</string>
+    <string name="tuner_show_brightness_mode">Show brightness mode switch</string>
+    <string name="tuner_show_brightness_new">Show brightness slider</string>
     <string name="status_bar_vpn">VPN</string>
 </resources>
