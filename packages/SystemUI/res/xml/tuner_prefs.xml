@@ -23,8 +23,6 @@
             android:summary="@string/show_lte_fourgee_summary"
             android:defaultValue="false" />
 
-    android:title="@string/statusbar_icons_blacklist">
-
     <com.android.systemui.tuner.StatusBarSwitch
         android:key="rotate"
         android:title="@string/status_bar_settings_auto_rotation" />
