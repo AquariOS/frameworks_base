@@ -63,4 +63,9 @@
 
     <string name="qs_menu_item_titles">Show labels</string>
 
+    <!-- Advance location quick setting tile -->
+    <string name="accessibility_quick_settings_location_battery_saving">Location reporting: battery saving mode.</string>
+    <string name="accessibility_quick_settings_location_gps_only">Location reporting: sensors only mode.</string>
+    <string name="accessibility_quick_settings_location_high_accuracy">Location reporting: high accuracy mode.</string>
+
 </resources>
