@@ -52,7 +52,7 @@ public class PictureInPictureTile extends QSTileImpl<BooleanState> {
     @Override
     public void handleClick() {
         mHost.collapsePanels();
-        DeviceUtils.sendKeycode(171);
+        AquaUtils.sendKeycode(171);
     }
 
     @Override
