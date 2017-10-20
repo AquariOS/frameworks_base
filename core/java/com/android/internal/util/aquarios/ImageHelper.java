@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package com.android.internal.util.gzosp;
+package com.android.internal.util.aquarios;
 
 import android.content.Context;
 import android.graphics.Bitmap;
