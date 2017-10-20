@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.service.quicksettings.Tile;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -54,6 +55,8 @@ import java.util.Collection;
 
 /** View that represents the quick settings tile panel. **/
 public class QSPanel extends LinearLayout implements Tunable, Callback {
+
+    private static final String TAG = "QSPanel";
 
     public static final String QS_SHOW_BRIGHTNESS = "qs_show_brightness";
 
@@ -98,7 +101,9 @@ public class QSPanel extends LinearLayout implements Tunable, Callback {
                 R.layout.quick_settings_brightness_dialog, this, false);
         ImageView brightnessIcon = (ImageView) mBrightnessView.findViewById(R.id.brightness_icon);
         brightnessIcon.setVisibility(View.VISIBLE);
-        addView(mBrightnessView);
+        mBrightnessController = new BrightnessController(getContext(),
+                brightnessIcon,
+                mBrightnessView.findViewById(R.id.brightness_slider));
 
         setupTileLayout();
 
@@ -109,6 +114,11 @@ public class QSPanel extends LinearLayout implements Tunable, Callback {
             ((PagedTileLayout) mTileLayout).setPageIndicator((PageIndicator) mPageIndicator);
         }
 
+        mBrightnessView.setPadding(mBrightnessView.getPaddingLeft(),
+                    mBrightnessView.getPaddingTop(), mBrightnessView.getPaddingRight(),
+                    mContext.getResources().getDimensionPixelSize(R.dimen.qs_brightness_footer_padding));
+        addView(mBrightnessView);
+
         addDivider();
 
         mFooter = new QSSecurityFooter(this, context);
@@ -116,9 +126,6 @@ public class QSPanel extends LinearLayout implements Tunable, Callback {
 
         updateResources();
 
-        mBrightnessController = new BrightnessController(getContext(),
-                brightnessIcon,
-                findViewById(R.id.brightness_slider));
     }
 
     protected void addDivider() {
@@ -175,9 +182,13 @@ public class QSPanel extends LinearLayout implements Tunable, Callback {
 
     @Override
     public void onTuningChanged(String key, String newValue) {
-        if (QS_SHOW_BRIGHTNESS.equals(key)) {
-            mBrightnessView.setVisibility(newValue == null || Integer.parseInt(newValue) != 0
-                    ? VISIBLE : GONE);
+        try {
+            if (QS_SHOW_BRIGHTNESS.equals(key)) {
+                mBrightnessView.setVisibility(newValue == null || Integer.parseInt(newValue) != 0
+                        ? VISIBLE : GONE);
+            }
+        } catch (Exception e){
+            Log.d(TAG, "Caught exception from Tuner", e);
         }
     }
 
