@@ -3977,7 +3977,7 @@ message MetricsEvent {
     // Add new aosp constants above this line.
     // END OF AOSP CONSTANTS
 
-    // AQUARIOS custom constants
-    AQUARIOS = 1500;
+    // AquariOS custom constants
+    AQUA = 1400;
   }
 }

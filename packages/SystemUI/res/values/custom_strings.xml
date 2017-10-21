@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-/* //device/apps/common/assets/res/any/strings.xml
 **
 ** Copyright 2006, The Android Open Source Project
 **
@@ -23,5 +22,36 @@
     <string name="global_action_restart_bootloader">Go to bootloader</string>
 
     <string name="summary_empty" translatable="false"></string>
+    <!-- Content description for Accessibility on unlocked tasks in recents -->
+    <string name="task_unlocked_desc">Lock %1$s. Currently unlocked</string>
+    <!-- Content description for Accessibility on locked tasks in recents -->
+    <string name="task_locked_desc">Unlock %1$s. Currently locked</string>
 
+    <!-- PiP Tile -->
+    <string name="quick_settings_pip_label">PiP</string>
+     <!-- Sync QS Tile -->
+    <string name="quick_settings_sync_label">Sync</string>
+    <string name="accessibility_quick_settings_sync_off">Sync off</string>
+    <string name="accessibility_quick_settings_sync_on">Sync on</string>
+    <string name="accessibility_quick_settings_sync_changed_off">Sync turned off</string>
+    <string name="accessibility_quick_settings_sync_changed_on">Sync turned on</string>
+    <!-- Expanded Desktop QS Tile -->
+    <string name="quick_settings_expanded_desktop_label">Expanded desktop</string>
+    <string name="quick_settings_expanded_desktop">Expanded</string>
+    <string name="quick_settings_expanded_desktop_off">Normal</string>
+    <string name="quick_settings_expanded_navigation_off">Hide navbar</string>
+    <string name="quick_settings_expanded_statusbar_off">Hide statusbar</string>
+    <!-- Navigation Bar tile -->
+    <string name="quick_settings_navbar_title">NavBar</string>
+    <string name="quick_settings_navbar">NavBar Enabled</string>
+    <string name="quick_settings_navbar_off">NavBar Disabled</string>
+
+    <!-- Caffeine QS Tile -->
+    <string name="quick_settings_caffeine_label">Caffeine</string>
+    <string name="accessibility_quick_settings_caffeine_off">Caffeine off</string>
+    <string name="accessibility_quick_settings_caffeine_on">Caffeine on</string>
+
+    <!-- Reboot/Recovery QS Tile -->
+    <string name="quick_settings_reboot_label">Reboot</string>
+    <string name="quick_settings_reboot_recovery_label">Recovery</string>
 </resources>

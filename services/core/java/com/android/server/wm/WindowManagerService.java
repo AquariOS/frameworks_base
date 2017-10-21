@@ -703,9 +703,9 @@ public class WindowManagerService extends IWindowManager.Stub
     PowerManager mPowerManager;
     PowerManagerInternal mPowerManagerInternal;
 
-    private float mWindowAnimationScaleSetting = 1.0f;
-    private float mTransitionAnimationScaleSetting = 1.0f;
-    private float mAnimatorDurationScaleSetting = 1.0f;
+    private float mWindowAnimationScaleSetting = 0.5f;
+    private float mTransitionAnimationScaleSetting = 0.5f;
+    private float mAnimatorDurationScaleSetting = 0.5f;
     private boolean mAnimationsDisabled = false;
 
     final InputManagerService mInputManager;
@@ -3226,6 +3226,11 @@ public class WindowManagerService extends IWindowManager.Stub
     /** Check if the service is set to dispatch pointer events. */
     boolean canDispatchPointerEvents() {
         return mPointerEventDispatcher != null;
+    }
+
+    @Override
+    public void addSystemUIVisibilityFlag(int flags) {
+        mLastStatusBarVisibility |= flags;
     }
 
     // Called by window manager policy. Not exposed externally.
