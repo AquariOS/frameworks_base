@@ -15,7 +15,11 @@
 */
 package com.android.internal.util.aquarios;
 
+import android.app.ActivityManager;
+import android.app.ActivityManagerNative;
+import android.app.IActivityManager;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -56,6 +60,7 @@ import java.util.List;
 public class AquaUtils {
 
     private static final String SETTINGS_METADATA_NAME = "com.android.settings";
+    private static final String TAG = Thread.currentThread().getStackTrace()[1].getClassName();
 
     // Device types
     private static final int DEVICE_PHONE  = 0;
@@ -212,6 +217,27 @@ public class AquaUtils {
         try {
             wm.sendCustomAction(new Intent(full? INTENT_SCREENSHOT : INTENT_REGION_SCREENSHOT));
         } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+/**
+ * Restart SystemUI
+ */
+
+    public static void restartSystemUI(Context context) {
+        try {
+            ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+            IActivityManager amn = ActivityManagerNative.getDefault();
+            context.stopService(new Intent().setComponent(new ComponentName("com.android.systemui", "com.android.systemui.SystemUIService")));
+            am.killBackgroundProcesses("com.android.systemui");
+            for (ActivityManager.RunningAppProcessInfo app : am.getRunningAppProcesses()) {
+                if ("com.android.systemui".equals(app.processName)) {
+                    amn.killApplicationProcess(app.processName, app.uid);
+                    break;
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
