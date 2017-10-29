@@ -36,10 +36,6 @@
   <java-symbol type="drawable" name="ic_lock_settings" />
   <java-symbol type="drawable" name="ic_lock_user" />
 
-  <!-- Powermenu Torch -->
-  <java-symbol type="drawable" name="ic_lock_torch" />
-  <java-symbol type="string" name="global_action_torch" />
-
   <!-- Unlink ringer/notifications -->
   <java-symbol type="drawable" name="ic_audio_notification_new" />
   <java-symbol type="drawable" name="ic_audio_notification_mute_new" />
