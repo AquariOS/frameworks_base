@@ -1234,7 +1234,8 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
         mHeadsUpManager.addListener(mScrimController);
         mStackScroller.setScrimController(mScrimController);
-        mDozeScrimController = new DozeScrimController(mScrimController, context);
+        mDozeScrimController = new DozeScrimController(mScrimController, context,
+                                    getKeyguardBottomAreaView().mVisualizerView);
 
         // Other icons
         mVolumeComponent = getComponent(VolumeComponent.class);
