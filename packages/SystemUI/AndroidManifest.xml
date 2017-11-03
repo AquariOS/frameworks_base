@@ -275,7 +275,7 @@
         <activity android:name=".tuner.TunerActivity"
                   android:enabled="true"
                   android:icon="@drawable/tuner"
-                  android:theme="@style/TunerSettings"
+                  android:theme="@style/CustomTunerSettings"
                   android:label="@string/systemui_tuner_icon_manager_title"
                   android:parentActivityName="com.aquarios.coralreef.CoralReef"
                   android:process=":tuner"
@@ -285,7 +285,7 @@
         <activity-alias android:name=".DemoMode"
                   android:targetActivity=".tuner.TunerActivity"
                   android:icon="@drawable/tuner"
-                  android:theme="@style/TunerSettings"
+                  android:theme="@style/CustomTunerSettings"
                   android:label="@string/demo_mode"
                   android:process=":tuner"
                   android:exported="true">
