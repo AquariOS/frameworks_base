@@ -540,8 +540,6 @@
     <protected-broadcast android:name="android.media.tv.action.PREVIEW_PROGRAM_BROWSABLE_DISABLED" />
     <protected-broadcast android:name="android.media.tv.action.WATCH_NEXT_PROGRAM_BROWSABLE_DISABLED" />
     <protected-broadcast android:name="android.media.tv.action.CHANNEL_BROWSABLE_REQUESTED" />
-
-    <!-- AQUARIOS additions start -->
     <protected-broadcast android:name="android.settings.SHOW_INPUT_METHOD_PICKER" />
 
     <!-- ====================================================================== -->
@@ -3413,6 +3411,12 @@
     <!-- Allows an instant app to create foreground services. -->
     <permission android:name="android.permission.INSTANT_APP_FOREGROUND_SERVICE"
         android:protectionLevel="signature|development|ephemeral|appop" />
+
+    <!-- Allows an application to restart the SystemUI process.-->
+    <permission android:name="android.permission.RESTART_UI"
+        android:label="@string/permlab_restartUI"
+        android:description="@string/permdesc_restartUI"
+        android:protectionLevel="signature" />
 
     <application android:process="system"
                  android:persistent="true"

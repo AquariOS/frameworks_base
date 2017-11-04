@@ -20,7 +20,6 @@ package com.android.server.power;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.IActivityManager;
-import android.app.KeyguardManager;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.IBluetoothManager;
@@ -48,10 +47,9 @@ import android.os.storage.IStorageShutdownObserver;
 import android.os.storage.IStorageManager;
 import android.system.ErrnoException;
 import android.system.Os;
-import android.provider.Settings;
-import android.widget.ListView;
 
 import com.android.internal.telephony.ITelephony;
+import com.android.internal.util.aquarios.AquaUtils;
 import com.android.server.pm.PackageManagerService;
 
 import android.util.Log;
@@ -77,8 +75,6 @@ public final class ShutdownThread extends Thread {
     private static final int PACKAGE_MANAGER_STOP_PERCENT = 6;
     private static final int RADIO_STOP_PERCENT = 18;
     private static final int MOUNT_SERVICE_STOP_PERCENT = 20;
-
-    private static final String SOFT_REBOOT = "soft_reboot";
 
     // length of vibration before shutting down
     private static final int SHUTDOWN_VIBRATE_MS = 500;
@@ -138,16 +134,6 @@ public final class ShutdownThread extends Thread {
         shutdownInner(context, confirm);
     }
 
-    private static boolean isAdvancedRebootPossible(final Context context) {
-        KeyguardManager km = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-        boolean keyguardLocked = km.inKeyguardRestrictedInputMode() && km.isKeyguardSecure();
-        boolean advancedRebootEnabled = Settings.Secure.getInt(context.getContentResolver(),
-            Settings.Secure.ADVANCED_REBOOT, 1) == 1;
-        boolean isPrimaryUser = UserHandle.getCallingUserId() == UserHandle.USER_OWNER;
-
-        return advancedRebootEnabled && !keyguardLocked && isPrimaryUser;
-    }
-
     private static void shutdownInner(final Context context, boolean confirm) {
         // ShutdownThread is called from many places, so best to verify here that the context passed
         // in is themed.
@@ -162,106 +148,39 @@ public final class ShutdownThread extends Thread {
             }
         }
 
-        boolean showRebootOption = false;
-
-        String[] actionsArray;
-        String actions = Settings.Global.getStringForUser(context.getContentResolver(),
-                Settings.Global.POWER_MENU_ACTIONS, UserHandle.USER_CURRENT);
-        if (actions == null) {
-            actionsArray = context.getResources().getStringArray(
-                    com.android.internal.R.array.config_globalActionsList);
-        } else {
-            actionsArray = actions.split("\\|");
-        }
-
-        for (int i = 0; i < actionsArray.length; i++) {
-            if (actionsArray[i].equals("reboot")) {
-                showRebootOption = true;
-                break;
-            }
-        }
         final int longPressBehavior = context.getResources().getInteger(
                         com.android.internal.R.integer.config_longPressOnPowerBehavior);
-        int resourceId = mRebootSafeMode
+        final int resourceId = mRebootSafeMode
                 ? com.android.internal.R.string.reboot_safemode_confirm
                 : (longPressBehavior == 2
                         ? com.android.internal.R.string.shutdown_confirm_question
                         : com.android.internal.R.string.shutdown_confirm);
-        if (showRebootOption && !mRebootSafeMode) {
-            resourceId = com.android.internal.R.string.reboot_confirm;
-        }
 
         Log.d(TAG, "Notifying thread to start shutdown longPressBehavior=" + longPressBehavior);
 
         if (confirm) {
             final CloseDialogReceiver closer = new CloseDialogReceiver(context);
-            final boolean advancedReboot = isAdvancedRebootPossible(context);
             if (sConfirmDialog != null) {
                 sConfirmDialog.dismiss();
-                sConfirmDialog = null;
             }
-            AlertDialog.Builder confirmDialogBuilder = new AlertDialog.Builder(context)
+            sConfirmDialog = new AlertDialog.Builder(context)
                     .setTitle(mRebootSafeMode
                             ? com.android.internal.R.string.reboot_safemode_title
-                            : showRebootOption
-                                    ? com.android.internal.R.string.reboot_title
-                                    : com.android.internal.R.string.power_off);
-
-            if (!advancedReboot) {
-                confirmDialogBuilder.setMessage(resourceId);
-            } else {
-                confirmDialogBuilder
-                      .setSingleChoiceItems(com.android.internal.R.array.shutdown_reboot_options,
-                              0, null);
-            }
-
-            confirmDialogBuilder.setPositiveButton(com.android.internal.R.string.yes,
-                    new DialogInterface.OnClickListener() {
-                        @Override
+                            : com.android.internal.R.string.power_off)
+                    .setMessage(resourceId)
+                    .setPositiveButton(com.android.internal.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            if (advancedReboot) {
-                                boolean softReboot = false;
-                                ListView reasonsList = ((AlertDialog)dialog).getListView();
-                                int selected = reasonsList.getCheckedItemPosition();
-                                if (selected != ListView.INVALID_POSITION) {
-                                    String actions[] = context.getResources().getStringArray(
-                                            com.android.internal.R.array.shutdown_reboot_actions);
-                                    if (selected >= 0 && selected < actions.length) {
-                                        mReason = actions[selected];
-                                        if (actions[selected].equals(SOFT_REBOOT)) {
-                                            doSoftReboot();
-                                            return;
-                                        }
-                                    }
-                                }
-
-                                mReboot = true;
-                            }
                             beginShutdownSequence(context);
-                      }
-                  });
-
-            confirmDialogBuilder.setNegativeButton(com.android.internal.R.string.no, null);
-            sConfirmDialog = confirmDialogBuilder.create();
-
+                        }
+                    })
+                    .setNegativeButton(com.android.internal.R.string.no, null)
+                    .create();
             closer.dialog = sConfirmDialog;
             sConfirmDialog.setOnDismissListener(closer);
             sConfirmDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
             sConfirmDialog.show();
         } else {
             beginShutdownSequence(context);
-        }
-    }
-
-    private static void doSoftReboot() {
-        try {
-            final IActivityManager am =
-                  IActivityManager.Stub.asInterface(ServiceManager.checkService("activity"));
-            if (am != null) {
-                am.restart();
-            }
-        } catch (RemoteException e) {
-            Log.e(TAG, "failure trying to perform soft reboot", e);
         }
     }
 
@@ -303,6 +222,38 @@ public final class ShutdownThread extends Thread {
         mReason = reason;
         shutdownInner(context, confirm);
     }
+
+    /**
+     * Request for Soft reboot or SystemUI restart.  Must be called from a Looper thread in which its UI
+     * is shown.
+     *
+     * @param context Context used by SystemUI restart helper method. This must be a context
+     *                suitable for displaying UI (aka Themable).
+     */
+    public static void advancedReboot(final Context context, String reason) {
+        mReason = reason;
+        if (mReason != null && mReason.equals(PowerManager.REBOOT_SOFT)) {
+            doSoftReboot();
+        } else if (mReason != null && mReason.equals(PowerManager.REBOOT_SYSTEMUI)) {
+            doSystemUIReboot(context);
+        }
+    }
+
+    private static void doSoftReboot() {
+        try {
+            final IActivityManager am =
+                  IActivityManager.Stub.asInterface(ServiceManager.checkService("activity"));
+            if (am != null) {
+                am.restart();
+            }
+        } catch (RemoteException e) {
+            Log.e(TAG, "failure trying to perform soft reboot", e);
+        }
+    }
+
+    private static void doSystemUIReboot(Context context) {
+        AquaUtils.restartSystemUI(context);
+      }
 
     /**
      * Request a reboot into safe mode.  Must be called from a Looper thread in which its UI
@@ -381,22 +332,18 @@ public final class ShutdownThread extends Thread {
             }
         } else if (mReason != null && mReason.equals(PowerManager.REBOOT_RECOVERY)) {
             // Factory reset path. Set the dialog message accordingly.
-// <<<<<<< HEAD
-   //         pd.setTitle(context.getText(com.android.internal.R.string.reboot_to_recovery_title));
-     //       pd.setMessage(context.getText(
-       //                 com.android.internal.R.string.reboot_to_recovery_message));
-         //   pd.setIndeterminate(true);
-       // } else if (mReason != null && mReason.equals(PowerManager.REBOOT_BOOTLOADER)) {
-   //         pd.setTitle(context.getText(com.android.internal.R.string.reboot_to_bootloader_title));
-     //       pd.setMessage(context.getText(
-     //                   com.android.internal.R.string.reboot_to_bootloader_message));
-            pd.setTitle(context.getText(com.android.internal.R.string.reboot_title));
+            pd.setTitle(context.getText(com.android.internal.R.string.reboot_to_recovery_title));
             pd.setMessage(context.getText(
-                        com.android.internal.R.string.reboot_progress));
+                        com.android.internal.R.string.reboot_to_recovery_message));
+            pd.setIndeterminate(true);
+        } else if (mReason != null && mReason.equals(PowerManager.REBOOT_BOOTLOADER)) {
+            pd.setTitle(context.getText(com.android.internal.R.string.reboot_to_bootloader_title));
+            pd.setMessage(context.getText(
+                        com.android.internal.R.string.reboot_to_bootloader_message));
             pd.setIndeterminate(true);
         } else if (mReboot) {
             pd.setTitle(context.getText(com.android.internal.R.string.reboot_title));
-            pd.setMessage(context.getText(com.android.internal.R.string.reboot_progress));
+            pd.setMessage(context.getText(com.android.internal.R.string.reboot_message));
             pd.setIndeterminate(true);
         } else {
             pd.setTitle(context.getText(com.android.internal.R.string.power_off));

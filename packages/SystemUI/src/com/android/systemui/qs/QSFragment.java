@@ -21,6 +21,8 @@ import android.app.Fragment;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -68,7 +70,10 @@ public class QSFragment extends Fragment implements QS {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             Bundle savedInstanceState) {
-        inflater =inflater.cloneInContext(new ContextThemeWrapper(getContext(), R.style.qs_theme));
+        boolean darkStyle = Settings.System.getIntForUser(
+                getContext().getContentResolver(), Settings.System.QS_STYLE_DARK, 0,
+                UserHandle.USER_CURRENT) == 1;
+        inflater =inflater.cloneInContext(new ContextThemeWrapper(getContext(), darkStyle ? R.style.qs_theme_dark : R.style.qs_theme));
         return inflater.inflate(R.layout.qs_panel, container, false);
     }
 
