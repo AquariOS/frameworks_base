@@ -794,7 +794,6 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     protected void onPlaySoundW(int streamType, int flags) {
-
         // If preference is no sound - just exit here
         if (Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.VOLUME_ADJUST_SOUNDS_ENABLED, 1) == 0) {
