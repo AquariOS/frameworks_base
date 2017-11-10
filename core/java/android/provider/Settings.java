@@ -3959,6 +3959,12 @@ public final class Settings {
         public static final String VOLUME_ADJUST_SOUNDS_ENABLED = "volume_adjust_sounds_enabled";
 
         /**
+         * Whether to show a notification when the battery is charged at the set level and screen is off
+         * @hide
+         */
+        public static final String ALERT_ON_CHARGED_LEVEL = "alert_on_charged_level";
+
+        /**
          * IMPORTANT: If you add a new public settings you also have to add it to
          * PUBLIC_SETTINGS below. If the new setting is hidden you have to add
          * it to PRIVATE_SETTINGS below. Also add a validator that can validate
