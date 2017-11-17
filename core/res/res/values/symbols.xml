@@ -3033,8 +3033,6 @@
   <java-symbol type="bool" name="config_multiColorBatteryLed" />
   <java-symbol type="bool" name="config_ledCanPulse" />
 
-  <java-symbol type="bool" name="config_useSystemClockforRotationSensor" />
-
   <java-symbol type="integer" name="config_sms_authorization_timeout_ms" />
   <java-symbol type="bool" name="config_sms_authorization_enabled" />
 
