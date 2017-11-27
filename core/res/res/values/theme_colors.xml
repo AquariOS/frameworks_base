@@ -79,6 +79,9 @@
     <!-- Notification sender text color -->
     <color name="sender_text_color">@android:color/black</color> 
 
+    <!-- Ambient Notification icon/text dynamic tint -->
+    <color name="notification_ambient_default_color">@android:color/notification_text_default_color</color>
+
     <!-- Two target preference vertical divider color -->
     <color name="list_divider_dark">#64000000</color>
 
