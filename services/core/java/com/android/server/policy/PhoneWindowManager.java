@@ -4305,8 +4305,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 awakenDreams();
             }
             hideRecentApps(false, true);
-        } else {
-            // Otherwise, just launch Home
+        } else if (mScreenOnFully) {
+            // check if screen is fully on before going home
+            // to avoid hardware home button wake going home
             sendCloseSystemWindows(SYSTEM_DIALOG_REASON_HOME_KEY);
             startDockOrHome(true /*fromHomeKey*/, awakenFromDreams);
         }
@@ -6332,6 +6333,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 }
                 break;
             }
+
+            case KeyEvent.KEYCODE_HOME:
+                if (down && !interactive) {
+                    isWakeKey = true;
+                }
+                break;
 
             case KeyEvent.KEYCODE_ENDCALL: {
                 result &= ~ACTION_PASS_TO_USER;
