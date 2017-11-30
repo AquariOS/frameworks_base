@@ -32,7 +32,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout.LayoutParams;
-import android.widget.HorizontalScrollView;
 
 import com.android.systemui.Interpolators;
 import com.android.systemui.R;
@@ -68,8 +67,6 @@ public class QSFragment extends Fragment implements QS {
     private QSFooter mFooter;
     private int mGutterHeight;
 
-    private HorizontalScrollView mQuickQsPanelScroller;
-
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             Bundle savedInstanceState) {
@@ -91,14 +88,12 @@ public class QSFragment extends Fragment implements QS {
         mGutterHeight = getContext().getResources().getDimensionPixelSize(R.dimen.qs_gutter_height);
 
         mQSDetail.setQsPanel(mQSPanel, mHeader, mFooter);
-        mQuickQsPanelScroller =
-                (HorizontalScrollView) mHeader.findViewById(R.id.quick_qs_panel_scroll);
 
         // If the quick settings row is not shown, then there is no need for the animation from
         // the row to the full QS panel.
         if (getResources().getBoolean(R.bool.config_showQuickSettingsRow)) {
             mQSAnimator = new QSAnimator(this,
-                    mHeader.findViewById(R.id.quick_qs_panel), mQSPanel, mQuickQsPanelScroller);
+                    mHeader.findViewById(R.id.quick_qs_panel), mQSPanel);
         }
 
         mQSCustomizer = view.findViewById(R.id.qs_customize);
@@ -136,10 +131,6 @@ public class QSFragment extends Fragment implements QS {
 
     @Override
     public View getHeader() {
-        return mHeader;
-    }
-
-    public QuickStatusBarHeader getQuickStatusBarHeader() {
         return mHeader;
     }
 

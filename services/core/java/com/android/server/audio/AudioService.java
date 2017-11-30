@@ -627,6 +627,16 @@ public class AudioService extends IAudioService.Stub
 
     private boolean mLinkNotificationWithVolume;
 
+    // only these packages are allowed to override Pulse visualizer lock
+    private static final String[] VISUALIZER_WHITELIST = new String[] {
+            "android",
+            "com.android.systemui",
+            "com.android.keyguard",
+            "com.google.android.googlequicksearchbox"
+    };
+
+    private boolean mVisualizerLocked;
+
     ///////////////////////////////////////////////////////////////////////////
     // Construction
     ///////////////////////////////////////////////////////////////////////////
@@ -1247,7 +1257,7 @@ public class AudioService extends IAudioService.Stub
                 + ", volControlStream=" + mVolumeControlStream
                 + ", userSelect=" + mUserSelectedVolumeControlStream);
         final int streamType;
-        if (mUserSelectedVolumeControlStream) { // implies mVolumeControlStream != -1
+        if (mUserSelectedVolumeControlStream && (mVolumeControlStream != -1)) { // implies mVolumeControlStream != -1
             streamType = mVolumeControlStream;
         } else {
             final int maybeActiveStreamType = getActiveStreamType(suggestedStreamType);
@@ -3681,6 +3691,25 @@ public class AudioService extends IAudioService.Stub
     @Override
     public boolean isStreamAffectedByMute(int streamType) {
         return (mMuteAffectedStreams & (1 << streamType)) != 0;
+    }
+
+    /** @hide */
+    public boolean isVisualizerLocked(String callingPackage) {
+        boolean isSystem = false;
+        for (int i = 0; i < VISUALIZER_WHITELIST.length; i++) {
+            if (TextUtils.equals(callingPackage, VISUALIZER_WHITELIST[i])) {
+                isSystem = true;
+                break;
+            }
+        }
+        return !isSystem && mVisualizerLocked;
+    }
+
+    /** @hide */
+    public void setVisualizerLocked(boolean doLock) {
+        if (mVisualizerLocked != doLock) {
+            mVisualizerLocked = doLock;
+        }
     }
 
     private void ensureValidDirection(int direction) {

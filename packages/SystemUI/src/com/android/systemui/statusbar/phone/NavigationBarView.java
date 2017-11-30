@@ -31,8 +31,6 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
-import android.os.UserHandle;
-import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
@@ -51,6 +49,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.DockedStackExistsListener;
 import com.android.systemui.R;
 import com.android.systemui.RecentsComponent;
+import com.android.systemui.navigation.Navigator;
 import com.android.systemui.plugins.PluginListener;
 import com.android.systemui.plugins.PluginManager;
 import com.android.systemui.plugins.statusbar.phone.NavGesture;
@@ -62,7 +61,7 @@ import com.android.systemui.statusbar.policy.KeyButtonDrawable;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
-public class NavigationBarView extends FrameLayout implements PluginListener<NavGesture> {
+public class NavigationBarView extends FrameLayout implements Navigator {
     final static boolean DEBUG = false;
     final static String TAG = "StatusBar/NavBarView";
 
@@ -834,14 +833,13 @@ public class NavigationBarView extends FrameLayout implements PluginListener<Nav
         pw.println();
     }
 
-    public interface OnVerticalChangedListener {
-        void onVerticalChanged(boolean isVertical);
+    @Override
+    public View getBaseView() {
+        return this;
     }
 
-    public void setDoubleTapToSleep() {
-        boolean isDoubleTapEnabled = Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.DOUBLE_TAP_SLEEP_NAVBAR, 1, UserHandle.USER_CURRENT) == 1;
-        ((NavigationBarFrame) getRootView()).setDoubleTapToSleep(isDoubleTapEnabled);
+    @Override
+    public void dispose() {
+        removeAllViews();
     }
-
 }

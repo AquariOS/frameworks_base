@@ -30,6 +30,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -61,7 +62,6 @@ public class QuickStatusBarHeader extends FrameLayout implements StatusBarHeader
     protected QSTileHost mHost;
 
     // omni additions
-    private HorizontalScrollView mQuickQsPanelScroller;
     private ImageView mBackgroundImage;
     private Drawable mCurrentBackground;
 
@@ -95,9 +95,6 @@ public class QuickStatusBarHeader extends FrameLayout implements StatusBarHeader
         battery.setForceShowPercent(true);
 
         mActivityStarter = Dependency.get(ActivityStarter.class);
-
-        mQuickQsPanelScroller = (HorizontalScrollView) findViewById(R.id.quick_qs_panel_scroll);
-        mQuickQsPanelScroller.setHorizontalScrollBarEnabled(false);
 
         mBackgroundImage = (ImageView) findViewById(R.id.qs_header_image);
     }
@@ -177,14 +174,6 @@ public class QuickStatusBarHeader extends FrameLayout implements StatusBarHeader
 
     public void setCallback(Callback qsPanelCallback) {
         mHeaderQsPanel.setCallback(qsPanelCallback);
-    }
-
-    public void onClosingFinished() {
-        mQuickQsPanelScroller.scrollTo(0, 0);
-    }
-
-    public void updateSettings() {
-        mHeaderQsPanel.updateSettings();
     }
 
     @Override
