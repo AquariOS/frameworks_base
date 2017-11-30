@@ -158,6 +158,7 @@ import com.android.keyguard.KeyguardStatusView;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.ViewMediatorCallback;
+import com.android.systemui.omni.StatusBarHeaderMachine;
 import com.android.systemui.ActivityStarterDelegate;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.DemoMode;
@@ -823,9 +824,8 @@ public class StatusBar extends SystemUI implements DemoMode,
 
     private NavigationBarFragment mNavigationBar;
     private View mNavigationBarView;
-    private FlashlightController mFlashlightController;
-
     private StatusBarHeaderMachine mStatusBarHeaderMachine;
+    private FlashlightController mFlashlightController;
 
     @Override
     public void start() {
@@ -1240,6 +1240,7 @@ public class StatusBar extends SystemUI implements DemoMode,
                     mQSPanel = ((QSFragment) qs).getQsPanel();
                     mQSPanel.setBrightnessMirror(mBrightnessMirrorController);
                     mKeyguardStatusBar.setQSPanel(mQSPanel);
+                    mQuickStatusBarHeader = ((QSFragment) qs).getQuickStatusBarHeader();
                     mStatusBarHeaderMachine.addObserver(mQuickStatusBarHeader);
                     mStatusBarHeaderMachine.updateEnablement();
                 }
@@ -4861,6 +4862,9 @@ public class StatusBar extends SystemUI implements DemoMode,
 
     public void onClosingFinished() {
         runPostCollapseRunnables();
+        if (mQuickStatusBarHeader != null) {
+            mQuickStatusBarHeader.onClosingFinished();
+        }
         if (!isPanelFullyCollapsed()) {
             // if we set it not to be focusable when collapsing, we have to undo it when we aborted
             // the closing
@@ -5655,6 +5659,10 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.SCREEN_BRIGHTNESS_MODE),
                     false, this, UserHandle.USER_ALL);
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_QUICKBAR_SCROLL_ENABLED),
+                    false, this, UserHandle.USER_ALL);
+            update();
         }
 
         @Override
@@ -5670,6 +5678,11 @@ public class StatusBar extends SystemUI implements DemoMode,
                     uri.equals(Settings.System.getUriFor(Settings.System.QS_COLUMNS_PORTRAIT)) ||
                     uri.equals(Settings.System.getUriFor(Settings.System.QS_COLUMNS_LANDSCAPE))) {
                 setQsRowsColumns();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_QUICKBAR_SCROLL_ENABLED))) {
+                if (mQuickStatusBarHeader != null) {
+                    mQuickStatusBarHeader.updateSettings();
+                }
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL))
                     || uri.equals(Settings.System.getUriFor(
