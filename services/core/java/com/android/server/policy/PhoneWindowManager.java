@@ -541,6 +541,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     // Used to hold the last user key used to wake the device.  This helps us prevent up events
     // from being passed to the foregrounded app without a corresponding down event
     volatile int mPendingWakeKey = PENDING_KEY_NULL;
+	volatile boolean mRequestedOrGoingToSleep;
 
     int mRecentAppsHeldModifiers;
     boolean mLanguageSwitchKeyPressed;
