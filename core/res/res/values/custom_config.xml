@@ -76,4 +76,9 @@
     <!-- Do the battery/notification LEDs support pulsing? -->
     <bool name="config_ledCanPulse">false</bool>
 
+    <!-- Button brightness -->
+    <bool name="config_button_brightness_support">false</bool>
+    <integer name="config_button_brightness_default">128</integer>
+    <bool name="config_button_brightness_has_variable_brightness">false</bool>
+
 </resources>
