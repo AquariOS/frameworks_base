@@ -4423,6 +4423,11 @@ public final class Settings {
                 sBooleanValidator;
 
         /**
+         * @hide
+         */
+        public static final String DEVICE_FEATURE_SETTINGS = "device_feature_settings";
+
+        /**
          * AM/PM Style for clock options
          * 0 - Normal AM/PM
          * 1 - Small AM/PM
@@ -4891,6 +4896,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(STATUSBAR_CLOCK_DATE_STYLE);
             PRIVATE_SETTINGS.add(STATUSBAR_CLOCK_DATE_FORMAT);
             PRIVATE_SETTINGS.add(SYSTEM_PROXI_CHECK_ENABLED);
+            PRIVATE_SETTINGS.add(DEVICE_FEATURE_SETTINGS);
         }
 
         /**
