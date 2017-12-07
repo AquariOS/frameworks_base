@@ -827,6 +827,8 @@ public class StatusBar extends SystemUI implements DemoMode,
 
     private StatusBarHeaderMachine mStatusBarHeaderMachine;
 
+    private boolean mLockscreenMediaMetadata;
+
     @Override
     public void start() {
         mNetworkController = Dependency.get(NetworkController.class);
@@ -2486,7 +2488,7 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
 
         Drawable artworkDrawable = null;
-        if (mMediaMetadata != null) {
+        if (mMediaMetadata != null && mLockscreenMediaMetadata) {
             Bitmap artworkBitmap = null;
             artworkBitmap = mMediaMetadata.getBitmap(MediaMetadata.METADATA_KEY_ART);
             if (artworkBitmap == null) {
@@ -5658,6 +5660,9 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.SCREEN_BRIGHTNESS_MODE),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LOCKSCREEN_MEDIA_METADATA),
+                    false, this, UserHandle.USER_ALL);
         }
 
         @Override
@@ -5678,12 +5683,16 @@ public class StatusBar extends SystemUI implements DemoMode,
                     || uri.equals(Settings.System.getUriFor(
                     Settings.System.SCREEN_BRIGHTNESS_MODE))) {
                 setBrightnessSlider();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.LOCKSCREEN_MEDIA_METADATA))) {
+                setLockscreenMediaMetadata();
             }
         }
 
         public void update() {
             setStatusBarWindowViewOptions();
             setQsRowsColumns();
+            setLockscreenMediaMetadata();
         }
     }
 
@@ -5728,6 +5737,11 @@ public class StatusBar extends SystemUI implements DemoMode,
             }
         }
     };
+
+    private void setLockscreenMediaMetadata() {
+        mLockscreenMediaMetadata = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.LOCKSCREEN_MEDIA_METADATA, 0, UserHandle.USER_CURRENT) == 1;
+    }
 
     private RemoteViews.OnClickHandler mOnClickHandler = new RemoteViews.OnClickHandler() {
 
