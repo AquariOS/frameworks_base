@@ -109,4 +109,12 @@
     <string name="quick_settings_screenrecord_lq_label">Screenrecord 480p</string>
     <string name="quick_settings_screenrecord_mq_label">Screenrecord 720p</string>
     <string name="quick_settings_screenrecord_hq_label">Screenrecord 720p+</string>
+
+    <!-- Alert on full charge -->
+    <string name="alert_on_charged_level">You can disconnect the charger ( ">"<xliff:g id="percentage">%s</xliff:g> )</string>
+    <string name="battery_level_good_title">Optimal battery level</string>
+    <string name="battery_level_good_sound" translatable="false">/system/media/audio/ui/GoodBattery.ogg</string>
+    <string name="notification_channel_charge_alert">Optimal battery charge level</string>
+
+    <string name="status_bar_vpn">VPN</string>
 </resources>
