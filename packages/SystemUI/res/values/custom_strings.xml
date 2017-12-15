@@ -61,7 +61,13 @@
     <string name="systemui_tuner_lockscreen_bottom_shortcuts_title">Bottom shortcuts</string>
     <string name="lockscreen_default">Default</string>
     <string name="lockscreen_hidden">None</string>
+    <string name="statusbar_icons_blacklist">Status bar icons</string>
+    <string name="navbar_tuner_activity">Navigation bar buttons</string>
+    <string name="lockscreen_tuner_activity">Lockscreen shortcuts</string>
+    <string name="powernotif_tuner_activity">Power notifications</string>
+    <string name="status_bar_volte">VOLTE</string>
     <string name="status_bar_vpn">VPN</string>
+    <string name="status_bar_roaming">Roaming</string>
 
     <!-- Advance location quick setting tile -->
     <string name="accessibility_quick_settings_location_battery_saving">Location reporting: battery saving mode.</string>
@@ -95,12 +101,6 @@
     <string name="omnijaws_package_not_available">OmniJaws not available</string>
     <string name="omnijaws_service_last_update">Last update:</string>
 
-    <!-- SysUI Tuner -->
-    <string name="statusbar_icons_blacklist">Status bar icons</string>
-    <string name="navbar_tuner_activity">Navigation bar buttons</string>
-    <string name="lockscreen_tuner_activity">Lockscreen shortcuts</string>
-    <string name="powernotif_tuner_activity">Power notifications</string>
-
     <!-- Screenrecord Tile -->
     <string name="quick_settings_screenrecord">Screenrecord</string>
 
@@ -131,6 +131,4 @@
     <string name="quick_settings_screenrecord_mq_label">Screenrecord 720p</string>
     <string name="quick_settings_screenrecord_hq_label">Screenrecord 720p+</string>
 
-    <!-- volte icon switch -->
-    <string name="status_bar_volte">VOLTE</string>
 </resources>
