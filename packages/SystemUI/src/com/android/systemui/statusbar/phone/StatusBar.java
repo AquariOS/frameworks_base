@@ -2108,6 +2108,21 @@ public class StatusBar extends SystemUI implements DemoMode,
         return themeInfo != null && themeInfo.isEnabled();
     }
 
+    // Unloads the stock dark theme
+    public void unloadStockDarkTheme() {
+        OverlayInfo themeInfo = null;
+        try {
+            themeInfo = mOverlayManager.getOverlayInfo("com.android.systemui.theme.dark",
+                    mCurrentUserId);
+            if (themeInfo != null && themeInfo.isEnabled()) {
+                mOverlayManager.setEnabled("com.android.systemui.theme.dark",
+                        false /*disable*/, mCurrentUserId);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Check for black and white accent overlays
     public void unfuckBlackWhiteAccent() {
         OverlayInfo themeInfo = null;
@@ -3927,27 +3942,37 @@ public class StatusBar extends SystemUI implements DemoMode,
     protected void updateTheme() {
         final boolean inflated = mStackScroller != null && mStatusBarWindowManager != null;
 
-        // The system wallpaper defines if QS should be light or dark.
-        WallpaperColors systemColors = mColorExtractor
-                .getWallpaperColors(WallpaperManager.FLAG_SYSTEM);
-        final boolean wallpaperWantsDarkTheme = systemColors != null
-                && (systemColors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_THEME) != 0;
-        final Configuration config = mContext.getResources().getConfiguration();
-        final boolean nightModeWantsDarkTheme = DARK_THEME_IN_NIGHT_MODE
-                && (config.uiMode & Configuration.UI_MODE_NIGHT_MASK)
-                    == Configuration.UI_MODE_NIGHT_YES;
-        final boolean useDarkTheme = wallpaperWantsDarkTheme || nightModeWantsDarkTheme;
-
+        int userThemeSetting = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.SYSTEM_THEME_STYLE, 0, mLockscreenUserManager.getCurrentUserId());
+        boolean useDarkTheme = false;
+        if (userThemeSetting == 0) {
+           // The system wallpaper defines if QS should be light or dark.
+            WallpaperColors systemColors = mColorExtractor
+                    .getWallpaperColors(WallpaperManager.FLAG_SYSTEM);
+            final boolean wallpaperWantsDarkTheme = systemColors != null
+                    && (systemColors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_THEME) != 0;
+            final Configuration config = mContext.getResources().getConfiguration();
+            final boolean nightModeWantsDarkTheme = DARK_THEME_IN_NIGHT_MODE
+                    && (config.uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                        == Configuration.UI_MODE_NIGHT_YES;
+            useDarkTheme = wallpaperWantsDarkTheme || nightModeWantsDarkTheme;
             // Check for black and white accent so we don't end up
             // with white on white or black on black
             unfuckBlackWhiteAccent();
-
+        } else {
+            useDarkTheme = userThemeSetting == 2;
+            // Check for black and white accent so we don't end up
+            // with white on white or black on black
+            unfuckBlackWhiteAccent();
+        }
         if (isUsingDarkTheme() != useDarkTheme) {
             mUiOffloadThread.submit(() -> {
                 try {
                     mOverlayManager.setEnabled("com.android.system.theme.dark",
                             useDarkTheme, mLockscreenUserManager.getCurrentUserId());
                     mOverlayManager.setEnabled("com.android.settings.theme.dark",
+                            useDarkTheme, mLockscreenUserManager.getCurrentUserId());
+                    mOverlayManager.setEnabled("com.android.systemui.theme.dark",
                             useDarkTheme, mLockscreenUserManager.getCurrentUserId());
                     // Check for black and white accent so we don't end up
                     // with white on white or black on black
@@ -5374,7 +5399,9 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.ACCENT_PICKER),
                     false, this, UserHandle.USER_ALL);
-            update();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SYSTEM_THEME_STYLE),
+                    false, this, UserHandle.USER_ALL);
         }
 
         @Override
@@ -5385,6 +5412,7 @@ public class StatusBar extends SystemUI implements DemoMode,
                 // Keeps us from overloading the system by performing these tasks every time.
                 unloadAccents();
                 updateAccents();
+                updateTheme();
             }
             update();
         }
