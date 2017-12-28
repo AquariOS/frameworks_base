@@ -4078,6 +4078,12 @@ public final class Settings {
         public static final String VOLUME_BUTTON_MUSIC_CONTROL = "volume_button_music_control";
 
         /**
+        * Whether to show Qs panel footer warnings like for active VPN
+        * @hide
+        */
+       public static final String QS_FOOTER_WARNINGS = "qs_footer_warnings";
+
+        /**
          * Whether to launch default music player when headset plugged in
          * 0 = don't do anything (default)
          * 1 = launch only on wired connection
@@ -4101,6 +4107,114 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_QUICK_QS_PULLDOWN = "status_bar_quick_qs_pulldown";
+
+        /**
+        * Whether to show media art on lockscreen
+        * @hide
+        */
+       public static final String LOCKSCREEN_MEDIA_METADATA = "lockscreen_media_metadata";
+
+        /**
+        * Whether to show battery light when DND mode is active
+        * @hide
+        */
+       public static final String BATTERY_LIGHT_ALLOW_ON_DND = "battery_light_allow_on_dnd";
+
+        /**
+        * Whether to show blinking light when battery is low
+        * @hide
+        */
+       public static final String BATTERY_LIGHT_LOW_BLINKING = "battery_light_low_blinking";
+
+        /**
+        * Low battery charging color
+        * @hide
+        */
+       public static final String BATTERY_LIGHT_LOW_COLOR = "battery_light_low_color";
+
+        /**
+        * Medium battery charging color
+        * @hide
+        */
+       public static final String BATTERY_LIGHT_MEDIUM_COLOR = "battery_light_medium_color";
+
+        /**
+        * Full battery charging color
+        * @hide
+        */
+       public static final String BATTERY_LIGHT_FULL_COLOR = "battery_light_full_color";
+
+        /**
+        * Really full 100 battery charging color
+        * @hide
+        */
+       public static final String BATTERY_LIGHT_REALLYFULL_COLOR = "battery_light_reallyfull_color";
+
+        /**
+         * How many rows to show in the qs panel when in portrait
+         * @hide
+         */
+        public static final String QS_ROWS_PORTRAIT = "qs_rows_portrait";
+
+        /**
+         * How many rows to show in the qs panel when in landscape
+         * @hide
+         */
+        public static final String QS_ROWS_LANDSCAPE = "qs_rows_landscape";
+
+        /**
+         * How many columns to show in the qs panel when in portrait
+         * @hide
+         */
+        public static final String QS_COLUMNS_PORTRAIT = "qs_columns_portrait";
+
+        /**
+         * How many columns to show in the qs panel when in landscape
+         * @hide
+         */
+        public static final String QS_COLUMNS_LANDSCAPE = "qs_columns_landscape";
+
+        /**
+         * Whether to display qs tile titles in the qs panel
+         * @hide
+         */
+        public static final String QS_TILE_TITLE_VISIBILITY = "qs_tile_title_visibility";
+
+        /**
+         *  Enable statusbar double tap gesture on to put device to sleep
+         * @hide
+         */
+        public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
+
+        /**
+         * Wheter to show heads up only for dialer and sms apps
+         * @hide
+         */
+        public static final String LESS_BORING_HEADS_UP = "less_boring_heads_up";
+
+        /**
+         * Wheter to show network traffic indicator in statusbar
+         * @hide
+         */
+        public static final String NETWORK_TRAFFIC_STATE = "network_traffic_state";
+
+        /**
+         * Network traffic inactivity threshold (default is 1 kBs)
+         * @hide
+         */
+        public static final String NETWORK_TRAFFIC_AUTOHIDE_THRESHOLD = "network_traffic_autohide_threshold";
+
+        /**
+         * Whether to use icon pack for Recents
+         * @hide
+         */
+        public static final String RECENTS_ICON_PACK = "recents_icon_pack";
+
+        /**
+         * Whether to show the battery info on the lockscreen while charging
+         * @hide
+         */
+        public static final String LOCKSCREEN_BATTERY_INFO = "lockscreen_battery_info";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -5580,6 +5694,287 @@ public final class Settings {
         public static final int LOCATION_MODE_HIGH_ACCURACY = 3;
 
         /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_HEIGHT_LANDSCAPE = "navigation_bar_height_landscape";
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
+
+        /**
+         * Add or remove software navigation bar
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_VISIBLE = "navigation_bar_visible";
+
+        /**
+         * Navigation bar mode
+         *
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_MODE = "navigation_bar_mode";
+
+        /**
+         * Fling actions
+         *
+         * @hide
+         */
+        public static final String FLING_GESTURE_ACTIONS = "fling_gesture_configs";
+
+        /**
+         * Fling logo visible
+         *
+         * @hide
+         */
+        public static final String FLING_LOGO_VISIBLE = "fling_logo_visible";
+
+        /**
+         * Fling logo animates
+         *
+         * @hide
+         */
+        public static final String FLING_LOGO_ANIMATES= "fling_logo_animates";
+
+        /**
+         * Fling logo animates
+         *
+         * @hide
+         */
+        //public static final String FLING_LOGO_COLOR = "fling_logo_color";
+
+        /**
+         * Fling logo opacity
+         *
+         * @hide
+         */
+        public static final String FLING_LOGO_OPACITY = "fling_logo_opacity";
+
+        /**
+         * Fling pulse music visualizer
+         *
+         * @hide
+         */
+        public static final String FLING_PULSE_ENABLED = "fling_pulse_enabled";
+
+        /**
+         * Fling pulse music visualizer color
+         *
+         * @hide
+         */
+        public static final String FLING_PULSE_COLOR = "fling_pulse_color";
+
+        /**
+         * Fling ripple effect
+         *
+         * @hide
+         */
+        public static final String FLING_RIPPLE_ENABLED = "fling_ripple_enabled";
+
+        /**
+         * Fling ripple color
+         *
+         * @hide
+         */
+        public static final String FLING_RIPPLE_COLOR = "fling_ripple_color";
+
+        /**
+         * Fling gesture trails on/off
+         *
+         * @hide
+         */
+        public static final String FLING_TRAILS_ENABLED = "fling_trails_enabled";
+
+        /**
+         * Fling gesture trails color
+         *
+         * @hide
+         */
+        public static final String FLING_TRAILS_COLOR = "fling_trails_color";
+
+        /**
+         * Fling pulse lavalamp psychedelic colors
+         *
+         * @hide
+         */
+        public static final String FLING_PULSE_LAVALAMP_ENABLED = "fling_pulse_lavalamp_enabled";
+
+        /**
+         * Fling pulse lavalamp animation speed
+         *
+         * @hide
+         */
+        public static final String FLING_PULSE_LAVALAMP_SPEED = "fling_pulse_lavalamp_speed";
+
+        /**
+         * Pulse renderer implementation
+         *
+         * @hide
+         */
+        public static final String PULSE_RENDER_STYLE_URI = "pulse_render_style";
+
+        /**
+         * time it takes to execute Fling long press action
+         *
+         * @hide
+         */
+        public static final String FLING_LONGPRESS_TIMEOUT = "fling_longpress_timeout";
+
+        /**
+         * distance to swipe right when device is in portrait orientation to
+         * trigger action
+         *
+         * @hide
+         */
+        public static final String FLING_LONGSWIPE_THRESHOLD_RIGHT_PORT = "fling_longswipe_threshold_right_port";
+
+        /**
+         * distance to swipe left when device is in portrait orientation to
+         * trigger action
+         *
+         * @hide
+         */
+        public static final String FLING_LONGSWIPE_THRESHOLD_LEFT_PORT = "fling_longswipe_threshold_left_port";
+
+        /**
+         * distance to swipe right when device is in landscape orientation to
+         * trigger action. Apples to a horizontal layout (tablet/phablet)
+         *
+         * @hide
+         */
+        public static final String FLING_LONGSWIPE_THRESHOLD_RIGHT_LAND = "fling_longswipe_threshold_right_land";
+
+        /**
+         * distance to swipe left when device is in landscape orientation to
+         * trigger action. Apples to a horizontal layout (tablet/phablet)
+         *
+         * @hide
+         */
+        public static final String FLING_LONGSWIPE_THRESHOLD_LEFT_LAND = "fling_longswipe_threshold_left_land";
+
+        /**
+         * distance to swipe up when device is in landscape orientation to
+         * trigger action. Apples to a vertical layout (phones)
+         *
+         * @hide
+         */
+        public static final String FLING_LONGSWIPE_THRESHOLD_UP_LAND = "fling_longswipe_threshold_up_land";
+
+        /**
+         * distance to swipe down when device is in landscape orientation to
+         * trigger action. Apples to a horizontal layout (phones)
+         *
+         * @hide
+         */
+        public static final String FLING_LONGSWIPE_THRESHOLD_DOWN_LAND = "fling_longswipe_threshold_down_land";
+
+        /**
+         * width of Fling trails stroke, in density pixels
+         *
+         * @hide
+         */
+        public static final String FLING_TRAILS_WIDTH = "fling_trails_width";
+
+        /**
+         * Navbar buttons transparency
+         * @hide
+         */
+        public static final String NAVBAR_BUTTONS_ALPHA = "navbar_buttons_alpha";
+
+        /**
+         * Custom Pulse Widths
+         * @hide
+         */
+        public static final String PULSE_CUSTOM_DIMEN = "pulse_custom_dimen";
+
+        /**
+         * Custom Spacing Between Pulse Bars
+         * @hide
+         */
+        public static final String PULSE_CUSTOM_DIV = "pulse_custom_div";
+
+        /**
+         * Custom Pulse Block Size
+         * @hide
+         */
+        public static final String PULSE_FILLED_BLOCK_SIZE = "pulse_filled_block_size";
+
+        /**
+         * Custom Spacing Between Pulse Blocks
+         * @hide
+         */
+        public static final String PULSE_EMPTY_BLOCK_SIZE = "pulse_empty_block_size";
+
+        /**
+         * Custom Pulse Sanity Levels
+         * @hide
+         */
+        public static final String PULSE_CUSTOM_FUDGE_FACTOR = "pulse_custom_fudge_factor";
+
+        /**
+         * Pulse Fudge Factor
+         * @hide
+         */
+        public static final String PULSE_SOLID_FUDGE_FACTOR = "pulse_solid_fudge_factor";
+
+        /**
+         * Pulse Lavamp Animation Speed
+         * @hide
+         */
+        public static final String PULSE_LAVALAMP_SOLID_SPEED = "lava_lamp_solid_speed";
+
+        /**
+         * Pulse Solid units count
+         * @hide
+         */
+        public static final String PULSE_SOLID_UNITS_COUNT = "pulse_solid_units_count";
+
+        /**
+         * Pulse Solid units opacity
+         * @hide
+         */
+        public static final String PULSE_SOLID_UNITS_OPACITY = "pulse_solid_units_opacity";
+
+        /**
+         * SmartBar buttons opacity on Pulse
+         * @hide
+         */
+        public static final String PULSE_CUSTOM_BUTTONS_OPACITY = "pulse_custom_buttons_opacity";
+
+        /**
+         * Long press delay for smartbar buttons
+         * @hide
+         * 0: Default (fast)
+         * 1: Normal delay
+         * 2: Long delay
+         */
+        public static final String SMARTBAR_LONGPRESS_DELAY = "smartbar_longpress_delay";
+
+        /**
+         * Scaling value for smartbar custom button icon
+         * @hide
+         */
+        public static final String SMARTBAR_CUSTOM_ICON_SIZE = "smartbar_custom_icon_size";
+
+        /**
+         * Whether to switch Fling double tap right/left actions to kb cursors when a keyboard is showing
+         * @hide
+         */
+        public static final String FLING_KEYBOARD_CURSORS = "fling_keyboard_cursors";
+
+        /**
+         * Whether to enable double tap to sleep for smartbar
+         * @hide
+         */
+        public static final String SMARTBAR_DOUBLETAP_SLEEP = "smartbar_doubletap_sleep";
+
+        /**
          * A flag containing settings used for biometric weak
          * @hide
          */
@@ -7015,6 +7410,18 @@ public final class Settings {
                 "camera_double_tap_power_gesture_disabled";
 
         /**
+         * Whether the torch launch gesture to double tap or long press the power button when the
+         * screen is off should be enabled.
+         *
+         * 0: disabled
+         * 1: double tap power for torch
+         * 2: long tap power for torch
+         * @hide
+         */
+        public static final String TORCH_POWER_BUTTON_GESTURE =
+                "torch_power_button_gesture";
+
+        /**
          * Whether the camera double twist gesture to flip between front and back mode should be
          * enabled.
          *
@@ -7380,6 +7787,7 @@ public final class Settings {
             SYNC_PARENT_SOUNDS,
             CAMERA_DOUBLE_TWIST_TO_FLIP_ENABLED,
             CAMERA_DOUBLE_TAP_POWER_GESTURE_DISABLED,
+            TORCH_POWER_BUTTON_GESTURE,
             SYSTEM_NAVIGATION_KEYS_ENABLED,
             QS_TILES,
             DOZE_ENABLED,

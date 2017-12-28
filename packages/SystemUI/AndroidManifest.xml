@@ -201,7 +201,14 @@
     <!-- to change themes - light or dark -->
     <uses-permission android:name="android.permission.CHANGE_OVERLAY_PACKAGES" />
 
+    <!-- DU permissions -->
+    <uses-permission android:name="android.permission.NAVIGATION_EDITOR" />
+    <uses-permission android:name="android.permission.FORCE_STOP_PACKAGES" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.ACCESS_SURFACE_FLINGER" />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
 
     <!-- Sync tile -->
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
@@ -210,6 +217,9 @@
     <!-- Reboot -->
     <uses-permission android:name="android.permission.REBOOT" />
     <uses-permission android:name="android.permission.RECOVERY" />
+
+    <!-- OmniJaws Tile -->
+    <uses-permission android:name="org.omnirom.omnijaws.READ_WEATHER" />
 
     <application
         android:name=".SystemUIApplication"
@@ -275,7 +285,7 @@
         <activity android:name=".tuner.TunerActivity"
                   android:enabled="true"
                   android:icon="@drawable/tuner"
-                  android:theme="@style/TunerSettings"
+                  android:theme="@style/CustomTunerSettings"
                   android:label="@string/systemui_tuner_icon_manager_title"
                   android:parentActivityName="com.aquarios.coralreef.CoralReef"
                   android:process=":tuner"
@@ -285,7 +295,7 @@
         <activity-alias android:name=".DemoMode"
                   android:targetActivity=".tuner.TunerActivity"
                   android:icon="@drawable/tuner"
-                  android:theme="@style/TunerSettings"
+                  android:theme="@style/CustomTunerSettings"
                   android:label="@string/demo_mode"
                   android:process=":tuner"
                   android:exported="true">
@@ -294,6 +304,16 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity-alias>
+
+        <activity android:name=".tuner.LockscreenActivity"
+                  android:enabled="true"
+                  android:icon="@drawable/tuner"
+                  android:theme="@style/CustomTunerSettings"
+                  android:label="@string/systemui_tuner_lockscreen_bottom_shortcuts_title"
+                  android:parentActivityName="com.dirtyunicorns.tweaks.DirtyTweaks"
+                  android:process=":tuner"
+                  android:exported="true">
+        </activity>
 
         <!-- Service used by secondary users to register themselves with the system user. -->
         <service android:name=".recents.RecentsSystemUserService"

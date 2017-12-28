@@ -255,6 +255,9 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
         if (mTileLayout != null) {
             mTileLayout.updateResources();
         }
+        if (mCustomizePanel != null) {
+            mCustomizePanel.updateResources();
+        }
     }
 
     @Override
@@ -272,6 +275,9 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
                     .findViewById(R.id.brightness_slider);
             brightnessSlider.setMirror(mirrorSlider);
             brightnessSlider.setMirrorController(mBrightnessMirrorController);
+        }
+        if (mTileLayout instanceof PagedTileLayout) {
+            ((PagedTileLayout) mTileLayout).postDistributeTiles();
         }
     }
 
@@ -422,6 +428,7 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
 
         if (mTileLayout != null) {
             mTileLayout.addTile(r);
+            configureTile(r.tile, r.tileView);
         }
 
         return r;
@@ -604,5 +611,37 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
         boolean updateResources();
 
         void setListening(boolean listening);
+
+        boolean isShowTitles();
+    }
+
+    private void configureTile(QSTile t, QSTileView v) {
+        if (mTileLayout != null) {
+            if (t.isDualTarget()) {
+                if (!mTileLayout.isShowTitles()) {
+                    v.setOnLongClickListener(view -> {
+                        t.secondaryClick();
+                        return true;
+                    });
+                } else {
+                    v.setOnLongClickListener(view -> {
+                        t.longClick();
+                        return true;
+                    });
+                }
+            }
+        }
+    }
+
+    public void updateSettings() {
+        if (mFooter != null) {
+            mFooter.updateSettings();
+        }
+        if (mTileLayout != null) {
+            for (TileRecord r : mRecords) {
+                configureTile(r.tile, r.tileView);
+            }
+        }
     }
 }
+

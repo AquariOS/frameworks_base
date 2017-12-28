@@ -1,7 +1,11 @@
 package com.android.systemui.qs;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +26,7 @@ public class TileLayout extends ViewGroup implements QSTileLayout {
     protected int mCellWidth;
     protected int mCellHeight;
     protected int mCellMargin;
+    protected boolean mShowTitles = true;
 
     protected final ArrayList<TileRecord> mRecords = new ArrayList<>();
     private int mCellMarginTop;
@@ -55,6 +60,7 @@ public class TileLayout extends ViewGroup implements QSTileLayout {
         mRecords.add(tile);
         tile.tile.setListening(this, mListening);
         addView(tile.tileView);
+        tile.tileView.textVisibility();
     }
 
     @Override
@@ -74,15 +80,38 @@ public class TileLayout extends ViewGroup implements QSTileLayout {
 
     public boolean updateResources() {
         final Resources res = mContext.getResources();
-        final int columns = Math.max(1, res.getInteger(R.integer.quick_settings_num_columns));
-        mCellHeight = mContext.getResources().getDimensionPixelSize(R.dimen.qs_tile_height);
+        final ContentResolver resolver = mContext.getContentResolver();
+
+        final int columns;
+        if (res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            columns = Settings.System.getIntForUser(resolver,
+                    Settings.System.QS_COLUMNS_PORTRAIT, 5,
+                    UserHandle.USER_CURRENT);
+        } else {
+            columns = Settings.System.getIntForUser(resolver,
+                    Settings.System.QS_COLUMNS_LANDSCAPE, 5,
+                    UserHandle.USER_CURRENT);
+        }
+        boolean showTitles = Settings.System.getIntForUser(resolver,
+                Settings.System.QS_TILE_TITLE_VISIBILITY, 0,
+                UserHandle.USER_CURRENT) == 1;
+        mShowTitles = showTitles;
+        if (showTitles) {
+            mCellHeight = mContext.getResources().getDimensionPixelSize(R.dimen.qs_tile_height);
+        } else {
+            mCellHeight = mContext.getResources().getDimensionPixelSize(R.dimen.qs_tile_height_wo_label);
+        }
         mCellMargin = res.getDimensionPixelSize(R.dimen.qs_tile_margin);
         mCellMarginTop = res.getDimensionPixelSize(R.dimen.qs_tile_margin_top);
+
+        for (TileRecord record : mRecords) {
+            record.tileView.textVisibility();
+        }
         if (mColumns != columns) {
             mColumns = columns;
-            requestLayout();
             return true;
         }
+        requestLayout();
         return false;
     }
 
@@ -139,5 +168,10 @@ public class TileLayout extends ViewGroup implements QSTileLayout {
 
     private int getColumnStart(int column) {
         return column * (mCellWidth + mCellMargin) + mCellMargin;
+    }
+
+    @Override
+    public boolean isShowTitles() {
+        return mShowTitles;
     }
 }
