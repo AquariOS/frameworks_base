@@ -23,6 +23,7 @@ import android.content.res.Resources;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.hardware.input.InputManager;
@@ -41,6 +42,8 @@ import android.view.KeyEvent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.DisplayMetrics;
+import java.util.List;
+import android.util.Log;
 import android.view.DisplayInfo;
 import android.view.WindowManager;
 import com.android.internal.R;
@@ -54,6 +57,8 @@ import com.android.internal.statusbar.IStatusBarService;
  */
 public class AquaUtils {
 
+    private static final String TAG = "AquaUtils";
+
     public static final String INTENT_SCREENSHOT = "action_take_screenshot";
     public static final String INTENT_REGION_SCREENSHOT = "action_take_region_screenshot";
     private static int sDeviceType = -1;
@@ -66,26 +71,6 @@ public class AquaUtils {
         if (pm!= null) {
             pm.goToSleep(SystemClock.uptimeMillis());
         }
-    }
-
-
-    public static boolean isPackageInstalled(Context context, String pkg, boolean ignoreState) {
-        if (pkg != null) {
-            try {
-                PackageInfo pi = context.getPackageManager().getPackageInfo(pkg, 0);
-                if (!pi.applicationInfo.enabled && !ignoreState) {
-                    return false;
-                }
-            } catch (NameNotFoundException e) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    public static boolean isPackageInstalled(Context context, String pkg) {
-        return isPackageInstalled(context, pkg, true);
     }
 
     private static int getScreenType(Context context) {
@@ -275,5 +260,65 @@ public class AquaUtils {
                 }
             }
         }
+    }
+
+   /**
+     * Checks if a specific package is installed.
+     *
+     * @param context     The context to retrieve the package manager
+     * @param packageName The name of the package
+     * @return Whether the package is installed or not.
+     */
+    public static boolean isPackageInstalled(Context context, String packageName) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            if (pm != null) {
+                List<ApplicationInfo> packages = pm.getInstalledApplications(0);
+                for (ApplicationInfo packageInfo : packages) {
+                    if (packageInfo.packageName.equals(packageName)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error: " + e.getMessage());
+        }
+        return false;
+    }
+
+    public static boolean isPackageEnabled(String packageName, PackageManager pm) {
+        try {
+            ApplicationInfo ai = pm.getApplicationInfo(packageName, 0);
+            return ai.enabled;
+        } catch (PackageManager.NameNotFoundException notFound) {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if a specific service is running.
+     *
+     * @param context     The context to retrieve the activity manager
+     * @param serviceName The name of the service
+     * @return Whether the service is running or not
+     */
+    public static boolean isServiceRunning(Context context, String serviceName) {
+        ActivityManager activityManager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> services = activityManager
+                .getRunningServices(Integer.MAX_VALUE);
+
+        if (services != null) {
+            for (ActivityManager.RunningServiceInfo info : services) {
+                if (info.service != null) {
+                    if (info.service.getClassName() != null && info.service.getClassName()
+                            .equalsIgnoreCase(serviceName)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
