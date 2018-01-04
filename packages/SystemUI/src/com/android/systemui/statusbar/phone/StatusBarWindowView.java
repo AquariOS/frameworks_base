@@ -16,6 +16,8 @@
 
 package com.android.systemui.statusbar.phone;
 
+import static com.android.systemui.qs.QSPanel.QS_SHOW_BRIGHTNESS_MODE;
+
 import android.annotation.ColorInt;
 import android.annotation.DrawableRes;
 import android.annotation.LayoutRes;
@@ -55,18 +57,21 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.view.FloatingActionMode;
 import com.android.internal.widget.FloatingToolbar;
+import com.android.systemui.Dependency;
 import com.android.systemui.R;
 import com.android.systemui.classifier.FalsingManager;
 import com.android.systemui.statusbar.DragDownHelper;
 import com.android.systemui.statusbar.StatusBarState;
 import com.android.systemui.statusbar.stack.NotificationStackScrollLayout;
+import com.android.systemui.tuner.TunerService;
+import com.android.systemui.tuner.TunerService.Tunable;
 
-
-public class StatusBarWindowView extends FrameLayout {
+public class StatusBarWindowView extends FrameLayout implements Tunable {
     public static final String TAG = "StatusBarWindowView";
     public static final boolean DEBUG = StatusBar.DEBUG;
 
@@ -75,6 +80,8 @@ public class StatusBarWindowView extends FrameLayout {
     private NotificationStackScrollLayout mStackScrollLayout;
     private NotificationPanelView mNotificationPanel;
     private View mBrightnessMirror;
+    private ImageView mBrightnessIcon;
+    private boolean mShowBrightnessIcon;
 
     private int mRightInset = 0;
     private int mLeftInset = 0;
@@ -174,6 +181,7 @@ public class StatusBarWindowView extends FrameLayout {
                 R.id.notification_stack_scroller);
         mNotificationPanel = (NotificationPanelView) findViewById(R.id.notification_panel);
         mBrightnessMirror = findViewById(R.id.brightness_mirror);
+        mBrightnessIcon = (ImageView) mBrightnessMirror.findViewById(R.id.brightness_icon);
     }
 
     @Override
@@ -181,6 +189,8 @@ public class StatusBarWindowView extends FrameLayout {
         super.onViewAdded(child);
         if (child.getId() == R.id.brightness_mirror) {
             mBrightnessMirror = child;
+            mBrightnessIcon = (ImageView) child.findViewById(R.id.brightness_icon);
+            mBrightnessIcon.setVisibility(!mShowBrightnessIcon ? GONE : VISIBLE);
         }
     }
 
@@ -211,6 +221,7 @@ public class StatusBarWindowView extends FrameLayout {
         } else {
             setWillNotDraw(!DEBUG);
         }
+        Dependency.get(TunerService.class).addTunable(this, QS_SHOW_BRIGHTNESS_MODE);
     }
 
     @Override
@@ -767,5 +778,14 @@ public class StatusBarWindowView extends FrameLayout {
         }
     }
 
+    @Override
+    public void onTuningChanged(String key, String newValue) {
+        if (QS_SHOW_BRIGHTNESS_MODE.equals(key)) {
+            if (mBrightnessIcon != null) {
+                mShowBrightnessIcon = (newValue == null || Integer.parseInt(newValue) == 0) ? false : true;
+                mBrightnessIcon.setVisibility(!mShowBrightnessIcon ? GONE : VISIBLE);
+            }
+        }
+    }
 }
 
