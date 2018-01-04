@@ -4063,6 +4063,20 @@ public final class Settings {
         */
        public static final String QS_FOOTER_WARNINGS = "qs_footer_warnings";
 
+        /** some devices have a extra hw button e.g. n3 on the back on the
+         * fingerprint sensor. allow mapping button to key
+         *
+         * @hide
+         */
+        public static final String BUTTON_EXTRA_KEY_MAPPING = "button_extra_mapping";
+
+        /**
+         * Enable proxi check for wake keys - must be implemented in a device
+         * KeyHandler
+         * @hide
+         */
+        public static final String DEVICE_PROXI_CHECK_ENABLED = "device_proxi_check_enabled";
+
         /**
          * Whether to launch default music player when headset plugged in
          * 0 = don't do anything (default)
@@ -10751,7 +10765,7 @@ public final class Settings {
         /** @hide */ public static final int ZEN_MODE_IMPORTANT_INTERRUPTIONS = 1;
         /** @hide */ public static final int ZEN_MODE_NO_INTERRUPTIONS = 2;
         /** @hide */ public static final int ZEN_MODE_ALARMS = 3;
-
+        /** @hide */ public static final int ZEN_MODE_OFF_ONLY = 4;
         /** @hide */ public static String zenModeToString(int mode) {
             if (mode == ZEN_MODE_IMPORTANT_INTERRUPTIONS) return "ZEN_MODE_IMPORTANT_INTERRUPTIONS";
             if (mode == ZEN_MODE_ALARMS) return "ZEN_MODE_ALARMS";
