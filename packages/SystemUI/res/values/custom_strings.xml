@@ -124,4 +124,7 @@
     <string name="tuner_show_brightness_side_buttons">Show brightness slider side buttons</string>
     <string name="status_bar_volte">VOLTE</string>
     <string name="status_bar_roaming">Roaming</string>    
+
+    <!-- Battery saver tile -->
+    <string name="battery_saver_qs_tile_fully_charged">Fully Charged</string>
 </resources>
