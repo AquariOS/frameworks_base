@@ -36,4 +36,5 @@
     <add-resource type="bool" name="config_supportHighBrightness"></add-resource>
     <bool name="config_supportHighBrightness">false</bool>
 
+    <integer name="config_flashlightProximityTimeout">300</integer>
 </resources>

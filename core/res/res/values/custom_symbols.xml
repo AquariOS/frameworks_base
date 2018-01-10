@@ -46,4 +46,5 @@
   <java-symbol type="anim" name="du_app_in" />
   <java-symbol type="anim" name="du_app_out" />
 
+  <java-symbol type="integer" name="config_flashlightProximityTimeout" />
 </resources>
