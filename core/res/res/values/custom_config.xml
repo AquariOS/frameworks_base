@@ -33,4 +33,6 @@
     <bool name="config_useDarkBgNotificationTinting_override">false</bool>
     <bool name="config_notificationTinting_override">false</bool>
 
+    <integer name="config_flashlightProximityTimeout">300</integer>
+
 </resources>
