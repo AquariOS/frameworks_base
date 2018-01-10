@@ -35,4 +35,7 @@
        platform signatures, specifically for use on devices with a vendor partition. -->
   <string-array name="config_vendorPlatformSignatures">
   </string-array>
+
+  <!-- Flashlight proximity check -->
+  <integer name="config_flashlightProximityTimeout">300</integer>
 </resources>
