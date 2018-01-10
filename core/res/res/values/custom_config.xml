@@ -35,4 +35,8 @@
        platform signatures, specifically for use on devices with a vendor partition. -->
   <string-array name="config_vendorPlatformSignatures">
   </string-array>
+
+  <!-- Seconds after which power button torch times out when proximity sensor is covered -->
+  <integer name="config_flashlightProximityTimeout">300</integer>
+
 </resources>
