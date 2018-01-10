@@ -28,6 +28,9 @@
   <java-symbol type="array" name="config_rebootActionsList" />
   <java-symbol type="array" name="values_globalActionsList" />
 
+  <!-- Power button torch -->
+  <java-symbol type="integer" name="config_flashlightProximityTimeout" />
+
   <!-- Vendor fingerprint check -->
   <java-symbol type="string" name="system_error_vendorprint" />
 
