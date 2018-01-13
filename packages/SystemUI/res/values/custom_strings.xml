@@ -158,4 +158,7 @@
     <string name="quick_settings_reboot_label">Reboot</string>
     <string name="quick_settings_reboot_recovery_label">Recovery</string>
 
+    <!-- Always on Display Tile -->
+    <string name="quick_settings_always_on_display_label">Always on display</string>
+
 </resources>
