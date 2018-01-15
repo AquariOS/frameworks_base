@@ -107,6 +107,9 @@ import static android.view.WindowManager.LayoutParams.TYPE_VOICE_INTERACTION_STA
 import static android.view.WindowManager.LayoutParams.TYPE_VOLUME_OVERLAY;
 import static android.view.WindowManager.LayoutParams.TYPE_WALLPAPER;
 import static android.view.WindowManager.LayoutParams.isSystemAlertWindowType;
+import static android.view.WindowManager.SCREEN_RECORD_LOW_QUALITY;
+import static android.view.WindowManager.SCREEN_RECORD_MID_QUALITY;
+import static android.view.WindowManager.SCREEN_RECORD_HIGH_QUALITY;
 import static android.view.WindowManager.TAKE_SCREENSHOT_FULLSCREEN;
 import static android.view.WindowManager.TAKE_SCREENSHOT_SELECTED_REGION;
 import static android.view.WindowManagerGlobal.ADD_OKAY;
@@ -779,12 +782,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private boolean mScreenshotChordVolumeDownKeyTriggered;
     private long mScreenshotChordVolumeDownKeyTime;
     private boolean mScreenshotChordVolumeDownKeyConsumed;
-    // Omni screenrecord
-    private boolean mScreenrecordChordEnabled;
-    private boolean mScreenrecordChordVolumeUpKeyTriggered;
-    private long mScreenrecordChordVolumeUpKeyTime;
-    private boolean mScreenrecordChordVolumeUpKeyConsumed;
-    // Omni end
     private boolean mA11yShortcutChordVolumeUpKeyTriggered;
     private long mA11yShortcutChordVolumeUpKeyTime;
     private boolean mA11yShortcutChordVolumeUpKeyConsumed;
@@ -1337,7 +1334,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mScreenshotChordPowerKeyTriggered = true;
             mScreenshotChordPowerKeyTime = event.getDownTime();
             interceptScreenshotChord();
-            interceptScreenrecordChord();
         }
 
         // Stop ringing or end call if configured to do so when power is pressed.
@@ -1374,7 +1370,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         // If the power key has still not yet been handled, then detect short
         // press, long press, or multi press and decide what to do.
         mPowerKeyHandled = hungUp || mScreenshotChordVolumeDownKeyTriggered
-                || mScreenrecordChordVolumeUpKeyTriggered
                 || mA11yShortcutChordVolumeUpKeyTriggered || gesturedServiceIntercepted;
         if (!mPowerKeyHandled) {
             if (interactive) {
@@ -1749,20 +1744,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
     }
 
-    private void interceptScreenrecordChord() {
-        if (mScreenrecordChordEnabled && mScreenrecordChordVolumeUpKeyTriggered
-                && mScreenshotChordPowerKeyTriggered) {
-            final long now = SystemClock.uptimeMillis();
-            if (now <= mScreenrecordChordVolumeUpKeyTime + SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS
-                    && now <= mScreenshotChordPowerKeyTime + SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS) {
-                mScreenrecordChordVolumeUpKeyConsumed = true;
-                cancelPendingPowerKeyAction();
-
-                mHandler.postDelayed(mScreenrecordRunnable, getScreenshotChordLongPressDelay());
-            }
-        }
-    }
-
     private void interceptAccessibilityShortcutChord() {
         if (mAccessibilityShortcutController.isAccessibilityShortcutAvailable(isKeyguardLocked())
                 && mScreenshotChordVolumeDownKeyTriggered && mA11yShortcutChordVolumeUpKeyTriggered
@@ -1790,10 +1771,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
     private void cancelPendingScreenshotChordAction() {
         mHandler.removeCallbacks(mScreenshotRunnable);
-    }
-
-    private void cancelPendingScreenrecordChordAction() {
-        mHandler.removeCallbacks(mScreenrecordRunnable);
     }
 
     private void cancelPendingAccessibilityShortcutAction() {
@@ -1824,12 +1801,29 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
     private final ScreenshotRunnable mScreenshotRunnable = new ScreenshotRunnable();
 
-    private final Runnable mScreenrecordRunnable = new Runnable() {
+    private class ScreenrecordRunnable implements Runnable {
+        private int mMode = SCREEN_RECORD_LOW_QUALITY;
+
+        public void setMode(int mode) {
+            mMode = mode;
+        }
+
         @Override
         public void run() {
-            takeScreenrecord();
+            takeScreenrecord(mMode);
         }
-    };
+    }
+
+    private final ScreenrecordRunnable mScreenrecordRunnable = new ScreenrecordRunnable();
+
+    @Override
+    public void screenRecordAction(int mode) {
+        mContext.enforceCallingOrSelfPermission(Manifest.permission.ACCESS_SURFACE_FLINGER,
+                TAG + "screenRecordAction permission denied");
+        mHandler.removeCallbacks(mScreenrecordRunnable);
+        mScreenrecordRunnable.setMode(mode);
+        mHandler.post(mScreenrecordRunnable);
+    }
 
     @Override
     public void showGlobalActions() {
@@ -2271,9 +2265,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         mScreenshotChordEnabled = mContext.getResources().getBoolean(
                 com.android.internal.R.bool.config_enableScreenshotChord);
-
-        mScreenrecordChordEnabled = mContext.getResources().getBoolean(
-                com.android.internal.R.bool.config_enableScreenrecordChord);
 
         mGlobalKeyManager = new GlobalKeyManager(mContext);
 
@@ -3545,26 +3536,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 return -1;
             }
         }*/
-
-        // If we think we might have a volume up & power key chord on the way
-        // but we're not sure, then tell the dispatcher to wait a little while and
-        // try again later before dispatching.
-        if (mScreenrecordChordEnabled && (flags & KeyEvent.FLAG_FALLBACK) == 0) {
-            if (mScreenrecordChordVolumeUpKeyTriggered && !mScreenshotChordPowerKeyTriggered) {
-                final long now = SystemClock.uptimeMillis();
-                final long timeoutTime = mScreenrecordChordVolumeUpKeyTime + SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS;
-                if (now < timeoutTime) {
-                    return timeoutTime - now;
-                }
-            }
-            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP
-                    && mScreenrecordChordVolumeUpKeyConsumed) {
-                if (!down) {
-                    mScreenrecordChordVolumeUpKeyConsumed = false;
-                }
-                return -1;
-            }
-        }
 
         // If an accessibility shortcut might be partially complete, hold off dispatching until we
         // know if it is complete or not
@@ -6144,28 +6115,14 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         }
     }
 
-    /**
-     * Notifies the screenshot service to show an error.
-     */
-    private void notifyScreenshotError() {
-        // If the service process is killed, then ask it to clean up after itself
-        final ComponentName errorComponent = new ComponentName(SYSUI_PACKAGE,
-                SYSUI_SCREENSHOT_ERROR_RECEIVER);
-        Intent errorIntent = new Intent(Intent.ACTION_USER_PRESENT);
-        errorIntent.setComponent(errorComponent);
-        errorIntent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT |
-                Intent.FLAG_RECEIVER_FOREGROUND);
-        mContext.sendBroadcastAsUser(errorIntent, UserHandle.CURRENT);
-    }
-
     // Assume this is called from the Handler thread.
-    private void takeScreenrecord() {
+    private void takeScreenrecord(final int mode) {
         synchronized (mScreenrecordLock) {
             if (mScreenrecordConnection != null) {
                 return;
             }
             ComponentName cn = new ComponentName("com.android.systemui",
-                    "com.android.systemui.omni.screenrecord.TakeScreenrecordService");
+                    "com.android.systemui.screenrecord.TakeScreenrecordService");
             Intent intent = new Intent();
             intent.setComponent(cn);
             ServiceConnection conn = new ServiceConnection() {
@@ -6173,7 +6130,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 public void onServiceConnected(ComponentName name, IBinder service) {
                     synchronized (mScreenrecordLock) {
                         Messenger messenger = new Messenger(service);
-                        Message msg = Message.obtain(null, 1);
+                        Message msg = Message.obtain(null, mode);
                         final ServiceConnection myConn = this;
                         Handler h = new Handler(mHandler.getLooper()) {
                             @Override
@@ -6196,16 +6153,38 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     }
                 }
                 @Override
-                public void onServiceDisconnected(ComponentName name) {}
+                public void onServiceDisconnected(ComponentName name) {
+                    synchronized (mScreenrecordLock) {
+                        if (mScreenrecordConnection != null) {
+                            mContext.unbindService(mScreenrecordConnection);
+                            mScreenrecordConnection = null;
+                            mHandler.removeCallbacks(mScreenrecordTimeout);
+                        }
+                    }
+                }
             };
             if (mContext.bindServiceAsUser(
                     intent, conn, Context.BIND_AUTO_CREATE, UserHandle.CURRENT)) {
                 mScreenrecordConnection = conn;
-                // Screenrecord max duration is 30 minutes. Allow 31 minutes before killing
+                // Screenrecord max duration is 30 minutes. Allow 32 minutes before killing
                 // the service.
-                mHandler.postDelayed(mScreenrecordTimeout, 31 * 60 * 1000);
+                mHandler.postDelayed(mScreenrecordTimeout, 32 * 60 * 1000);
             }
         }
+    }
+
+    /**
+     * Notifies the screenshot service to show an error.
+     */
+    private void notifyScreenshotError() {
+        // If the service process is killed, then ask it to clean up after itself
+        final ComponentName errorComponent = new ComponentName(SYSUI_PACKAGE,
+                SYSUI_SCREENSHOT_ERROR_RECEIVER);
+        Intent errorIntent = new Intent(Intent.ACTION_USER_PRESENT);
+        errorIntent.setComponent(errorComponent);
+        errorIntent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT |
+                Intent.FLAG_RECEIVER_FOREGROUND);
+        mContext.sendBroadcastAsUser(errorIntent, UserHandle.CURRENT);
     }
 
     /** {@inheritDoc} */
@@ -6341,7 +6320,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                             mScreenshotChordVolumeDownKeyTime = event.getDownTime();
                             mScreenshotChordVolumeDownKeyConsumed = false;
                             cancelPendingPowerKeyAction();
-                            cancelPendingScreenrecordChordAction();
                             interceptScreenshotChord();
                             interceptAccessibilityShortcutChord();
                         }
@@ -6352,26 +6330,19 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     }
                 } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
                     if (down) {
-                        if (interactive && (!mA11yShortcutChordVolumeUpKeyTriggered
-                                || !mScreenrecordChordVolumeUpKeyTriggered)
+                        if (interactive && !mA11yShortcutChordVolumeUpKeyTriggered
                                 && (event.getFlags() & KeyEvent.FLAG_FALLBACK) == 0) {
                             mA11yShortcutChordVolumeUpKeyTriggered = true;
                             mA11yShortcutChordVolumeUpKeyTime = event.getDownTime();
                             mA11yShortcutChordVolumeUpKeyConsumed = false;
-                            mScreenrecordChordVolumeUpKeyTriggered = true;
-                            mScreenrecordChordVolumeUpKeyTime = event.getDownTime();
-                            mScreenrecordChordVolumeUpKeyConsumed = false;
                             cancelPendingPowerKeyAction();
-                            cancelPendingScreenrecordChordAction();
                             interceptScreenshotChord();
                             interceptAccessibilityShortcutChord();
                         }
                     } else {
                         mA11yShortcutChordVolumeUpKeyTriggered = false;
-                        mScreenrecordChordVolumeUpKeyTriggered = false;
                         cancelPendingScreenshotChordAction();
                         cancelPendingAccessibilityShortcutAction();
-                        cancelPendingScreenrecordChordAction();
                     }
                 }
                 if (down) {

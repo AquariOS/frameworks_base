@@ -70,11 +70,11 @@ public class NotificationChannels extends SystemUI {
                         isTv(context)
                                 ? NotificationManager.IMPORTANCE_DEFAULT
                                 : NotificationManager.IMPORTANCE_LOW),
+                batteryChannel,
                 new NotificationChannel(
                         SCREENRECORDS,
                         context.getString(R.string.notification_channel_screenrecord),
-                        NotificationManager.IMPORTANCE_LOW),
-                batteryChannel
+                        NotificationManager.IMPORTANCE_LOW)
         ));
 
         if (isTv(context)) {
