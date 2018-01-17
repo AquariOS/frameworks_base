@@ -4007,6 +4007,7 @@ public final class Settings {
         public static final String OMNIJAWS_WEATHER_ICON_PACK = "omnijaws_weather_icon_pack";
 
         /**
+<<<<<<< HEAD
          * Whether to show the battery bar
          * @hide
          */
@@ -4334,6 +4335,8 @@ public final class Settings {
 
 
         /**
+=======
+>>>>>>> parent of 4f88fa9... [SQUASH] Battery Bar with DUI support and color blending [1/2]
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
