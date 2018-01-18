@@ -191,6 +191,7 @@ import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.navigation.Navigator;
+import com.android.systemui.omni.StatusBarHeaderMachine;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin.MenuItem;
@@ -199,6 +200,7 @@ import com.android.systemui.qs.QSFragment;
 import com.android.systemui.qs.QSPanel;
 import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.qs.car.CarQSFragment;
+import com.android.systemui.qs.QuickStatusBarHeader;
 import com.android.systemui.recents.Recents;
 import com.android.systemui.recents.ScreenPinningRequest;
 import com.android.systemui.recents.events.EventBus;
@@ -462,6 +464,7 @@ public class StatusBar extends SystemUI implements DemoMode,
 
     // settings
     private QSPanel mQSPanel;
+    private QuickStatusBarHeader mQuickStatusBarHeader;
 
     // top bar
     protected KeyguardStatusBarView mKeyguardStatusBar;
@@ -597,6 +600,7 @@ public class StatusBar extends SystemUI implements DemoMode,
     protected PorterDuffXfermode mSrcOverXferMode =
             new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER);
 
+    private NotificationManager mNoMan;
     private String[] mNavMediaArrowsExcludeList;
     private MediaSessionManager mMediaSessionManager;
     private MediaController mMediaController;
@@ -612,10 +616,12 @@ public class StatusBar extends SystemUI implements DemoMode,
                 if (!isPlaybackActive(state.getState())) {
                     clearCurrentMediaNotification();
                     updateMediaMetaData(true, true);
+                if (getKeyguardBottomAreaView().mVisualizerView != null) {
+                    getKeyguardBottomAreaView().mVisualizerView
+                        .setPlaying(state.getState() == PlaybackState.STATE_PLAYING);
+                    }
                 }
-                if (mNavigationBar != null) {
-                    setMediaPlaying();
-                }
+                setMediaPlaying();
             }
         }
 
@@ -625,17 +631,13 @@ public class StatusBar extends SystemUI implements DemoMode,
             if (DEBUG_MEDIA) Log.v(TAG, "DEBUG_MEDIA: onMetadataChanged: " + metadata);
             mMediaMetadata = metadata;
             updateMediaMetaData(true, true);
-            if (mNavigationBar != null) {
-                setMediaPlaying();
-            }
+            setMediaPlaying();
         }
 
         @Override
         public void onSessionDestroyed() {
             super.onSessionDestroyed();
-            if (mNavigationBar != null) {
-                setMediaPlaying();
-            }
+            setMediaPlaying();
         }
     };
 
@@ -645,15 +647,21 @@ public class StatusBar extends SystemUI implements DemoMode,
                     getMediaControllerPlaybackState(mMediaController)
                     || PlaybackState.STATE_BUFFERING ==
                     getMediaControllerPlaybackState(mMediaController)) {
+                mNoMan.setMediaPlaying(true);
                 final String currentPkg = mMediaController.getPackageName().toLowerCase();
                 for (String packageName : mNavMediaArrowsExcludeList) {
                     if (currentPkg.contains(packageName)) {
                         return;
                     }
                 }
-                mNavigationBar.setMediaPlaying(true);
+                if (mNavigationBar != null) {
+                    mNavigationBar.setMediaPlaying(true);
+                }
             } else {
-                mNavigationBar.setMediaPlaying(false);
+                mNoMan.setMediaPlaying(false);
+                if (mNavigationBar != null) {
+                    mNavigationBar.setMediaPlaying(false);
+                }
             }
         }
     }
@@ -839,6 +847,7 @@ public class StatusBar extends SystemUI implements DemoMode,
     private View mNavigationBarView;
 
     private boolean mLockscreenMediaMetadata;
+    private StatusBarHeaderMachine mStatusBarHeaderMachine;
 
     @Override
     public void start() {
@@ -903,21 +912,19 @@ public class StatusBar extends SystemUI implements DemoMode,
                 mLockscreenSettingsObserver,
                 UserHandle.USER_ALL);
         if (ENABLE_LOCK_SCREEN_ALLOW_REMOTE_INPUT) {
-            mContext.getContentResolver().registerContentObserver(
-                    Settings.Secure.getUriFor(Settings.Secure.LOCK_SCREEN_ALLOW_REMOTE_INPUT),
-                    false,
-                    mSettingsObserver,
-                    UserHandle.USER_ALL);
-        }
-
         mContext.getContentResolver().registerContentObserver(
-                Settings.Secure.getUriFor(Settings.Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS),
-                true,
+                Settings.Secure.getUriFor(Settings.Secure.LOCK_SCREEN_ALLOW_REMOTE_INPUT), false,
+                mSettingsObserver,
+                UserHandle.USER_ALL);
+        }
+        mContext.getContentResolver().registerContentObserver(
+                Settings.Secure.getUriFor(Settings.Secure.LOCK_SCREEN_ALLOW_PRIVATE_NOTIFICATIONS), true,
                 mLockscreenSettingsObserver,
                 UserHandle.USER_ALL);
-
-        mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor(
-                Settings.Secure.NAVIGATION_BAR_VISIBLE), false, mNavbarObserver, UserHandle.USER_ALL);
+        mContext.getContentResolver().registerContentObserver(
+                Settings.System.getUriFor(Settings.System.SHOW_LOCKSCREEN_VISUALIZER), false,
+                mSettingsObserver,
+                UserHandle.USER_ALL);
 
         mBarService = IStatusBarService.Stub.asInterface(
                 ServiceManager.getService(Context.STATUS_BAR_SERVICE));
@@ -1133,6 +1140,10 @@ public class StatusBar extends SystemUI implements DemoMode,
             mNotificationPanelDebugText.setVisibility(View.VISIBLE);
         }
 
+        mNoMan = (NotificationManager)
+                        mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+        setMediaPlaying();
+
         boolean showNav = Settings.Secure.getInt(mContext.getContentResolver(),
                 Settings.Secure.NAVIGATION_BAR_VISIBLE,
                 DUActionUtils.hasNavbarByDefault(mContext) ? 1 : 0) != 0;
@@ -1170,6 +1181,8 @@ public class StatusBar extends SystemUI implements DemoMode,
                 mNotificationPanel.getLockIcon());
         mNotificationPanel.setKeyguardIndicationController(mKeyguardIndicationController);
 
+        getKeyguardBottomAreaView().setKeyguardIndicationController(mKeyguardIndicationController);
+        getKeyguardBottomAreaView().onLockscreenVisualizerChange();
 
         mAmbientIndicationContainer = mStatusBarWindow.findViewById(
                 R.id.ambient_indication_container);
@@ -1222,7 +1235,8 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
         mHeadsUpManager.addListener(mScrimController);
         mStackScroller.setScrimController(mScrimController);
-        mDozeScrimController = new DozeScrimController(mScrimController, context);
+        mDozeScrimController = new DozeScrimController(mScrimController, context,
+                                    getKeyguardBottomAreaView().mVisualizerView);
 
         // Other icons
         mVolumeComponent = getComponent(VolumeComponent.class);
@@ -1231,6 +1245,8 @@ public class StatusBar extends SystemUI implements DemoMode,
         if (UserManager.get(mContext).isUserSwitcherEnabled()) {
             createUserSwitcher();
         }
+
+        mStatusBarHeaderMachine = new StatusBarHeaderMachine(mContext);
 
         // Set up the quick settings tile panel
         View container = mStatusBarWindow.findViewById(R.id.qs_frame);
@@ -1254,6 +1270,9 @@ public class StatusBar extends SystemUI implements DemoMode,
                     mQSPanel = ((QSFragment) qs).getQsPanel();
                     mQSPanel.setBrightnessMirror(mBrightnessMirrorController);
                     mKeyguardStatusBar.setQSPanel(mQSPanel);
+                    mQuickStatusBarHeader = ((QSFragment) qs).getQuickStatusBarHeader();
+                    mStatusBarHeaderMachine.addObserver(mQuickStatusBarHeader);
+                    mStatusBarHeaderMachine.updateEnablement();
                 }
             });
         }
@@ -2419,9 +2438,7 @@ public class StatusBar extends SystemUI implements DemoMode,
                 clearCurrentMediaNotification();
                 mMediaController = controller;
                 mMediaController.registerCallback(mMediaListener);
-                if (mNavigationBar != null) {
-                    setMediaPlaying();
-                }
+                setMediaPlaying();
                 mMediaMetadata = mMediaController.getMetadata();
                 if (DEBUG_MEDIA) {
                     Log.v(TAG, "DEBUG_MEDIA: insert listener, receive metadata: "
@@ -2473,9 +2490,7 @@ public class StatusBar extends SystemUI implements DemoMode,
                         + mMediaController.getPackageName());
             }
             mMediaController.unregisterCallback(mMediaListener);
-            if (mNavigationBar != null) {
-                setMediaPlaying();
-            }
+            setMediaPlaying();
         }
         mMediaController = null;
     }
@@ -2558,6 +2573,22 @@ public class StatusBar extends SystemUI implements DemoMode,
                 && mStatusBarKeyguardViewManager.isOccluded();
 
         final boolean hasArtwork = artworkDrawable != null;
+
+        final boolean keyguardVisible = (mState != StatusBarState.SHADE);
+        if(getKeyguardBottomAreaView().mVisualizerView != null &&
+                !mKeyguardFadingAway && keyguardVisible) {
+            getKeyguardBottomAreaView().mVisualizerView.setPlaying(
+                mMediaController != null &&
+                mMediaController.getPlaybackState() != null &&
+                mMediaController.getPlaybackState()
+                    .getState() == PlaybackState.STATE_PLAYING);
+        }
+
+        if (getKeyguardBottomAreaView().mVisualizerView != null &&
+                hasArtwork && (artworkDrawable instanceof BitmapDrawable)) {
+            getKeyguardBottomAreaView().mVisualizerView
+                .setBitmap(((BitmapDrawable)artworkDrawable).getBitmap());
+        }
 
         if ((hasArtwork || DEBUG_MEDIA_FAKE_ARTWORK)
                 && (mState != StatusBarState.SHADE || allowWhenShade)
@@ -5043,6 +5074,9 @@ public class StatusBar extends SystemUI implements DemoMode,
 
     public void onClosingFinished() {
         runPostCollapseRunnables();
+        if (mQuickStatusBarHeader != null) {
+            mQuickStatusBarHeader.onClosingFinished();
+        }
         if (!isPanelFullyCollapsed()) {
             // if we set it not to be focusable when collapsing, we have to undo it when we aborted
             // the closing
@@ -5976,6 +6010,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             setZenMode(mode);
 
             updateLockscreenNotificationSetting();
+            getKeyguardBottomAreaView().onLockscreenVisualizerChange();
         }
     };
 
@@ -6040,6 +6075,9 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.RECENTS_ICON_PACK),
                     false, this, UserHandle.USER_ALL);
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_QUICKBAR_SCROLL_ENABLED),
+                    false, this, UserHandle.USER_ALL);
         }
 
         @Override
@@ -6076,6 +6114,9 @@ public class StatusBar extends SystemUI implements DemoMode,
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.RECENTS_ICON_PACK))) {
                 updateRecentsIconPack();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_QUICKBAR_SCROLL_ENABLED))) {
+                setQuickStatusBarHeader(); 
             }
         }
 
@@ -6087,6 +6128,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             updateQsPanelResources();
             setUseLessBoringHeadsUp();
             updateRecentsIconPack();
+            setQuickStatusBarHeader();
         }
     }
 
@@ -6119,6 +6161,12 @@ public class StatusBar extends SystemUI implements DemoMode,
     private void updateQsPanelResources() {
         if (mQSPanel != null) {
             mQSPanel.updateResources();
+        }
+    }
+
+    private void setQuickStatusBarHeader() {
+        if (mQuickStatusBarHeader != null) {
+            mQuickStatusBarHeader.updateSettings();
         }
     }
 
@@ -6400,9 +6448,7 @@ public class StatusBar extends SystemUI implements DemoMode,
                     }
                 }
             } else if (BANNER_ACTION_CANCEL.equals(action) || BANNER_ACTION_SETUP.equals(action)) {
-                NotificationManager noMan = (NotificationManager)
-                        mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-                noMan.cancel(SystemMessage.NOTE_HIDDEN_NOTIFICATIONS);
+                mNoMan.cancel(SystemMessage.NOTE_HIDDEN_NOTIFICATIONS);
 
                 Settings.Secure.putInt(mContext.getContentResolver(),
                         Settings.Secure.SHOW_NOTE_ABOUT_NOTIFICATION_HIDING, 0);
@@ -6599,9 +6645,7 @@ public class StatusBar extends SystemUI implements DemoMode,
                                     setupIntent);
             overrideNotificationAppName(mContext, note);
 
-            NotificationManager noMan =
-                    (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
-            noMan.notify(SystemMessage.NOTE_HIDDEN_NOTIFICATIONS, note.build());
+            mNoMan.notify(SystemMessage.NOTE_HIDDEN_NOTIFICATIONS, note.build());
         }
     }
 

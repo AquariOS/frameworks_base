@@ -39,5 +39,4 @@ public class Prefs {
     public static int getLastBatteryLevel(Context context) {
         return read(context).getInt(LAST_BATTERY_LEVEL, 50);
     }
-
 }

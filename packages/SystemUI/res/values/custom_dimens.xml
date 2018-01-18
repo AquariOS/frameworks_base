@@ -34,4 +34,15 @@
     <dimen name="net_traffic_multi_text_size">8dp</dimen>
     <dimen name="net_traffic_txt_img_padding">2dp</dimen>
 
+    <!-- Screen Recorder -->
+    <dimen name="screenrecord_hint_size">48dp</dimen>
+
+    <!-- QuickSettingHeader scrollbar-->
+    <dimen name="qs_scroller_margin">8dp</dimen>
+    <dimen name="qs_scroller_top_margin">40dp</dimen>
+
+    <!-- QS Footer -->
+    <dimen name="qs_panel_margin_top">20dp</dimen>
+    <dimen name="qs_panel_margin_top_header">85dp</dimen>
+    <dimen name="qs_panel_footer_height">48dp</dimen>
 </resources>

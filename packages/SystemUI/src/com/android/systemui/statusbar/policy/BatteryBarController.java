@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2010 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.android.systemui.statusbar.policy;
 
 import android.content.BroadcastReceiver;
@@ -25,6 +9,7 @@ import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.os.BatteryManager;
 import android.os.Handler;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -64,14 +49,12 @@ public class BatteryBarController extends LinearLayout {
 
         void observer() {
             ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.STATUSBAR_BATTERY_BAR), false, this);
-            resolver.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.STATUSBAR_BATTERY_BAR_STYLE), false,
-                    this);
-            resolver.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.STATUSBAR_BATTERY_BAR_THICKNESS),
-                    false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.BATTERY_BAR_LOCATION), false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.BATTERY_BAR_STYLE), false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.BATTERY_BAR_THICKNESS),false, this, UserHandle.USER_ALL);
         }
 
         @Override
@@ -145,8 +128,8 @@ public class BatteryBarController extends LinearLayout {
     public void addBars() {
         // set heights
         DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
-        float dp = (float) Settings.System.getInt(getContext().getContentResolver(),
-                Settings.System.STATUSBAR_BATTERY_BAR_THICKNESS, 1);
+        float dp = (float) Settings.System.getIntForUser(getContext().getContentResolver(),
+                Settings.System.BATTERY_BAR_THICKNESS, 1, UserHandle.USER_CURRENT);
         int pixels = (int) ((metrics.density * dp) + 0.5);
 
         ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) getLayoutParams();
@@ -184,6 +167,7 @@ public class BatteryBarController extends LinearLayout {
                 addView(bar2, (new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                         LayoutParams.MATCH_PARENT, 1)));
             }
+
         } else if (mStyle == STYLE_REVERSE) {
             BatteryBar bar = new BatteryBar(mContext, mBatteryCharging, mBatteryLevel, isVertical);
             bar.setRotation(180);
@@ -197,12 +181,12 @@ public class BatteryBarController extends LinearLayout {
     }
 
     public void updateSettings() {
-        mStyle = Settings.System.getInt(getContext().getContentResolver(),
-                Settings.System.STATUSBAR_BATTERY_BAR_STYLE, 0);
-        mLocation = Settings.System.getInt(getContext().getContentResolver(),
-                Settings.System.STATUSBAR_BATTERY_BAR, 0);
+        mStyle = Settings.System.getIntForUser(getContext().getContentResolver(),
+                Settings.System.BATTERY_BAR_STYLE, 0, UserHandle.USER_CURRENT);
+        mLocation = Settings.System.getIntForUser(getContext().getContentResolver(),
+                Settings.System.BATTERY_BAR_LOCATION, 0, UserHandle.USER_CURRENT);
 
-        if (mLocation > 0 && isLocationValid(mLocation)) {
+        if (isLocationValid(mLocation)) {
             removeBars();
             addBars();
             setVisibility(View.VISIBLE);
