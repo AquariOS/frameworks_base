@@ -4420,6 +4420,12 @@ public final class Settings {
         public static final String MTP_DIRTY_HACK_SAVE = "mtp_dirty_hack_save";
 
         /**
+         * Force an Ambient notification when a new media track is being played
+         * @hide
+         */
+        public static final String FORCE_AMBIENT_FOR_MEDIA = "force_ambient_for_media";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
