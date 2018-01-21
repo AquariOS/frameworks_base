@@ -42,7 +42,7 @@ include $(BUILD_PREBUILT)
 
 ########################
 include $(CLEAR_VARS)
-LOCAL_MODULE := privapp-permissions-google.xml
+LOCAL_MODULE := privapp-permissions-custom.xml
 LOCAL_MODULE_CLASS := ETC
 LOCAL_MODULE_PATH := $(TARGET_OUT_ETC)/permissions
 LOCAL_SRC_FILES := $(LOCAL_MODULE)
