@@ -411,4 +411,8 @@ It allows additional grants on top of privapp-permissions-platform.xml
     <privapp-permissions package="com.android.timezone.updater">
         <permission name="android.permission.UPDATE_TIME_ZONE_RULES" />
     </privapp-permissions>
+
+    <privapp-permissions package="org.omnirom.omnijaws">
+        <permission name="android.permission.LOCATION_HARDWARE"/>
+    </privapp-permissions>
 </permissions>
