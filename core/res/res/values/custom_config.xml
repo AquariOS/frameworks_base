@@ -37,4 +37,6 @@
     <bool name="config_supportHighBrightness">false</bool>
 
     <integer name="config_flashlightProximityTimeout">300</integer>
+
+    <bool name="config_canForceDozeNotifications">true</bool>
 </resources>
