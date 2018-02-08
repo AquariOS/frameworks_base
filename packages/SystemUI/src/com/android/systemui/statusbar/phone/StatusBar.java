@@ -493,7 +493,7 @@ public class StatusBar extends SystemUI implements DemoMode,
 
     // the tracker view
     int mTrackingPosition; // the position of the top of the tracking view.
-
+    private int mTickerEnabled;
     private boolean mAmbientMediaPlaying;
 
     // Tracking finger for opening/closing.
@@ -681,9 +681,6 @@ public class StatusBar extends SystemUI implements DemoMode,
         for (int i = 0; i < N; i++) {
             final Entry entry = activeNotifications.get(i);
             if (entry.notification.getPackageName().equals(pkg)) {
-                if (mTickerEnabled == 2) {
-                    tick(entry.notification, true, true, mMediaMetadata);
-                }
                 if (mAmbientMediaPlaying != 0 && mAmbientIndicationContainer != null) {
                     ((AmbientIndicationContainer)mAmbientIndicationContainer).setIndication(mMediaMetadata);
                 }
@@ -6257,7 +6254,7 @@ public class StatusBar extends SystemUI implements DemoMode,
     private void setForceAmbient() {
         mAmbientMediaPlaying = Settings.System.getIntForUser(mContext.getContentResolver(),
                 Settings.System.FORCE_AMBIENT_FOR_MEDIA, 0,
-                UserHandle.USER_CURRENT);
+                UserHandle.USER_CURRENT) == 1;
         if (mAmbientMediaPlaying != 0 && mAmbientIndicationContainer != null) {
             ((AmbientIndicationContainer)mAmbientIndicationContainer).setIndication(mMediaMetadata);
         }
