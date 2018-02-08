@@ -457,4 +457,8 @@ public class BrightnessController implements ToggleSlider.Listener {
             mBackgroundHandler.post(mUpdateSliderRunnable);
         }
     }
+
+    public void showSideButtons(boolean enable) {
+        mControl.showSideButtons(enable);
+    }
 }

@@ -121,4 +121,5 @@
     <string name="tuner_show_brightness_mode">Show brightness mode switch</string>
     <string name="tuner_show_brightness_new">Show brightness slider</string>
     <string name="status_bar_vpn">VPN</string>
+    <string name="tuner_show_brightness_side_buttons">Show brightness slider side buttons</string>
 </resources>
