@@ -43,6 +43,7 @@ import com.android.systemui.qs.tiles.OnTheGoTile;
 import com.android.systemui.qs.tiles.RotationLockTile;
 import com.android.systemui.qs.tiles.ScreenshotTile;
 import com.android.systemui.qs.tiles.ScreenrecordTile;
+import com.android.systemui.qs.tiles.SoundSearchTIle;
 import com.android.systemui.qs.tiles.SmartNavTile;
 import com.android.systemui.qs.tiles.ThemeTile;
 import com.android.systemui.qs.tiles.UserTile;
@@ -119,6 +120,8 @@ public class QSFactoryImpl implements QSFactory {
                 return new OnTheGoTile(mHost);
             case "font":
                 return new FontTile(mHost);
+            case "soundsearch":
+                return new SoundSearchTIle(mHost);
         }
 
         // Intent tiles.
