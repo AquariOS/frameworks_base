@@ -206,6 +206,7 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
             mBrightnessSliderSideButtons = (newValue == null || Integer.parseInt(newValue) == 0)
                     ? false : true;
             mBrightnessController.showSideButtons(mBrightnessSliderSideButtons);
+            updateBrightnessMirror();
         }
     }
 
@@ -294,7 +295,7 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
             ToggleSliderView brightnessSlider = findViewById(R.id.brightness_slider);
             ToggleSliderView mirrorSlider = mBrightnessMirrorController.getMirror()
                     .findViewById(R.id.brightness_slider);
-            mirrorSlider.setMirrorStyle();
+            mirrorSlider.showSideButtons(mBrightnessSliderSideButtons);
             brightnessSlider.setMirror(mirrorSlider);
             brightnessSlider.setMirrorController(mBrightnessMirrorController);
         }
