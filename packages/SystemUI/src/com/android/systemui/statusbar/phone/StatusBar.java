@@ -925,6 +925,9 @@ public class StatusBar extends SystemUI implements DemoMode,
                 mSettingsObserver,
                 UserHandle.USER_ALL);
 
+        mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor(
+                Settings.Secure.NAVIGATION_BAR_VISIBLE), false, mNavbarObserver, UserHandle.USER_ALL);
+
         mBarService = IStatusBarService.Stub.asInterface(
                 ServiceManager.getService(Context.STATUS_BAR_SERVICE));
 
