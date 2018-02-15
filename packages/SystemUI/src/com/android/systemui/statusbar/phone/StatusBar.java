@@ -2649,7 +2649,8 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
 
         if (getKeyguardBottomAreaView().mVisualizerView != null &&
-                hasArtwork && (artworkDrawable instanceof BitmapDrawable)) {
+                keyguardVisible && hasArtwork &&
+                (artworkDrawable instanceof BitmapDrawable)) {
             getKeyguardBottomAreaView().mVisualizerView
                 .setBitmap(((BitmapDrawable)artworkDrawable).getBitmap());
         }
