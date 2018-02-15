@@ -4454,6 +4454,19 @@ public final class Settings {
         public static final String SYSTEM_UI_THEME = "system_ui_theme";
 
         /**
+         * Select various accents to go along with system themes
+         *
+         * @hide
+         */
+        public static final String ACCENT_PICKER = "accent_picker";
+
+        /**
+         * Select various accents to go along with system themes
+         *
+         * @hide
+         */
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
