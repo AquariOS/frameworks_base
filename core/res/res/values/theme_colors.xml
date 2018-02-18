@@ -27,4 +27,7 @@
     <color name="power_menu_lockdown">#ff202020</color>
     <color name="power_menu_screenshot">#ff202020</color>
 
+    <!-- Resolver -->
+    <color name="resolver_list_bg">@android:color/white</color>
+
 </resources>
