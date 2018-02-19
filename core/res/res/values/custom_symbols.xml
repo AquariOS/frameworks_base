@@ -58,4 +58,7 @@
   <!-- Notification info -->
   <java-symbol type="color" name="notification_info_button_text" />
 
+  <!-- In call notification vibration strength -->
+  <java-symbol type="integer" name="config_in_call_notification_vibration_strength" />
+
 </resources>
