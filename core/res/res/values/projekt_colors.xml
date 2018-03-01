@@ -74,4 +74,6 @@
     <!-- Settings icon tint color -->
     <color name="settings_icon_tint_color">#737373</color>
 
+    <!-- Launcher3 -->
+    <color name="updater_snackbar_text_color">@android:color/white</color>
 </resources>
