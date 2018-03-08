@@ -15,19 +15,24 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- Whether to show a custom view for FOD -->
-    <bool name="config_needCustomFODView">false</bool>
+  <!-- Whether to show a custom view for FOD -->
+  <bool name="config_needCustomFODView">false</bool>
 
-    <!-- Default value for proximity check on screen wake
-         NOTE ! - Enable for devices that have a fast response proximity sensor (ideally < 300ms)
-    -->
-    <bool name="config_proximityCheckOnWake">false</bool>
-    <integer name="config_proximityCheckTimeout">250</integer>
-    <bool name="config_proximityCheckOnWakeEnabledByDefault">false</bool>
+  <!-- Default value for proximity check on screen wake
+       NOTE ! - Enable for devices that have a fast response proximity sensor (ideally < 300ms)
+  -->
+  <bool name="config_proximityCheckOnWake">false</bool>
+  <integer name="config_proximityCheckTimeout">250</integer>
+  <bool name="config_proximityCheckOnWakeEnabledByDefault">false</bool>
 
-    <!-- Path to the library that contains a device specific key handler -->
-    <string-array name="config_deviceKeyHandlerLibs" translatable="false"></string-array>
+  <!-- Path to the library that contains a device specific key handler -->
+  <string-array name="config_deviceKeyHandlerLibs" translatable="false"></string-array>
 
-    <!-- Name of that key handler class -->
-    <string-array name="config_deviceKeyHandlerClasses" translatable="false"></string-array>
+  <!-- Name of that key handler class -->
+  <string-array name="config_deviceKeyHandlerClasses" translatable="false"></string-array>
+
+  <!-- The list of vendor package signatures that should also be considered
+       platform signatures, specifically for use on devices with a vendor partition. -->
+  <string-array name="config_vendorPlatformSignatures">
+  </string-array>
 </resources>
