@@ -193,4 +193,8 @@
     <!-- QS customizer -->
     <string name="drag_or_tap_to_add_tiles">Drag or tap to add tiles</string>
 
+    <!-- QS Mini mode -->
+    <string name="qs_show_mini">Mini mode</string>
+    <string name="qs_header">Header</string>
+
 </resources>
