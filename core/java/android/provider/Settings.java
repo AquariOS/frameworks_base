@@ -4067,6 +4067,12 @@ public final class Settings {
         public static final String HEADSET_CONNECT_PLAYER = "headset_connect_player";
 
         /**
+         * Configure the app to be used to edit screenshots with
+         * @hide
+         */
+        public static final String SCREENSHOT_EDIT_USER_APP = "screenshot_edit_user_app";
+
+        /**
          * Whether to enable scrolling in the small quick settings
          * @hide
          */
