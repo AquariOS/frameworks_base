@@ -18,7 +18,9 @@ package com.android.systemui.qs;
 
 import static android.app.StatusBarManager.DISABLE2_QUICK_SETTINGS;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.UserInfo;
 import android.content.res.ColorStateList;
@@ -28,12 +30,15 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Bundle;
 import android.os.UserManager;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -61,7 +66,7 @@ import com.android.systemui.statusbar.policy.UserInfoController;
 import com.android.systemui.statusbar.policy.UserInfoController.OnUserInfoChangedListener;
 
 public class QSFooterImpl extends FrameLayout implements QSFooter,
-        OnClickListener, OnUserInfoChangedListener, EmergencyListener, SignalCallback {
+        OnClickListener, OnLongClickListener, OnUserInfoChangedListener, EmergencyListener, SignalCallback {
 
     private ActivityStarter mActivityStarter;
     private UserInfoController mUserInfoController;
@@ -94,11 +99,14 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
     private ImageView mMobileRoaming;
     private final int mColorForeground;
     private final CellSignalState mInfo = new CellSignalState();
+    private final Vibrator mVibrator;
     private OnClickListener mExpandClickListener;
 
     public QSFooterImpl(Context context, AttributeSet attrs) {
         super(context, attrs);
         mColorForeground = Utils.getColorAttr(context, android.R.attr.colorForeground);
+        ContentResolver resolver = context.getContentResolver();
+        mVibrator = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     @Override
@@ -114,6 +122,7 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
 
         mSettingsButton = findViewById(R.id.settings_button);
         mSettingsButton.setOnClickListener(this);
+        mSettingsButton.setOnLongClickListener(this);
 
         mMobileGroup = findViewById(R.id.mobile_combo);
         mMobileSignal = findViewById(R.id.mobile_signal);
@@ -339,6 +348,22 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
                             : MetricsProto.MetricsEvent.ACTION_QS_COLLAPSED_SETTINGS_LAUNCH);
             startSettingsActivity();
         }
+    }
+
+    public boolean onLongClick(View v) {
+        if (v == mSettingsButton) {
+            startCoralReefActivity();
+            mVibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
+        }
+        return false;
+    }
+
+    private static final ComponentName CORAL_REEF_SETTING_COMPONENT = new ComponentName(
+        "com.android.settings", "com.android.settings.Settings$CoralReefActivity");
+
+    private void startCoralReefActivity() {
+        mActivityStarter.startActivity(new Intent().setComponent(CORAL_REEF_SETTING_COMPONENT),
+                true /* dismissShade */);
     }
 
     private void startSettingsActivity() {
