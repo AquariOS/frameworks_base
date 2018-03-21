@@ -14,13 +14,17 @@
 
 package com.android.systemui.qs.tileimpl;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.service.quicksettings.Tile;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +47,7 @@ public class QSTileView extends QSTileBaseView {
     private ImageView mPadLock;
     private int mState;
     private ViewGroup mLabelContainer;
-    private View mExpandIndicator;
+    private ImageView mExpandIndicator;
     private View mExpandSpace;
 
     public QSTileView(Context context, QSIconView icon) {
@@ -88,6 +92,30 @@ public class QSTileView extends QSTileBaseView {
         mDivider = mLabelContainer.findViewById(R.id.underline);
         mExpandIndicator = mLabelContainer.findViewById(R.id.expand_indicator);
         mExpandSpace = mLabelContainer.findViewById(R.id.expand_space);
+
+        // if theme accent is set to default, resolve the proper color
+        // attribute and apply to label views
+        // TODO: is there OMS api to see if we are using default overlay?
+        int accentSetting = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.ACCENT_PICKER, 0, ActivityManager.getCurrentUser());
+        if (accentSetting == 0) {
+            int[] textColorPrimaryAttr = new int[] {
+                    com.android.internal.R.attr.textColorPrimary
+            };
+            int indexOfAttrTextColor = 0;
+            TypedValue defaultLabelColor = new TypedValue();
+            mContext.getTheme().resolveAttribute(com.android.internal.R.attr.textColorPrimary,
+                    defaultLabelColor, true);
+            TypedArray a = mContext.obtainStyledAttributes(defaultLabelColor.data,
+                    textColorPrimaryAttr);
+            int color = a.getColor(indexOfAttrTextColor, -1);
+
+            mLabel.setTextColor(color);
+            mExpandIndicator.setImageTintList(ColorStateList.valueOf(color));
+            TextView appLabel = mLabelContainer.findViewById(R.id.app_label);
+            appLabel.setTextColor(color);
+            a.recycle();
+        }
 
         addView(mLabelContainer);
     }
