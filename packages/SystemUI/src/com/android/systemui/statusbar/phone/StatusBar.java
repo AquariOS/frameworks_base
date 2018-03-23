@@ -6232,10 +6232,11 @@ public class StatusBar extends SystemUI implements DemoMode,
                     Settings.System.ACCENT_PICKER),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HEADS_UP_STOPLIST_VALUES), false, this);
+                    Settings.System.HEADS_UP_STOPLIST_VALUES),
+                    false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.HEADS_UP_BLACKLIST_VALUES), false, this);
-            update();
+                    Settings.System.HEADS_UP_BLACKLIST_VALUES),
+                    false, this, UserHandle.USER_ALL);
         }
 
         @Override
@@ -6289,6 +6290,12 @@ public class StatusBar extends SystemUI implements DemoMode,
                 // Keeps us from overloading the system by performing these tasks every time.
                 unloadAccents();
                 updateAccents();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.HEADS_UP_STOPLIST_VALUES))) {
+                setHeadsUpStoplist();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.HEADS_UP_BLACKLIST_VALUES))) {
+                setHeadsUpBlacklist();
             }
         }
 
