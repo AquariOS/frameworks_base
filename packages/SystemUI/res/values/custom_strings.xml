@@ -129,6 +129,9 @@
     <string name="accessibility_quick_settings_usb_tether_changed_on">USB tethering turned on</string>
     <string name="quick_settings_usb_tether_label">USB tethering</string>
 
+    <!-- AlwaysOn Display tile -->
+    <string name="quick_settings_aod_label">AlwaysOn</string>
+
     <!-- Smartspace -->
     <string name="smartspace_hours_mins">%1$s %2$s</string>
     <string name="smartspace_now">Now</string>
