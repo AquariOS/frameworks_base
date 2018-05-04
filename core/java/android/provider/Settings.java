@@ -4760,6 +4760,11 @@ public final class Settings {
         public static final String DIALER_OPENCNAM_AUTH_TOKEN = "dialer_opencnam_auth_token";
 
         /**
+         * @hide
+         */
+        public static final String SYSTEM_PROXI_CHECK_ENABLED = "system_proxi_check_enabled";
+
+        /**
          * These are all public system settings
          *
          * @hide
@@ -4885,6 +4890,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(STATUSBAR_CLOCK_DATE_DISPLAY);
             PRIVATE_SETTINGS.add(STATUSBAR_CLOCK_DATE_STYLE);
             PRIVATE_SETTINGS.add(STATUSBAR_CLOCK_DATE_FORMAT);
+            PRIVATE_SETTINGS.add(SYSTEM_PROXI_CHECK_ENABLED);
         }
 
         /**
