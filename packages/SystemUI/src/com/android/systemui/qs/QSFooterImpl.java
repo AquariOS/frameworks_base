@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.os.UserManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
@@ -265,9 +266,10 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
     private void updateVisibilities() {
         final boolean isDemo = UserManager.isDeviceInDemoMode(mContext);
         mSettingsButton.setVisibility(View.VISIBLE);
-        mRunningServicesButton.setVisibility(!isDemo && mExpanded ? View.VISIBLE : View.INVISIBLE);
         mMultiUserSwitch.setVisibility(showUserSwitcher(isDemo) ? View.VISIBLE : View.INVISIBLE);
         mEdit.setVisibility(isDemo || !mExpanded ? View.INVISIBLE : View.VISIBLE);
+        mRunningServicesButton.setVisibility(isRunningServicesEnabled() ? !isDemo && mExpanded ?
+            View.VISIBLE : View.INVISIBLE : View.GONE);
     }
 
     private boolean showUserSwitcher(boolean isDemo) {
@@ -305,6 +307,11 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
             mMultiUserSwitch.setQsPanel(qsPanel);
             mQsPanel.setFooterPageIndicator(mPageIndicator);
         }
+    }
+
+    public boolean isRunningServicesEnabled() {
+        return Settings.System.getInt(mContext.getContentResolver(),
+            Settings.System.QS_RUNNING_SERVICES_TOGGLE, 0) == 1;
     }
 
     @Override
