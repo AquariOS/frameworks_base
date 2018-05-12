@@ -4428,6 +4428,24 @@ public final class Settings {
                 ANY_STRING_VALIDATOR;
 
         /**
+         * @hide
+         */
+        public static final String ASPECT_RATIO_APPS_LIST = "aspect_ratio_apps_list";
+
+        /** @hide */
+        private static final Validator ASPECT_RATIO_APPS_LIST_VALIDATOR =
+                ANY_STRING_VALIDATOR;
+
+        /**
+         * @hide
+         */
+        public static final String ASPECT_RATIO_APPS_ENABLED = "aspect_ratio_apps_enabled";
+
+        /** @hide */
+        private static final Validator ASPECT_RATIO_APPS_ENABLED_VALIDATOR =
+                BOOLEAN_VALIDATOR;
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
@@ -4489,7 +4507,9 @@ public final class Settings {
             QS_PANEL_BG_ALPHA,
             INCREASING_RING,
             INCREASING_RING_START_VOLUME,
-            INCREASING_RING_RAMP_UP_TIME
+            INCREASING_RING_RAMP_UP_TIME,
+            ASPECT_RATIO_APPS_ENABLED,
+            ASPECT_RATIO_APPS_LIST
         };
 
         /**
@@ -4611,6 +4631,8 @@ public final class Settings {
             PRIVATE_SETTINGS.add(INCREASING_RING_START_VOLUME);
             PRIVATE_SETTINGS.add(INCREASING_RING_RAMP_UP_TIME);
             PRIVATE_SETTINGS.add(WEATHER_LOCKSCREEN_UNIT);
+            PRIVATE_SETTINGS.add(ASPECT_RATIO_APPS_ENABLED);
+            PRIVATE_SETTINGS.add(ASPECT_RATIO_APPS_LIST);
         }
 
         /**
@@ -4704,6 +4726,8 @@ public final class Settings {
             VALIDATORS.put(INCREASING_RING_START_VOLUME, INCREASING_RING_START_VOLUME_VALIDATOR);
             VALIDATORS.put(INCREASING_RING_RAMP_UP_TIME, INCREASING_RING_RAMP_UP_TIME_VALIDATOR);
             VALIDATORS.put(WEATHER_LOCKSCREEN_UNIT, WEATHER_LOCKSCREEN_UNIT_VALIDATOR);
+            VALIDATORS.put(ASPECT_RATIO_APPS_ENABLED, ASPECT_RATIO_APPS_ENABLED_VALIDATOR);
+            VALIDATORS.put(ASPECT_RATIO_APPS_LIST, ASPECT_RATIO_APPS_LIST_VALIDATOR);
         }
 
         /**
