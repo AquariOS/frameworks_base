@@ -36,4 +36,7 @@
   <java-symbol type="color" name="power_menu_screenshot" />
   <java-symbol type="array" name="config_custom_globalActionsList" />
 
+  <!-- Full screen aspect ratio -->
+  <java-symbol type="bool" name="config_haveHigherAspectRatioScreen" />
+  <java-symbol type="dimen" name="config_screenAspectRatio" />
 </resources>
