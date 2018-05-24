@@ -688,7 +688,6 @@ public class StatusBar extends SystemUI implements DemoMode,
             if (mAmbientMediaPlaying != 0 && mAmbientIndicationContainer != null) {
                 ((AmbientIndicationContainer)mAmbientIndicationContainer).hideIndication();
             }
-            mNoMan.setMediaPlaying(false);
             if (mNavigationBar != null) {
                 mNavigationBar.setMediaPlaying(false);
             }
