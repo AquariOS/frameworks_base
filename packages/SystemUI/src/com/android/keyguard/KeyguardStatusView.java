@@ -623,6 +623,7 @@ public class KeyguardStatusView extends GridLayout implements
 
     public void setDark(float darkAmount) {
         if (mDarkAmount == darkAmount) {
+            updateVisibilities();
             return;
         }
         mDarkAmount = darkAmount;
@@ -650,7 +651,7 @@ public class KeyguardStatusView extends GridLayout implements
         mWeatherView.setAlpha(dark ? 0 : 1);
         mAnalogClockView.setDark(dark);
         mDeadPoolClockView.setDark(dark);
-        updateVisibilities();
+        updateVisibilities(); // with updated mDarkAmount value
     }
 
     public void setPulsing(boolean pulsing) {
