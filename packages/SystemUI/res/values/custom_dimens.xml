@@ -46,4 +46,8 @@
 
     <!-- Status bar clock -->
     <dimen name="status_bar_left_clock_end_padding">5dp</dimen>
+
+    <!-- Big clock dozing -->
+    <dimen name="dozing_big_clock_padding" format="float">0.38</dimen>
+
 </resources>
