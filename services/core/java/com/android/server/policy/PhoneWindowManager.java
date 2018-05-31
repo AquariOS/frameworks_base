@@ -991,15 +991,15 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 case MSG_RINGER_TOGGLE_CHORD:
                     handleRingerChordGesture();
                     break;
-                case MSG_DISPATCH_VOLKEY_SKIP_TRACK: {
-                    sendSkipTrackEventToStatusBar(msg.arg1);
-                    mVolumeMusicControlActive = true;
-                    break;
                 case MSG_TOGGLE_TORCH:
                     toggleFlashLightProximityCheck();
                     break;
                 case MSG_CLEAR_PROXIMITY:
                     cleanupProximity();
+                    break;
+                case MSG_DISPATCH_VOLKEY_SKIP_TRACK: {
+                    sendSkipTrackEventToStatusBar(msg.arg1);
+                    mVolumeMusicControlActive = true;
                     break;
                 }
             }
@@ -1053,7 +1053,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     }
 
     private void toggleFlashLightProximityCheck() {
-        if (mProximitySensor != null) {
+        if (mProximitySensor != null && mProximityTimeOut != -1) {
             if (mHandler.hasMessages(MSG_CLEAR_PROXIMITY)) {
                 // A message is already queued
                 return;
