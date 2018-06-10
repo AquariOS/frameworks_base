@@ -6607,7 +6607,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.Secure.getUriFor(
                     Settings.Secure.STATUS_BAR_BATTERY_STYLE),
                     false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
                     Settings.System.FORCE_AMBIENT_FOR_MEDIA),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -6629,12 +6629,9 @@ public class StatusBar extends SystemUI implements DemoMode,
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-        }
-
-        public void update() {
             if (uri.equals(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_LOCKSCREEN))) {
-                setLockscreenDoubleTapToSleep();
+                setStatusBarWindowViewOptions();
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.LOCKSCREEN_MEDIA_METADATA))) {
                 setLockscreenMediaMetadata();
@@ -6672,9 +6669,6 @@ public class StatusBar extends SystemUI implements DemoMode,
                     Settings.Secure.STATUS_BAR_BATTERY_STYLE))) {
                 updateBatterySettings();
             } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.FORCE_AMBIENT_FOR_MEDIA))) {
-                setForceAmbient();
-            } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.SYSTEM_UI_THEME))) {
                 getCurrentThemeSetting();
                 updateTheme();
@@ -6697,7 +6691,6 @@ public class StatusBar extends SystemUI implements DemoMode,
 
         public void update() {
             setLockscreenMediaMetadata();
-            setQsRowsColumns();
             setQsPanelOptions();
             updateQsPanelResources();
             setStatusBarWindowViewOptions();
