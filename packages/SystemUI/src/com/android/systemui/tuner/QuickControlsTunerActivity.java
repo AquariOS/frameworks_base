@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 ABC rom
+ * Copyright (C) 2018 AquariOS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,9 @@ import com.android.systemui.Dependency;
 import com.android.systemui.R;
 import com.android.systemui.tuner.TunerActivity;
 
-public class QSTunerActivity extends TunerActivity {
+public class QuickControlsTunerActivity extends TunerActivity {
 
-    private static final String TAG_TUNER = "quick_settings";
+    private static final String TAG_TUNER = "tuner";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,9 +32,10 @@ public class QSTunerActivity extends TunerActivity {
 
         if (getFragmentManager().findFragmentByTag(TAG_TUNER) == null) {
             final String action = getIntent().getAction();
-            final PreferenceFragment fragment = new QSTunerFragment();
+            final PreferenceFragment fragment = new QuickControlsTunerFragment();
             getFragmentManager().beginTransaction().replace(R.id.content_frame,
                     fragment, TAG_TUNER).commit();
         }
     }
 }
+

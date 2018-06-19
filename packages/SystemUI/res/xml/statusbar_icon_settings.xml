@@ -16,19 +16,15 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:sysui="http://schemas.android.com/apk/res-auto"
-    android:title="@string/status_bar">
+    android:title="@string/statusbar_icons_blacklist">
 
     <com.android.systemui.tuner.StatusBarSwitch
         android:key="headset"
         android:title="@string/headset" />
 
-    <!--<com.android.systemui.tuner.StatusBarSwitch
-    android:key="managed_profile"
-    android:title="@string/status_bar_work" />-->
-
-    <!-- ime -->
-    <!-- sync_failing -->
-    <!-- sync_active -->
+    <com.android.systemui.tuner.StatusBarSwitch
+        android:key="managed_profile"
+        android:title="@string/status_bar_work" />
 
     <com.android.systemui.tuner.StatusBarSwitch
         android:key="cast"
@@ -42,15 +38,9 @@
         android:key="bluetooth"
         android:title="@string/quick_settings_bluetooth_label" />
 
-    <!-- nfc -->
-    <!-- tty -->
-    <!-- speakerphone -->
-
     <com.android.systemui.tuner.StatusBarSwitch
         android:key="zen"
         android:title="@string/quick_settings_dnd_label" />
-
-    <!-- mute -->
 
     <com.android.systemui.tuner.StatusBarSwitch
         android:key="volume"
@@ -60,9 +50,9 @@
         android:key="wifi"
         android:title="@string/quick_settings_wifi_label" />
 
-    <!--<com.android.systemui.tuner.StatusBarSwitch
-    android:key="ethernet"
-    android:title="@string/status_bar_ethernet" />-->
+    <com.android.systemui.tuner.StatusBarSwitch
+        android:key="ethernet"
+        android:title="@string/status_bar_ethernet" />
 
     <com.android.systemui.tuner.StatusBarSwitch
         android:key="mobile"
@@ -72,20 +62,18 @@
         android:key="airplane"
         android:title="@string/status_bar_airplane" />
 
-    <!-- other weird signal stuff -->
-
-    <com.android.systemui.tuner.StatusBarSwitch
-        android:key="battery"
-        android:title="@string/battery" />
+    <com.android.systemui.tuner.BatteryPreference
+        android:title="@string/battery"
+        android:summary="%s"
+        android:entries="@array/battery_options" />
 
     <com.android.systemui.tuner.StatusBarSwitch
         android:key="alarm_clock"
         android:title="@string/status_bar_alarm" />
 
-    <com.android.systemui.tuner.StatusBarSwitch
-        android:key="vpn"
-        android:title="@string/status_bar_vpn" />
-
-    <!-- secure -->
+    <com.android.systemui.tuner.ClockPreference
+        android:title="@string/tuner_time"
+        android:summary="%s"
+        android:entries="@array/clock_options" />
 
 </PreferenceScreen>

@@ -24,7 +24,7 @@ import com.android.systemui.tuner.TunerActivity;
 
 public class LockscreenTunerActivity extends TunerActivity {
 
-    private static final String TAG_TUNER = "lockscreen";
+    private static final String TAG_TUNER = "tuner";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,3 +38,4 @@ public class LockscreenTunerActivity extends TunerActivity {
         }
     }
 }
+

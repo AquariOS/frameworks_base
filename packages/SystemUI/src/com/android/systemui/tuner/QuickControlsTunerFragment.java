@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 The Android Open Source Project
+ * Copyright (C) 2018 AquariOS
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,19 +32,19 @@ import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 import com.android.systemui.R;
 import com.android.systemui.plugins.PluginPrefs;
 
-public class QSTunerFragment extends TunerFragment {
+public class QuickControlsTunerFragment extends TunerFragment {
 
     private static final String TAG = "QSTunerFragment";
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        addPreferencesFromResource(R.xml.qs_tuner);
+        addPreferencesFromResource(R.xml.quick_controls_tuner);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle(R.string.quick_settings);
+        getActivity().setTitle(R.string.quick_controls_activity);
 
         MetricsLogger.visibility(getContext(), MetricsEvent.TUNER, true);
     }

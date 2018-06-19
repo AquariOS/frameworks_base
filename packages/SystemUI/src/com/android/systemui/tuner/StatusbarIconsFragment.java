@@ -44,7 +44,7 @@ public class StatusbarIconsFragment extends TunerFragment {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle(R.string.status_bar);
+        getActivity().setTitle(R.string.statusbar_icons_blacklist);
 
         MetricsLogger.visibility(getContext(), MetricsEvent.TUNER, true);
     }
