@@ -644,7 +644,7 @@ public class VolumeDialogImpl implements VolumeDialog, TunerService.Tunable {
         boolean isActive = row == activeRow;
 
         final boolean linkNotificationWithVolume = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.VOLUME_LINK_NOTIFICATION, 1) == 1;
+                Settings.System.VOLUME_LINK_NOTIFICATION, 0) == 1;
         final boolean isNotificationStream = row.stream == AudioManager.STREAM_NOTIFICATION;
         if (linkNotificationWithVolume && isNotificationStream) {
             return false;

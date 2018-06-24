@@ -421,7 +421,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             } else if (GLOBAL_ACTION_KEY_ADVANCED.equals(actionKey)) {
                 if (Settings.System.getInt(mContext.getContentResolver(),
                         Settings.System.POWERMENU_REBOOT, 1) == 1 && Settings.System.getInt(mContext.getContentResolver(),
-                        Settings.System.POWERMENU_ADVANCED_REBOOT, 0) != 0) {
+                        Settings.System.POWERMENU_ADVANCED_REBOOT, 1) != 0) {
                     mItems.add(mShowAdvancedToggles);
                 }
             } else if (GLOBAL_ACTION_KEY_SCREENSHOT.equals(actionKey)) {

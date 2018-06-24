@@ -1678,7 +1678,7 @@ public class KeyguardViewMediator extends SystemUI {
     private void playSound(int soundId) {
         if (soundId == 0) return;
         final ContentResolver cr = mContext.getContentResolver();
-        if (Settings.System.getInt(cr, Settings.System.LOCKSCREEN_SOUNDS_ENABLED, 1) == 1) {
+        if (Settings.System.getInt(cr, Settings.System.LOCKSCREEN_SOUNDS_ENABLED, 0) == 1) {
 
             mLockSounds.stop(mLockSoundStreamId);
             // Init mAudioManager
