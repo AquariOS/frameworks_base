@@ -302,7 +302,7 @@
                   android:theme="@style/CustomTunerSettings"
                   android:label="@string/statusbar_icons_blacklist"
                   android:process=":tuner"
-                  android:parentActivityName="com.aquarios.coralreef.CoralReef"
+                  android:parentActivityName="com.aquarios.coralreef.StatusBarItems"
                   android:exported="true">
         </activity>
 
@@ -310,7 +310,7 @@
                   android:theme="@style/CustomTunerSettings"
                   android:label="@string/navbar_tuner_activity"
                   android:process=":tuner"
-                  android:parentActivityName="com.aquarios.coralreef.CoralReef"
+                  android:parentActivityName="com.aquarios.coralreef.NavigationBar"
                   android:exported="true">
         </activity>
 
@@ -318,7 +318,7 @@
                   android:theme="@style/CustomTunerSettings"
                   android:label="@string/lockscreen_tuner_activity"
                   android:process=":tuner"
-                  android:parentActivityName="com.aquarios.coralreef.CoralReef"
+                  android:parentActivityName="com.aquarios.coralreef.LockscreenDisplay"
                   android:exported="true">
         </activity>
 
@@ -326,7 +326,7 @@
                   android:theme="@style/CustomTunerSettings"
                   android:label="@string/quick_controls_activity"
                   android:process=":tuner"
-                  android:parentActivityName="com.aquarios.coralreef.CoralReef"
+                  android:parentActivityName="com.aquarios.coralreef.QuickSettings"
                   android:exported="true">
         </activity>
 
