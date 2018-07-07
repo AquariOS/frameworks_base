@@ -67,7 +67,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private StatusBar mStatusBarComponent;
     private DarkIconManager mDarkIconManager;
     private SignalClusterView mSignalClusterView;
-    private View mBatteryBar;
 
     private View mClock;
     private View mLeftClock;
@@ -155,7 +154,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         mDarkIconManager = new DarkIconManager(view.findViewById(R.id.statusIcons));
         Dependency.get(StatusBarIconController.class).addIconGroup(mDarkIconManager);
         mSystemIconArea = mStatusBar.findViewById(R.id.system_icon_area);
-        mBatteryBar = mStatusBar.findViewById(R.id.battery_bar);
         mSignalClusterView = mStatusBar.findViewById(R.id.signal_cluster);
         mClock = mStatusBar.findViewById(R.id.clock);
         mLeftClock = mStatusBar.findViewById(R.id.left_clock);
@@ -263,7 +261,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     public void hideSystemIconArea(boolean animate) {
-        animateHide(mBatteryBar, animate);
         animateHide(mSystemIconArea, animate);
         if (((Clock)mCenterClock).isEnabled()) {
         animateHide(mCenterClockLayout, animate);
@@ -271,7 +268,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     public void showSystemIconArea(boolean animate) {
-        animateShow(mBatteryBar, animate);
         animateShow(mSystemIconArea, animate);
         if (((Clock)mCenterClock).isEnabled()) {
         animateShow(mCenterClockLayout, animate);
