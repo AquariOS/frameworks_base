@@ -4482,24 +4482,6 @@ public final class Settings {
         public static final String OMNIJAWS_WEATHER_ICON_PACK = "omnijaws_weather_icon_pack";
 
         /**
-         * Whether to show the weather info on the lock screen
-         * @hide
-         */
-        public static final String LOCK_SCREEN_SHOW_WEATHER = "lock_screen_show_weather";
-
-        /**
-         * Whether to show the weather location on lock screen
-         * @hide
-         */
-        public static final String LOCK_SCREEN_SHOW_WEATHER_LOCATION = "lock_screen_show_weather_location";
-
-        /**
-         * Whether to show the weather condition icon on lock screen
-         * @hide
-         */
-        public static final String LOCK_SCREEN_WEATHER_CONDITION_ICON = "lock_screen_weather_condition_icon";
-
-        /**
          * Force expanded notifications on all apps that support it.
          * @hide
          */
