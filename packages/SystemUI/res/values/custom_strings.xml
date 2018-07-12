@@ -135,7 +135,7 @@
     <string name="qs_show_clock">Show clock</string>
     <string name="qs_show_mini">Mini mode</string>
     <string name="qs_header">Header</string>
-    <string name="status_bar_volte">VOLTE</string>
+    <string name="status_bar_volte">VoLTE</string>
     <string name="status_bar_roaming">Roaming</string>    
 
     <!-- Battery saver tile -->
