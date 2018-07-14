@@ -312,11 +312,6 @@ public class QuickQSPanel extends QSPanel {
             }
         }
 
-        @Override
-        public boolean isShowTitles() {
-            return false;
-        }
-
         public void updateTileGaps() {
             int panelWidth = mContext.getResources()
                     .getDimensionPixelSize(R.dimen.notification_panel_width);
@@ -334,6 +329,11 @@ public class QuickQSPanel extends QSPanel {
                     params.width = tileGap;
                 }
             }
+        }
+
+        @Override
+        public boolean isShowTitles() {
+            return false;
         }
     }
 }
