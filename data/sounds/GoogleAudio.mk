@@ -24,6 +24,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)material/alarms/Icicles.ogg:system/media/audio/alarms/Icicles.ogg \
     $(LOCAL_PATH)material/alarms/Jump_start.ogg:system/media/audio/alarms/Jump_start.ogg \
     $(LOCAL_PATH)material/alarms/Loose_change.ogg:system/media/audio/alarms/Loose_change.ogg \
+    $(LOCAL_PATH)material/alarms/Monkey_around.ogg:system/media/audio/alarms/Monkey_around.ogg \
     $(LOCAL_PATH)material/alarms/Rolling_fog.ogg:system/media/audio/alarms/Rolling_fog.ogg \
     $(LOCAL_PATH)material/alarms/Spokes.ogg:system/media/audio/alarms/Spokes.ogg \
     $(LOCAL_PATH)material/alarms/Sunshower.ogg:system/media/audio/alarms/Sunshower.ogg \
