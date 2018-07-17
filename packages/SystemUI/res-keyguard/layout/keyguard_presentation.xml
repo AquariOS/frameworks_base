@@ -43,16 +43,17 @@
                 android:layout_gravity="center_horizontal|top"
                 android:textColor="?attr/wallpaperTextColor"
                 style="@style/widget_big_thin"
+                android:layout_marginTop="@dimen/top_margin_spacing_digital"
                 android:layout_marginBottom="@dimen/bottom_text_spacing_digital" />
 
             <include layout="@layout/keyguard_status_area" />
-            <include layout="@layout/keyguard_weather_view" />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dip"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/kg_security_lock_normal" />
+            <include layout="@layout/keyguard_weather_view" />
         </LinearLayout>
     </com.android.keyguard.KeyguardStatusView>
 
