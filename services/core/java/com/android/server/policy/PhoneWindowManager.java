@@ -1011,9 +1011,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     mVolumeMusicControlActive = true;
                     break;
                 }
-                case MSG_TOGGLE_TORCH:
-                    toggleFlashLightProximityCheck();
-                    break;
                 case MSG_CLEAR_PROXIMITY:
                     cleanupProximity();
                     break;
