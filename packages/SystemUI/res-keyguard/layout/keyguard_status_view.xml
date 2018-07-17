@@ -46,6 +46,7 @@
                 android:layout_alignParentTop="true"
                 android:textColor="?attr/wallpaperTextColor"
                 style="@style/widget_big_thin"
+                android:layout_marginTop="@dimen/top_margin_spacing_digital"
                 android:layout_marginBottom="@dimen/bottom_text_spacing_digital" />
             <CustomAnalogClock
                 android:id="@+id/analog_clock_view"
@@ -55,6 +56,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentTop="true"
                 style="@style/widget_big_thin"
+                android:layout_marginTop="@dimen/top_margin_spacing_digital"
                 android:layout_marginBottom="@dimen/bottom_text_spacing_digital" />
             <DeadPoolAnalogClock
                 android:id="@+id/deadpool_clock_view"
@@ -64,6 +66,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_alignParentTop="true"
                 style="@style/widget_big_thin"
+                android:layout_marginTop="@dimen/top_margin_spacing_digital"
                 android:layout_marginBottom="@dimen/bottom_text_spacing_digital" />
             <!--<com.android.systemui.ChargingView
                 android:id="@+id/battery_doze"

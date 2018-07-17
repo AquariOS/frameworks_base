@@ -255,16 +255,26 @@ public class KeyguardStatusView extends GridLayout implements
         mClockView.setLayoutParams(layoutParams);
 
         // Custom analog clock
-        MarginLayoutParams customlayoutParams = (MarginLayoutParams) mAnalogClockView.getLayoutParams();
-        customlayoutParams.bottomMargin = getResources().getDimensionPixelSize(
+        MarginLayoutParams custombottomlayoutParams = (MarginLayoutParams) mAnalogClockView.getLayoutParams();
+        custombottomlayoutParams.bottomMargin = getResources().getDimensionPixelSize(
                 R.dimen.bottom_text_spacing_digital);
-        mAnalogClockView.setLayoutParams(customlayoutParams);
+        mAnalogClockView.setLayoutParams(custombottomlayoutParams);
+
+        MarginLayoutParams customtoplayoutParams = (MarginLayoutParams) mAnalogClockView.getLayoutParams();
+        customtoplayoutParams.topMargin = getResources().getDimensionPixelSize(
+                R.dimen.top_margin_spacing_digital);
+        mAnalogClockView.setLayoutParams(customtoplayoutParams);
 
         // DeadPool analog clock
-        MarginLayoutParams deadpoollayoutParams = (MarginLayoutParams) mDeadPoolClockView.getLayoutParams();
-        deadpoollayoutParams.bottomMargin = getResources().getDimensionPixelSize(
+        MarginLayoutParams deadpoolbottomlayoutParams = (MarginLayoutParams) mDeadPoolClockView.getLayoutParams();
+        deadpoolbottomlayoutParams.bottomMargin = getResources().getDimensionPixelSize(
                 R.dimen.bottom_text_spacing_digital);
-        mDeadPoolClockView.setLayoutParams(deadpoollayoutParams);
+        mDeadPoolClockView.setLayoutParams(deadpoolbottomlayoutParams);
+
+        MarginLayoutParams deadpooltoplayoutParams = (MarginLayoutParams) mAnalogClockView.getLayoutParams();
+        deadpooltoplayoutParams.topMargin = getResources().getDimensionPixelSize(
+                R.dimen.top_margin_spacing_digital);
+        mAnalogClockView.setLayoutParams(deadpooltoplayoutParams);
 
         // DateView
         mDateView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimensionPixelSize(
