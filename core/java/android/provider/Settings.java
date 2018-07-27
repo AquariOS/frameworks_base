@@ -4003,28 +4003,56 @@ public final class Settings {
         public static final String POCKET_JUDGE = "pocket_judge";
 
         /**
-         * Whether to display the reboot option in the power menu
+         * Whether to display the reboot option on the power menu
          *
          * @hide
          */
         public static final String POWERMENU_REBOOT = "powermenu_reboot";
 
         /**
-         * Whether to display the advanced reboot option in the power menu
+         * Whether to display the power menu advanced reboot option on a secured lockscreen
+         *
+         * @hide
+         */
+        public static final String POWERMENU_LS_ADVANCED_REBOOT = "powermenu_ls_advanced_reboot";
+
+        /**
+         * Whether to display the power menu screenshot option on a secured lockscreen
+         *
+         * @hide
+         */
+        public static final String POWERMENU_LS_SCREENSHOT = "powermenu_ls_screenshot";
+
+        /**
+         * Whether to display the power menu airplane mode option on a secured lockscreen
+         *
+         * @hide
+         */
+        public static final String POWERMENU_LS_AIRPLANE = "powermenu_ls_airplane";
+
+        /**
+         * Whether to display the power menu reboot option on a secured lockscreen
+         *
+         * @hide
+         */
+        public static final String POWERMENU_LS_REBOOT = "powermenu_ls_reboot";
+
+        /**
+         * Whether to display the advanced reboot option on the power menu
          *
          * @hide
          */
         public static final String POWERMENU_ADVANCED_REBOOT = "powermenu_advanced_reboot";
 
         /**
-         * Whether to display the screenshot option in the power menu
+         * Whether to display the screenshot option on the power menu
          *
          * @hide
          */
         public static final String POWERMENU_SCREENSHOT = "powermenu_screenshot";
 
         /**
-         * Whether to display the airplane option in the power menu
+         * Whether to display the airplane option on the power menu
          *
          * @hide
          */
@@ -4639,6 +4667,12 @@ public final class Settings {
          * @hide
          */
         public static final String LOCKSCREEN_CLOCK_SELECTION = "lockscreen_clock_selection";
+
+        /**
+         * Whether to display the power menu dialog while on the lockscreen
+         * @hide
+         */
+        public static final String POWERMENU_LOCKSCREEN = "powermenu_lockscreen";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
