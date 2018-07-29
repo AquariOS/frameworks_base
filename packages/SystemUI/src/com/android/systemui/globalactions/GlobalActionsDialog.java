@@ -290,9 +290,13 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             }
 
             public boolean showDuringKeyguard() {
-                boolean showlocked = Settings.System.getInt(mContext.getContentResolver(),
-                        Settings.System.POWERMENU_LS_AIRPLANE, 0) == 1;
+                boolean showlocked = Settings.System.getIntForUser(mContext.getContentResolver(),
+                         Settings.System.POWERMENU_LS_AIRPLANE, 0, UserHandle.USER_CURRENT) == 1;
                 return showlocked;
+            }
+
+            public boolean onLongPress() {
+                return false;
             }
 
             public boolean showBeforeProvisioning() {
@@ -308,8 +312,8 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
                 mWindowManagerFuncs, mHandler) {
 
             public boolean showDuringKeyguard() {
-                boolean showlocked = Settings.System.getInt(mContext.getContentResolver(),
-                        Settings.System.POWERMENU_LS_ADVANCED_REBOOT, 0) == 1;
+                boolean showlocked = Settings.System.getIntForUser(mContext.getContentResolver(),
+                         Settings.System.POWERMENU_LS_ADVANCED_REBOOT, 0, UserHandle.USER_CURRENT) == 1;
                 return showlocked;
             }
 
@@ -392,8 +396,9 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             if (GLOBAL_ACTION_KEY_POWER.equals(actionKey)) {
                 mItems.add(new PowerAction());
             } else if (GLOBAL_ACTION_KEY_AIRPLANE.equals(actionKey)) {
-                if (Settings.System.getInt(mContext.getContentResolver(),
-                        Settings.System.POWERMENU_AIRPLANE, 0) != 0) {
+                if (Settings.System.getIntForUser(mContext.getContentResolver(),
+                        Settings.System.POWERMENU_AIRPLANE, 0, UserHandle.USER_CURRENT) != 0 && !isInLockTaskMode()) {
+
                     mItems.add(mAirplaneModeOn);
                 }
             } else if (GLOBAL_ACTION_KEY_BUGREPORT.equals(actionKey)) {
@@ -418,20 +423,20 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             } else if (GLOBAL_ACTION_KEY_ASSIST.equals(actionKey)) {
                 //mItems.add(getAssistAction());
             } else if (GLOBAL_ACTION_KEY_RESTART.equals(actionKey)) {
-                if (Settings.System.getInt(mContext.getContentResolver(),
-                        Settings.System.POWERMENU_REBOOT, 1) == 1) {
+                if (Settings.System.getIntForUser(mContext.getContentResolver(),
+                         Settings.System.POWERMENU_REBOOT, 1, UserHandle.USER_CURRENT) == 1) {
                     mItems.add(new RestartAction());
                 }
             } else if (GLOBAL_ACTION_KEY_ADVANCED.equals(actionKey)) {
-                if (Settings.System.getInt(mContext.getContentResolver(),
-                        Settings.System.POWERMENU_REBOOT, 1) == 1 && Settings.System.getInt(mContext.getContentResolver(),
-                        Settings.System.POWERMENU_ADVANCED_REBOOT, 1) != 0) {
-                    mItems.add(mShowAdvancedToggles);
+                if (Settings.System.getIntForUser(mContext.getContentResolver(),
+                         Settings.System.POWERMENU_REBOOT, 1, UserHandle.USER_CURRENT) == 1 && Settings.System.getIntForUser(mContext.getContentResolver(),
+                         Settings.System.POWERMENU_ADVANCED_REBOOT, 1, UserHandle.USER_CURRENT) != 0 && !isInLockTaskMode()) {
+                     mItems.add(mShowAdvancedToggles);
                 }
             } else if (GLOBAL_ACTION_KEY_SCREENSHOT.equals(actionKey)) {
-                if (Settings.System.getInt(mContext.getContentResolver(),
-                        Settings.System.POWERMENU_SCREENSHOT, 0) != 0) {
-                    mItems.add(getScreenshotAction());
+                if (Settings.System.getIntForUser(mContext.getContentResolver(),
+                        Settings.System.POWERMENU_SCREENSHOT, 0, UserHandle.USER_CURRENT) != 0 && !isInLockTaskMode()) {
+                    mItems.add(new ScreenshotAction());
                 }
             } else {
                 Log.e(TAG, "Invalid global action key " + actionKey);
@@ -452,7 +457,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
                     long id) {
                 final Action action = mAdapter.getItem(position);
                 if (action instanceof LongPressAction) {
-                    mDialog.dismiss();
+                    //mDialog.dismiss();
                     return ((LongPressAction) action).onLongPress();
                 }
                 return false;
@@ -509,6 +514,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         public boolean onLongPress() {
             UserManager um = (UserManager) mContext.getSystemService(Context.USER_SERVICE);
             if (!um.hasUserRestriction(UserManager.DISALLOW_SAFE_BOOT)) {
+                mDialog.dismiss();
                 mWindowManagerFuncs.reboot(true);
                 return true;
             }
@@ -517,8 +523,8 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
 
         @Override
         public boolean showDuringKeyguard() {
-            boolean showlocked = Settings.System.getInt(mContext.getContentResolver(),
-                    Settings.System.POWERMENU_LS_REBOOT, 1) == 1;
+            boolean showlocked = Settings.System.getIntForUser(mContext.getContentResolver(),
+                     Settings.System.POWERMENU_LS_REBOOT, 1, UserHandle.USER_CURRENT) == 1;
             return showlocked;
         }
 
@@ -533,33 +539,37 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
         }
     }
 
-    private Action getScreenshotAction() {
-        return new SinglePressAction(com.android.systemui.R.drawable.ic_screenshot,
-                com.android.systemui.R.string.global_action_screenshot) {
+    private final class ScreenshotAction extends SinglePressAction implements LongPressAction {
+        private ScreenshotAction() {
+            super(com.android.systemui.R.drawable.ic_screenshot, com.android.systemui.R.string.global_action_screenshot);
+        }
+        @Override
+        public void onPress() {
+           mHandler.postDelayed(new Runnable() {
+               @Override
+                public void run() {
+                    Intent intent = new Intent(Intent.ACTION_SCREENSHOT);
+                    mContext.sendBroadcast(intent);
+                }
+            }, 500);
+        }
 
-            @Override
-            public void onPress() {
-               mHandler.postDelayed(new Runnable() {
-                   @Override
-                    public void run() {
-                        Intent intent = new Intent(Intent.ACTION_SCREENSHOT);
-                        mContext.sendBroadcast(intent);
-                    }
-                }, 500);
-            }
+        @Override
+        public boolean onLongPress() {
+            return false;
+        }
 
-            @Override
-            public boolean showDuringKeyguard() {
-                boolean showlocked = Settings.System.getInt(mContext.getContentResolver(),
-                        Settings.System.POWERMENU_LS_SCREENSHOT, 0) == 1;
-                return showlocked;
-            }
+        @Override
+        public boolean showDuringKeyguard() {
+            boolean showlocked = Settings.System.getIntForUser(mContext.getContentResolver(),
+                     Settings.System.POWERMENU_LS_SCREENSHOT, 0, UserHandle.USER_CURRENT) == 1;
+            return showlocked;
+        }
 
-            @Override
-            public boolean showBeforeProvisioning() {
-                return true;
-            }
-        };
+        @Override
+        public boolean showBeforeProvisioning() {
+            return true;
+        }
     }
 
     private class BugReportAction extends SinglePressAction implements LongPressAction {
@@ -1222,7 +1232,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
 
         @Override
         public boolean onLongPress() {
-            return true;
+            return false;
         }
 
         public boolean isEnabled() {
@@ -1644,6 +1654,14 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogIn
             }
         } catch (RemoteException e) {
             Log.e(TAG, "failure trying to perform hot reboot", e);
+        }
+    }
+
+    private boolean isInLockTaskMode() {
+        try {
+            return ActivityManagerNative.getDefault().isInLockTaskMode();
+        } catch (RemoteException e) {
+            return false;
         }
     }
 }
