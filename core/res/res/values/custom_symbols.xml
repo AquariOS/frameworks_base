@@ -159,4 +159,7 @@
 
   <java-symbol type="bool" name="config_proxiSensorWakupCheck" />
 
+  <!-- Notch -->
+  <java-symbol type="bool" name="config_haveNotch" />
+
 </resources>
