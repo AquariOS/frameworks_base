@@ -101,4 +101,6 @@
     <string name="lockscreen_tuner_activity">Lock screen shortcuts</string>
     <string name="powernotif_tuner_activity">Power notifications</string>
 
+    <!-- Ambient Display Pixel-Like string -->
+    <string name="ambientmusic_songinfo">%s by %s</string>
 </resources>
