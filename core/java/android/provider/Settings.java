@@ -4302,6 +4302,12 @@ public final class Settings {
         public static final String LOCKSCREEN_BATTERY_INFO = "lockscreen_battery_info";
 
         /**
+         * Storage for the reboot option selected in Power tile
+         * @hide
+         */
+        public static final String QUICK_SETTINGS_REBOOT_OPTIONS = "quick_settings_reboot_options";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
