@@ -76,4 +76,8 @@
   <java-symbol type="array" name="config_deviceKeyHandlerLibs" />
   <java-symbol type="array" name="config_deviceKeyHandlerClasses" />
 
+  <!-- SmartNav -->
+  <java-symbol type="anim" name="smartnav_app_in" />
+  <java-symbol type="anim" name="smartnav_app_out" />
+
 </resources>
