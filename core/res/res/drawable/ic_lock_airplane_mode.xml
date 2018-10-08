@@ -13,7 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-
+ 
 <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
     android:src="@drawable/ic_lock_airplane_mode_alpha"
-    android:tint="?attr/colorControlActivated" />
+    android:tint="@color/global_action_airplane" />
