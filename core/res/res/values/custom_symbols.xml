@@ -93,6 +93,9 @@
   <java-symbol type="anim" name="smartnav_app_in" />
   <java-symbol type="anim" name="smartnav_app_out" />
 
+  <!-- Oreo's recents component activity -->
+  <java-symbol type="string" name="config_recentsComponentNameOreo" />
+
   <!-- Wallpaper component -->
   <java-symbol type="string" name="default_wallpaper_component_custom" />
 
