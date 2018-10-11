@@ -1036,12 +1036,13 @@ public class Build {
      * 1) Checks that device fingerprint is defined and that it matches across
      *    various partitions.
      * 2) Verifies radio and bootloader partitions are those expected in the build.
-     *
-     * @hide
-     */
+      *
+      * @hide
+      */
     public static boolean isBuildConsistent() {
         // Don't care on eng builds.  Incremental build may trigger false negative.
         if (IS_ENG) return true;
+
         if (IS_TREBLE_ENABLED && Build.VERSION.FIRST_SDK_INT >= VERSION_CODES.O) {
             // If we can run this code, the device should already pass AVB.
             // So, we don't need to check AVB here.
