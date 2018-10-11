@@ -2104,6 +2104,10 @@ public class StatusBar extends SystemUI implements DemoMode,
         return ThemeAccentUtils.isUsingDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId());
     }
 
+     public boolean isUsingBlackTheme() {
+         return ThemeAccentUtils.isUsingBlackTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId());
+     }
+
     // Unloads the stock dark theme
     public void unloadStockDarkTheme() {
         ThemeAccentUtils.unloadStockDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId());
@@ -3910,6 +3914,7 @@ public class StatusBar extends SystemUI implements DemoMode,
     protected void updateTheme() {
         final boolean inflated = mStackScroller != null;
         boolean useDarkTheme = false;
+        boolean useBlackTheme = false;
         if (mCurrentTheme == 0) {
         // The system wallpaper defines if QS should be light or dark.
         WallpaperColors systemColors = mColorExtractor
@@ -3921,6 +3926,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             unfuckBlackWhiteAccent();
         } else {
             useDarkTheme = mCurrentTheme == 2;
+            useBlackTheme = mCurrentTheme == 3;
             // Check for black and white accent so we don't end up
             // with white on white or black on black
             unfuckBlackWhiteAccent();
@@ -3928,7 +3934,9 @@ public class StatusBar extends SystemUI implements DemoMode,
         if (isUsingDarkTheme() != useDarkTheme) {
             ThemeAccentUtils.setLightDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useDarkTheme);
         }
-
+        if (isUsingBlackTheme() != useBlackTheme) {
+            ThemeAccentUtils.setLightBlackTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useBlackTheme);
+        }
         // Lock wallpaper defines the color of the majority of the views, hence we'll use it
         // to set our default theme.
         final boolean lockDarkText = mColorExtractor.getColors(WallpaperManager.FLAG_LOCK, true
