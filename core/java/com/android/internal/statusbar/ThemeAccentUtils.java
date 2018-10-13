@@ -26,15 +26,15 @@ public class ThemeAccentUtils {
 
     private static final String[] ACCENTS = {
         "default_accent", // 0
-        "com.accents.aqua", // 1
-        "com.accents.darkred", // 2
-        "com.accents.pink", // 3
-        "com.accents.purple", // 4
-        "com.accents.deeppurple", // 5
-        "com.accents.indigo", // 6
-        "com.accents.red", // 7
-        "com.accents.lightblue", // 8
-        "com.accents.cyan", // 9
+        "com.accents.red", // 1
+        "com.accents.pink", // 2
+        "com.accents.purple", // 3
+        "com.accents.deeppurple", // 4
+        "com.accents.indigo", // 5
+        "com.accents.blue", // 6
+        "com.accents.lightblue", // 7
+        "com.accents.cyan", // 8
+        "com.accents.teal", // 9
         "com.accents.green", // 10
         "com.accents.lightgreen", // 11
         "com.accents.lime", // 12
@@ -47,6 +47,13 @@ public class ThemeAccentUtils {
         "com.accents.bluegrey", // 19
         "com.accents.black", // 20
         "com.accents.white", // 21
+        "com.accents.userone", // 22
+        "com.accents.usertwo", // 23
+        "com.accents.userthree", // 24
+        "com.accents.userfour", // 25
+        "com.accents.userfive", // 26
+        "com.accents.usersix", // 27
+        "com.accents.userseven", // 28
     };
 
     private static final String[] DARK_THEMES = {
@@ -161,11 +168,11 @@ public class ThemeAccentUtils {
         }
     }
 
-    // Check for the white accent overlay
-    public static boolean isUsingWhiteAccent(IOverlayManager om, int userId) {
+    // Check for any accent overlay
+    public static boolean isUsingAccent(IOverlayManager om, int userId, int accent) {
         OverlayInfo themeInfo = null;
         try {
-            themeInfo = om.getOverlayInfo(ACCENTS[21],
+            themeInfo = om.getOverlayInfo(ACCENTS[accent],
                     userId);
         } catch (RemoteException e) {
             e.printStackTrace();
@@ -183,6 +190,12 @@ public class ThemeAccentUtils {
                         true, userId);
             } catch (RemoteException e) {
                 Log.w(TAG, "Can't change theme", e);
+            }
+        } else if (accentSetting > 21) {
+            try {
+                om.setEnabled(ACCENTS[accentSetting],
+                        true, userId);
+            } catch (RemoteException e) {
             }
         } else if (accentSetting == 20) {
             try {
