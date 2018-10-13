@@ -5169,10 +5169,8 @@ public class StatusBar extends SystemUI implements DemoMode,
         public void onChange(boolean selfChange, Uri uri) {
             if (uri.equals(Settings.System.getUriFor(
                     Settings.System.ACCENT_PICKER))) {
-                // Unload the accents and update the accent only when the user asks.
-                // Keeps us from overloading the system by performing these tasks every time.
-                unloadAccents();
-                updateAccents();
+                unloadAccents(); // Unload the accents when users request it
+                updateAccents(); // Update the accents when users request it
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.SYSTEM_THEME_STYLE))) {
                 getCurrentThemeSetting();

@@ -67,47 +67,6 @@ public class ThemeAccentUtils {
 
     private static final String STOCK_DARK_THEME = "com.android.systemui.theme.dark";
 
-    // Switches theme accent from to another or back to stock
-    public static void updateAccents(IOverlayManager om, int userId, int accentSetting) {
-        if (accentSetting == 0) {
-            unloadAccents(om, userId);
-        } else if (accentSetting < 20) {
-            try {
-                om.setEnabled(ACCENTS[accentSetting],
-                        true, userId);
-            } catch (RemoteException e) {
-                Log.w(TAG, "Can't change theme", e);
-            }
-        } else if (accentSetting == 20) {
-            try {
-                // If using a dark theme we use the white accent, otherwise use the black accent
-                if (isUsingDarkTheme(om, userId) || isUsingBlackTheme(om, userId)) {
-                    om.setEnabled(ACCENTS[21],
-                            true, userId);
-                } else {
-                    om.setEnabled(ACCENTS[20],
-                            true, userId);
-                }
-            } catch (RemoteException e) {
-                Log.w(TAG, "Can't change theme", e);
-            }
-        }
-    }
-
-    // Unload all the theme accents
-    public static void unloadAccents(IOverlayManager om, int userId) {
-        // skip index 0
-        for (int i = 1; i < ACCENTS.length; i++) {
-            String accent = ACCENTS[i];
-            try {
-                om.setEnabled(accent,
-                        false /*disable*/, userId);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     // Check for the dark system theme
     public static boolean isUsingDarkTheme(IOverlayManager om, int userId) {
         OverlayInfo themeInfo = null;
@@ -212,5 +171,46 @@ public class ThemeAccentUtils {
             e.printStackTrace();
         }
         return themeInfo != null && themeInfo.isEnabled();
+    }
+
+    // Switches theme accent from to another or back to stock
+    public static void updateAccents(IOverlayManager om, int userId, int accentSetting) {
+        if (accentSetting == 0) {
+            unloadAccents(om, userId);
+        } else if (accentSetting < 20) {
+            try {
+                om.setEnabled(ACCENTS[accentSetting],
+                        true, userId);
+            } catch (RemoteException e) {
+                Log.w(TAG, "Can't change theme", e);
+            }
+        } else if (accentSetting == 20) {
+            try {
+                // If using a dark theme we use the white accent, otherwise use the black accent
+                if (isUsingDarkTheme(om, userId) || isUsingBlackTheme(om, userId)) {
+                    om.setEnabled(ACCENTS[21],
+                            true, userId);
+                } else {
+                    om.setEnabled(ACCENTS[20],
+                            true, userId);
+                }
+            } catch (RemoteException e) {
+                Log.w(TAG, "Can't change theme", e);
+            }
+        }
+    }
+
+    // Unload all the theme accents
+    public static void unloadAccents(IOverlayManager om, int userId) {
+        // skip index 0
+        for (int i = 1; i < ACCENTS.length; i++) {
+            String accent = ACCENTS[i];
+            try {
+                om.setEnabled(accent,
+                        false /*disable*/, userId);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
