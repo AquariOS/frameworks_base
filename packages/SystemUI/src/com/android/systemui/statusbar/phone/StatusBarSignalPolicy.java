@@ -188,7 +188,7 @@ public class StatusBarSignalPolicy implements NetworkControllerImpl.SignalCallba
     @Override
     public void setMobileDataIndicators(IconState statusIcon, IconState qsIcon, int statusType,
             int qsType, boolean activityIn, boolean activityOut, String typeContentDescription,
-            String description, boolean isWide, int subId, boolean roaming) {
+            String description, boolean isWide, int subId, boolean roaming, boolean isMobileIms) {
         MobileIconState state = getState(subId);
         if (state == null) {
             return;
@@ -205,6 +205,7 @@ public class StatusBarSignalPolicy implements NetworkControllerImpl.SignalCallba
         state.roaming = roaming;
         state.activityIn = activityIn && mActivityEnabled;
         state.activityOut = activityOut && mActivityEnabled;
+        state.mobileIms = isMobileIms;
 
         // Always send a copy to maintain value type semantics
         mIconController.setMobileIcons(mSlotMobile, MobileIconState.copyStates(mMobileStates));
@@ -396,6 +397,7 @@ public class StatusBarSignalPolicy implements NetworkControllerImpl.SignalCallba
         public int strengthId;
         public int typeId;
         public boolean roaming;
+        public boolean mobileIms;
         public boolean needsLeadingPadding;
         public String typeContentDescription;
 
@@ -417,6 +419,7 @@ public class StatusBarSignalPolicy implements NetworkControllerImpl.SignalCallba
                     strengthId == that.strengthId &&
                     typeId == that.typeId &&
                     roaming == that.roaming &&
+                    mobileIms == that.mobileIms &&
                     needsLeadingPadding == that.needsLeadingPadding &&
                     Objects.equals(typeContentDescription, that.typeContentDescription);
         }
@@ -441,6 +444,7 @@ public class StatusBarSignalPolicy implements NetworkControllerImpl.SignalCallba
             other.strengthId = strengthId;
             other.typeId = typeId;
             other.roaming = roaming;
+            other.mobileIms = mobileIms;
             other.needsLeadingPadding = needsLeadingPadding;
             other.typeContentDescription = typeContentDescription;
         }
