@@ -995,6 +995,69 @@ public class NavigationBarView extends FrameLayout implements Navigator {
         return mVertical;
     }
 
+    @Override
+    public void setControllers(PulseController pc) {
+        mPulse = pc;
+        mPulse.setPulseObserver(this);
+    }
+
+    @Override
+    public final void setKeyguardShowing(boolean showing) {
+        if (mKeyguardShowing != showing) {
+            mKeyguardShowing = showing;
+            if (mPulse != null) {
+                mPulse.setKeyguardShowing(showing);
+            }
+            //onKeyguardShowing(showing);
+        }
+    }
+
+    @Override
+    public final void notifyInflateFromUser() {
+        if (mPulse != null) {
+            mPulse.notifyScreenOn(true);
+        }
+    }
+
+    @Override
+    public void setLeftInLandscape(boolean leftInLandscape) {
+        if (mPulse != null) {
+            mPulse.setLeftInLandscape(leftInLandscape);
+        }
+    }
+
+    public void setPulseColors(boolean colorizedMedia, int[] colors) {
+        if (mPulse != null) {
+            mPulse.setPulseColors(colorizedMedia, colors);
+        }
+    }
+
+    @Override
+    public boolean onStartPulse(Animation animatePulseIn) {
+        // TODO add buttons alpha animation
+        mPulse.turnOnPulse();
+        return true;
+    }
+
+    @Override
+    public void onStopPulse(Animation animatePulseOut) {
+        // TODO add buttons alpha animation
+    }
+
+    public boolean isBarPulseFaded() {
+        if (mPulse == null) {
+            return false;
+        } else {
+            return mPulse.shouldDrawPulse();
+        }
+    }
+
+    public void setMediaPlaying(boolean playing) {
+        if (mPulse != null) {
+            mPulse.setMediaPlaying(playing);
+        }
+    }
+
     public void reorient() {
         updateCurrentView();
 
