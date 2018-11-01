@@ -135,6 +135,7 @@ public class NavigationBarView extends FrameLayout implements Navigator {
     private TintedKeyButtonDrawable mRotateSuggestionIcon;
 
     private boolean mFullGestureMode;
+    private boolean mDt2s;
 
     private GestureHelper mGestureHelper;
     private final DeadZone mDeadZone;
@@ -699,12 +700,17 @@ public class NavigationBarView extends FrameLayout implements Navigator {
         return ActivityManagerWrapper.getInstance().isScreenPinningActive();
     }
 
-    public void setFullGestureMode(boolean full) {
+    public void setFullGestureMode(boolean full, boolean dt2s) {
         mFullGestureMode = full;
+        mDt2s = dt2s;
     }
 
     public boolean isFullGestureMode() {
         return mFullGestureMode;
+    }
+
+     public boolean isDt2s() {
+        return mDt2s;
     }
 
     public void setLayoutTransitionsEnabled(boolean enabled) {

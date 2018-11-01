@@ -202,7 +202,7 @@ Navigator.OnVerticalChangedListener, KeyguardMonitor.Callback, NotificationMedia
     private final OverviewProxyListener mOverviewProxyListener = new OverviewProxyListener() {
         @Override
         public void onConnectionChanged(boolean isConnected) {
-        	setFullGestureMode(); // updateStates will update back icon visibility
+            setFullGestureMode(); // updateStates will update back icon visibility
             mNavigationBarView.updateStates();
             updateScreenPinningGestures();
         }
@@ -223,10 +223,10 @@ Navigator.OnVerticalChangedListener, KeyguardMonitor.Callback, NotificationMedia
         @Override
         public void onBackButtonAlphaChanged(float alpha, boolean animate) {
             final ButtonDispatcher backButton = mNavigationBarView.getBackButton();
-			if (backButton != null && mFullGestureMode) {
-				backButton.setVisibility(View.INVISIBLE);
-				return;
-			}
+            if (mFullGestureMode) {
+                backButton.setVisibility(View.INVISIBLE);
+                return;
+            }
             if (backButton != null) {
                 backButton.setVisibility(alpha > 0 ? View.VISIBLE : View.INVISIBLE);
                 backButton.setAlpha(alpha, animate);
@@ -257,6 +257,9 @@ Navigator.OnVerticalChangedListener, KeyguardMonitor.Callback, NotificationMedia
         		mSettingsObserver, UserHandle.USER_ALL);
         mContentResolver.registerContentObserver(Settings.System.getUriFor(
                 Settings.System.FULL_GESTURE_NAVBAR), false,
+                mSettingsObserver, UserHandle.USER_ALL);
+        mContentResolver.registerContentObserver(Settings.System.getUriFor(
+                Settings.System.FULL_GESTURE_NAVBAR_DT2S), false,
                 mSettingsObserver, UserHandle.USER_ALL);
 
         if (savedInstanceState != null) {
@@ -296,7 +299,6 @@ Navigator.OnVerticalChangedListener, KeyguardMonitor.Callback, NotificationMedia
         mNavbarObserver.observe();
         mKeyguardMonitor.addCallback(this);
         mMediaManager.addCallback(this);
-        setFullGestureMode();
     }
 
     @Override
@@ -331,7 +333,6 @@ Navigator.OnVerticalChangedListener, KeyguardMonitor.Callback, NotificationMedia
         mNavigationBarView = (Navigator) view;
         mNavigationBarView.setResourceMap(mResourceMap);
         mNavigationBarView.setLeftInLandscape(mLeftInLandscape);
-
         mNavigationBarView.setDisabledFlags(mDisabledFlags1);
         mNavigationBarView.setComponents(mRecents, mDivider, mStatusBar.getPanel());
         mNavigationBarView.setDisabledFlags(mDisabledFlags1);
@@ -1136,40 +1137,43 @@ Navigator.OnVerticalChangedListener, KeyguardMonitor.Callback, NotificationMedia
     private final AccessibilityServicesStateChangeListener mAccessibilityListener =
             this::updateAccessibilityServicesState;
 
-	private class SettingsObserver extends ContentObserver {
+    private class SettingsObserver extends ContentObserver {
 
-		public SettingsObserver(Handler handler) {
-			super(handler);
-		}
+        public SettingsObserver(Handler handler) {
+            super(handler);
+        }
 
-		@Override
-		public void onChange(boolean selfChange) {
-			if (isUsingStockNav()) {
-				NavigationBarFragment.this.updateAccessibilityServicesState(mAccessibilityManager);
-				NavigationBarFragment.this.setFullGestureMode();
-				if (mNavigationBarView != null) {
-					mNavigationBarView.updateNavButtonIcons();
-				}
-			}
-		}
-	}
+        @Override
+        public void onChange(boolean selfChange) {
+            NavigationBarFragment.this.updateAccessibilityServicesState(mAccessibilityManager);
+            NavigationBarFragment.this.setFullGestureMode();
+            if (mNavigationBarView != null) {
+                mNavigationBarView.updateNavButtonIcons();
+            }
+        }
+    }
 
-	private void setFullGestureMode() {
-		if (isUsingStockNav()) {
-			boolean enabled = false;
-			try {
-				if (Settings.System.getIntForUser(mContentResolver, Settings.System.FULL_GESTURE_NAVBAR,
-						UserHandle.USER_CURRENT) == 1) {
-					enabled = true;
-				}
-			} catch (Settings.SettingNotFoundException e) {
-			}
-			mFullGestureMode = mOverviewProxyService.shouldShowSwipeUpUI() && enabled;
-			if (mNavigationBarView != null) {
-				mNavigationBarView.setFullGestureMode(mFullGestureMode);
-			}
-		}
-	}
+    private void setFullGestureMode() {
+        boolean fullModeEnabled = false;
+        boolean dt2sEnabled = false;
+        try {
+            if (Settings.System.getIntForUser(mContentResolver,
+                    Settings.System.FULL_GESTURE_NAVBAR,
+                    UserHandle.USER_CURRENT) == 1) {
+                fullModeEnabled = true;
+            }
+            if (Settings.System.getIntForUser(mContentResolver,
+                    Settings.System.FULL_GESTURE_NAVBAR_DT2S,
+                    UserHandle.USER_CURRENT) == 1) {
+                dt2sEnabled = fullModeEnabled;
+            }
+        } catch (Settings.SettingNotFoundException e) {
+        }
+        mFullGestureMode = mOverviewProxyService.shouldShowSwipeUpUI() && fullModeEnabled;
+        if (mNavigationBarView != null) {
+            mNavigationBarView.setFullGestureMode(mFullGestureMode, dt2sEnabled);
+        }
+    }
 
     private final Stub mRotationWatcher = new Stub() {
         @Override
@@ -1428,7 +1432,6 @@ Navigator.OnVerticalChangedListener, KeyguardMonitor.Callback, NotificationMedia
                     .setNavigationBar(mNavigationBarView.getLightTransitionsController());
             if (isUsingStockNav()) {
                 mNavigationBarView.getBaseView().setOnTouchListener(this::onNavigationTouch);
-                setFullGestureMode();
 	            mNavigationBarView.updateNavButtonIcons();
             } else {
                 ((NavigationBarFrame) vg).disableDeadZone();
