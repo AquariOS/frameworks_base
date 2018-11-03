@@ -24,4 +24,8 @@
     <!-- Vendor mismatched fingerprint warning [CHAR LIMIT=NONE] -->
     <string name="system_error_vendorprint">Your vendor image does not match the system. Please flash the <xliff:g id="string">%s</xliff:g> vendor image for your device</string>
 
+    <!-- Ambient play -->
+    <string name="ambient_recognition_notification">Now Playing</string>
+    <string name="ambient_recognition_information">%1$s by %2$s</string>
+
 </resources>
