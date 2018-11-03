@@ -3970,9 +3970,10 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
                  Settings.System.QS_TILE_STYLE, 0, mLockscreenUserManager.getCurrentUserId());
         ThemeAccentUtils.updateTileStyle(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), qsTileStyle);
     }
-     // Unload all qs tile styles back to stock
-    public void stockTileStyle() {
-        ThemeAccentUtils.stockTileStyle(mOverlayManager, mLockscreenUserManager.getCurrentUserId());
+
+    // Unload all the qs tile styles
+    public void unlockQsTileStyles() {
+        ThemeAccentUtils.unlockQsTileStyles(mOverlayManager, mLockscreenUserManager.getCurrentUserId());
     }
 
     private void updateDozingState() {
@@ -5192,7 +5193,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
                 updateTheme();
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.QS_TILE_STYLE))) {
-                stockTileStyle();
+                unlockQsTileStyles();
                 updateTileStyle();
             } else if (uri.equals(Settings.System.getUriFor(Settings.System.QS_ROWS_PORTRAIT)) ||
                     uri.equals(Settings.System.getUriFor(Settings.System.QS_ROWS_LANDSCAPE)) ||
