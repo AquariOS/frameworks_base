@@ -57,27 +57,27 @@ public class ThemeAccentUtils {
     };
 
     private static final String[] DARK_THEMES = {
-        "com.android.system.theme.dark", // 0
-        "com.android.settings.theme.dark", // 1
-        "com.android.systemui.theme.dark", // 2
-        "com.android.systemui.qstheme.dark", // 3
-        "com.android.gboard.theme.dark", //4
+        "com.aquarios.system.theme.dark", // 0
+        "com.aquarios.settings.theme.dark", // 1
+        "com.aquarios.systemui.theme.dark", // 2
+        "com.aquarios.systemui.qstheme.dark", // 3
+        "com.aquarios.gboard.theme.dark", //4
     };
 
     private static final String[] BLACK_THEMES = {
-        "com.android.system.theme.black", // 0
-        "com.android.settings.theme.black", // 1
-        "com.android.systemui.theme.black", // 2
-        "com.android.systemui.qstheme.black", // 3
-        "com.android.gboard.theme.black", //4
+        "com.aquarios.system.theme.black", // 0
+        "com.aquarios.settings.theme.black", // 1
+        "com.aquarios.systemui.theme.black", // 2
+        "com.aquarios.systemui.qstheme.black", // 3
+        "com.aquarios.gboard.theme.black", //4
     };
 
     private static final String[] QS_TILE_THEMES = {
 		"default", // 0
-        "com.android.systemui.qstile.hexicon", // 1
-        "com.android.systemui.qstile.circletrim", // 2
-        "com.android.systemui.qstile.dualtonecircletrim", // 3
-        "com.android.systemui.qstile.squircletrim", // 4
+        "com.aquarios.systemui.qstile.hexicon", // 1
+        "com.aquarios.systemui.qstile.circletrim", // 2
+        "com.aquarios.systemui.qstile.dualtonecircletrim", // 3
+        "com.aquarios.systemui.qstile.squircletrim", // 4
     };
 
     private static final String STOCK_DARK_THEME = "com.android.systemui.theme.dark";
