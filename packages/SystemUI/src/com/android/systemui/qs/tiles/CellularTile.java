@@ -110,12 +110,12 @@ public class CellularTile extends QSTileImpl<SignalState> {
     }
 
     private void maybeShowDisableDialog() {
-        if (Prefs.getBoolean(mContext, QS_HAS_TURNED_OFF_MOBILE_DATA, false)) {
+        //if (Prefs.getBoolean(mContext, QS_HAS_TURNED_OFF_MOBILE_DATA, false)) {
             // Directly turn off mobile data if the user has seen the dialog before.
             mDataController.setMobileDataEnabled(false);
-            return;
-        }
-        String carrierName = mController.getMobileDataNetworkName();
+            //return;
+        //}
+        /*String carrierName = mController.getMobileDataNetworkName();
         if (TextUtils.isEmpty(carrierName)) {
             carrierName = mContext.getString(R.string.mobile_data_disable_message_default_carrier);
         }
@@ -134,7 +134,7 @@ public class CellularTile extends QSTileImpl<SignalState> {
         SystemUIDialog.setShowForAllUsers(dialog, true);
         SystemUIDialog.registerDismissListener(dialog);
         SystemUIDialog.setWindowOnTop(dialog);
-        dialog.show();
+        dialog.show();*/
     }
 
     @Override
