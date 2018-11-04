@@ -144,7 +144,7 @@ import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.internal.util.liquid.LiquidUtils;
+import com.android.internal.util.aquarios.AquaCafUtils;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.MessagingGroup;
 import com.android.internal.widget.MessagingMessage;
@@ -1116,7 +1116,7 @@ public class StatusBar extends SystemUI implements DemoMode,
         filter.addAction(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(DevicePolicyManager.ACTION_SHOW_DEVICE_MONITORING_DIALOG);
-        filter.addAction(LiquidUtils.ACTION_DISMISS_KEYGUARD);
+        filter.addAction(AquaCafUtils.ACTION_DISMISS_KEYGUARD);
         context.registerReceiverAsUser(mBroadcastReceiver, UserHandle.ALL, filter, null, null);
 
         IntentFilter demoFilter = new IntentFilter();
@@ -3231,9 +3231,9 @@ public class StatusBar extends SystemUI implements DemoMode,
             else if (DevicePolicyManager.ACTION_SHOW_DEVICE_MONITORING_DIALOG.equals(action)) {
                 mQSPanel.showDeviceMonitoringDialog();
             }
-            else if (LiquidUtils.ACTION_DISMISS_KEYGUARD.equals(action)) {
-                if (intent.hasExtra(LiquidUtils.DISMISS_KEYGUARD_EXTRA_INTENT)) {
-                    Intent launchIntent = (Intent) intent.getParcelableExtra(LiquidUtils.DISMISS_KEYGUARD_EXTRA_INTENT);
+            else if (AquaCafUtils.ACTION_DISMISS_KEYGUARD.equals(action)) {
+                if (intent.hasExtra(AquaCafUtils.DISMISS_KEYGUARD_EXTRA_INTENT)) {
+                    Intent launchIntent = (Intent) intent.getParcelableExtra(AquaCafUtils.DISMISS_KEYGUARD_EXTRA_INTENT);
                     startActivityDismissingKeyguard(launchIntent, true, true);
                 }
             }

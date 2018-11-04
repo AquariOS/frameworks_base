@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.liquid;
+package com.android.internal.util.aquarios;
 
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +36,7 @@ import com.android.internal.statusbar.IStatusBarService;
 /**
  * Some custom utilities
  */
-public class LiquidUtils {
+public class AquaCafUtils {
 
     public static void switchScreenOff(Context ctx) {
         PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
