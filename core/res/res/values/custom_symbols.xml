@@ -157,4 +157,9 @@
   <!-- FoD -->
   <java-symbol type="bool" name="config_needCustomFODView" />
   <java-symbol type="bool" name="config_usesOnePlusFOD" />
+
+  <!-- Recents/Launcher3 icon pack support -->
+  <!-- Icon packs -->
+  <java-symbol type="drawable" name="adaptive_icon_drawable_wrapper" />
+
 </resources>
