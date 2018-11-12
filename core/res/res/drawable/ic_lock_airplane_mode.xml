@@ -16,4 +16,4 @@
  
 <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
     android:src="@drawable/ic_lock_airplane_mode_alpha"
-    android:tint="@color/global_action_airplane" />
+    android:tint="?attr/colorControlActivated" />
