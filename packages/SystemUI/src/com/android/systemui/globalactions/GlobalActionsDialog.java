@@ -1002,9 +1002,14 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener,
         public View getView(int position, View convertView, ViewGroup parent, boolean noDivider) {
             Action action = getItem(position);
             View view = action.create(mContext, convertView, parent, LayoutInflater.from(mContext));
-            if (!noDivider && position == getCount() - 1) {
-                HardwareUiLayout.get(parent).setDivisionView(view);
-            }
+          /**
+           * This added a slightly different shade background color to whatever
+           * the last power menu item was at the time. This made sense for ABC,
+           * but not for us.
+           *if (!noDivider && position == getCount() - 1) {
+           *    HardwareUiLayout.get(parent).setDivisionView(view);
+           *}
+           */
             return view;
         }
     }
