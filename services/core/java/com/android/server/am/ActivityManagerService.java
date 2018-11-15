@@ -2207,6 +2207,9 @@ public class ActivityManagerService extends IActivityManager.Stub
                     }
                 }
                 callbacks.finishBroadcast();
+                // We have to clean up the RemoteCallbackList here, because otherwise it will
+                // needlessly hold the enclosed callbacks until the remote process dies.
+                callbacks.kill();
             } break;
             case UPDATE_TIME_ZONE: {
                 synchronized (ActivityManagerService.this) {
@@ -5588,7 +5591,7 @@ public class ActivityManagerService extends IActivityManager.Stub
         // TODO: Switch to user app stacks here.
         int ret = mActivityStartController.startActivities(caller, -1, callingPackage,
                 intents, resolvedTypes, resultTo, SafeActivityOptions.fromBundle(bOptions), userId,
-                reason);
+                reason, null /* originatingPendingIntent */);
         return ret;
     }
 
@@ -9626,10 +9629,17 @@ public class ActivityManagerService extends IActivityManager.Stub
             }
         }
 
-        // If we're extending a persistable grant, then we always need to create
-        // the grant data structure so that take/release APIs work
+        // Figure out the value returned when access is allowed
+        final int allowedResult;
         if ((modeFlags & Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION) != 0) {
-            return targetUid;
+            // If we're extending a persistable grant, then we need to return
+            // "targetUid" so that we always create a grant data structure to
+            // support take/release APIs
+            allowedResult = targetUid;
+        } else {
+            // Otherwise, we can return "-1" to indicate that no grant data
+            // structures need to be created
+            allowedResult = -1;
         }
 
         if (targetUid >= 0) {
@@ -9638,7 +9648,7 @@ public class ActivityManagerService extends IActivityManager.Stub
                 // No need to grant the target this permission.
                 if (DEBUG_URI_PERMISSION) Slog.v(TAG_URI_PERMISSION,
                         "Target " + targetPkg + " already has full permission to " + grantUri);
-                return -1;
+                return allowedResult;
             }
         } else {
             // First...  there is no target package, so can anyone access it?
@@ -9673,7 +9683,7 @@ public class ActivityManagerService extends IActivityManager.Stub
                 }
             }
             if (allowed) {
-                return -1;
+                return allowedResult;
             }
         }
 
@@ -11053,6 +11063,20 @@ public class ActivityManagerService extends IActivityManager.Stub
                 Binder.restoreCallingIdentity(ident);
             }
         }
+    }
+
+    /**
+     * @return whitelist tag for a uid from mPendingTempWhitelist, null if not currently on
+     * the whitelist
+     */
+    String getPendingTempWhitelistTagForUidLocked(int uid) {
+        final PendingTempWhitelist ptw = mPendingTempWhitelist.get(uid);
+        return ptw != null ? ptw.tag : null;
+    }
+
+    @VisibleForTesting
+    boolean isActivityStartsLoggingEnabled() {
+        return mConstants.mFlagActivityStartsLoggingEnabled;
     }
 
     @Override
@@ -23039,6 +23063,7 @@ public class ActivityManagerService extends IActivityManager.Stub
                 // The process is being computed, so there is a cycle. We cannot
                 // rely on this process's state.
                 app.containsCycle = true;
+
                 return false;
             }
         }
@@ -23063,6 +23088,7 @@ public class ActivityManagerService extends IActivityManager.Stub
         final int logUid = mCurOomAdjUid;
 
         int prevAppAdj = app.curAdj;
+        int prevProcState = app.curProcState;
 
         if (app.maxAdj <= ProcessList.FOREGROUND_APP_ADJ) {
             // The max adjustment doesn't allow this app to be anything
@@ -23350,6 +23376,19 @@ public class ActivityManagerService extends IActivityManager.Stub
             }
         }
 
+        // If the app was recently in the foreground and moved to a foreground service status,
+        // allow it to get a higher rank in memory for some time, compared to other foreground
+        // services so that it can finish performing any persistence/processing of in-memory state.
+        if (app.foregroundServices && adj > ProcessList.PERCEPTIBLE_RECENT_FOREGROUND_APP_ADJ
+                && (app.lastTopTime + mConstants.TOP_TO_FGS_GRACE_DURATION > now
+                    || app.setProcState <= ActivityManager.PROCESS_STATE_TOP)) {
+            adj = ProcessList.PERCEPTIBLE_RECENT_FOREGROUND_APP_ADJ;
+            app.adjType = "fg-service-act";
+            if (DEBUG_OOM_ADJ_REASON || logUid == appUid) {
+                reportOomAdjMessageLocked(TAG_OOM_ADJ, "Raise to recent fg: " + app);
+            }
+        }
+
         if (adj > ProcessList.PERCEPTIBLE_APP_ADJ
                 || procState > ActivityManager.PROCESS_STATE_TRANSIENT_BACKGROUND) {
             if (app.forcingToImportant != null) {
@@ -23541,11 +23580,16 @@ public class ActivityManagerService extends IActivityManager.Stub
                         ProcessRecord client = cr.binding.client;
                         computeOomAdjLocked(client, cachedAdj, TOP_APP, doingAll, now);
                         if (client.containsCycle) {
-                            // We've detected a cycle. We should ignore this connection and allow
-                            // this process to retry computeOomAdjLocked later in case a later-checked
-                            // connection from a client  would raise its priority legitimately.
+                            // We've detected a cycle. We should retry computeOomAdjLocked later in
+                            // case a later-checked connection from a client  would raise its
+                            // priority legitimately.
                             app.containsCycle = true;
-                            continue;
+                            // If the client has not been completely evaluated, skip using its
+                            // priority. Else use the conservative value for now and look for a
+                            // better state in the next iteration.
+                            if (client.completedAdjSeq < mAdjSeq) {
+                                continue;
+                            }
                         }
                         int clientAdj = client.curRawAdj;
                         int clientProcState = client.curProcState;
@@ -23609,6 +23653,10 @@ public class ActivityManagerService extends IActivityManager.Stub
                                         schedGroup = ProcessList.SCHED_GROUP_DEFAULT;
                                         procState = ActivityManager.PROCESS_STATE_PERSISTENT;
                                     }
+                                } else if ((cr.flags & Context.BIND_ADJUST_BELOW_PERCEPTIBLE) != 0
+                                        && clientAdj < ProcessList.PERCEPTIBLE_APP_ADJ
+                                        && adj > ProcessList.PERCEPTIBLE_APP_ADJ + 1) {
+                                    newAdj = ProcessList.PERCEPTIBLE_APP_ADJ + 1;
                                 } else if ((cr.flags&Context.BIND_NOT_VISIBLE) != 0
                                         && clientAdj < ProcessList.PERCEPTIBLE_APP_ADJ
                                         && adj > ProcessList.PERCEPTIBLE_APP_ADJ) {
@@ -23768,11 +23816,16 @@ public class ActivityManagerService extends IActivityManager.Stub
                 }
                 computeOomAdjLocked(client, cachedAdj, TOP_APP, doingAll, now);
                 if (client.containsCycle) {
-                    // We've detected a cycle. We should ignore this connection and allow
-                    // this process to retry computeOomAdjLocked later in case a later-checked
-                    // connection from a client  would raise its priority legitimately.
+                    // We've detected a cycle. We should retry computeOomAdjLocked later in
+                    // case a later-checked connection from a client  would raise its
+                    // priority legitimately.
                     app.containsCycle = true;
-                    continue;
+                    // If the client has not been completely evaluated, skip using its
+                    // priority. Else use the conservative value for now and look for a
+                    // better state in the next iteration.
+                    if (client.completedAdjSeq < mAdjSeq) {
+                        continue;
+                    }
                 }
                 int clientAdj = client.curRawAdj;
                 int clientProcState = client.curProcState;
@@ -24004,8 +24057,8 @@ public class ActivityManagerService extends IActivityManager.Stub
         app.foregroundActivities = foregroundActivities;
         app.completedAdjSeq = mAdjSeq;
 
-        // if curAdj is less than prevAppAdj, then this process was promoted
-        return app.curAdj < prevAppAdj;
+        // if curAdj or curProcState improved, then this process was promoted
+        return app.curAdj < prevAppAdj || app.curProcState < prevProcState;
     }
 
     /**
@@ -24574,6 +24627,8 @@ public class ActivityManagerService extends IActivityManager.Stub
             // Must be called before updating setProcState
             maybeUpdateUsageStatsLocked(app, nowElapsed);
 
+            maybeUpdateLastTopTime(app, now);
+
             app.setProcState = app.curProcState;
             if (app.setProcState >= ActivityManager.PROCESS_STATE_HOME) {
                 app.notCachedSinceIdle = false;
@@ -24795,6 +24850,13 @@ public class ActivityManagerService extends IActivityManager.Stub
         app.reportedInteraction = isInteraction;
         if (!isInteraction) {
             app.interactionEventTime = 0;
+        }
+    }
+
+    private void maybeUpdateLastTopTime(ProcessRecord app, long nowUptime) {
+        if (app.setProcState <= ActivityManager.PROCESS_STATE_TOP
+                && app.curProcState > ActivityManager.PROCESS_STATE_TOP) {
+            app.lastTopTime = nowUptime;
         }
     }
 
@@ -25058,7 +25120,7 @@ public class ActivityManagerService extends IActivityManager.Stub
         // - Continue retrying until no process was promoted.
         // - Iterate from least important to most important.
         int cycleCount = 0;
-        while (retryCycles) {
+        while (retryCycles && cycleCount < 10) {
             cycleCount++;
             retryCycles = false;
 
@@ -25073,12 +25135,14 @@ public class ActivityManagerService extends IActivityManager.Stub
             for (int i=0; i<N; i++) {
                 ProcessRecord app = mLruProcesses.get(i);
                 if (!app.killedByAm && app.thread != null && app.containsCycle == true) {
+
                     if (computeOomAdjLocked(app, ProcessList.UNKNOWN_ADJ, TOP_APP, true, now)) {
                         retryCycles = true;
                     }
                 }
             }
         }
+
         for (int i=N-1; i>=0; i--) {
             ProcessRecord app = mLruProcesses.get(i);
             if (!app.killedByAm && app.thread != null) {
@@ -26493,7 +26557,7 @@ public class ActivityManagerService extends IActivityManager.Stub
                         packageUid, packageName,
                         intents, resolvedTypes, null /* resultTo */,
                         SafeActivityOptions.fromBundle(bOptions), userId,
-                        false /* validateIncomingUser */);
+                        false /* validateIncomingUser */, null /* originatingPendingIntent */);
             }
         }
 
@@ -26824,6 +26888,25 @@ public class ActivityManagerService extends IActivityManager.Stub
         @Override
         public void enforceCallerIsRecentsOrHasPermission(String permission, String func) {
             ActivityManagerService.this.enforceCallerIsRecentsOrHasPermission(permission, func);
+        }
+
+        @Override
+        public Intent getHomeIntent() {
+            synchronized (ActivityManagerService.this) {
+                return ActivityManagerService.this.getHomeIntent();
+            }
+        }
+
+        @Override
+        public void notifyDefaultDisplaySizeChanged() {
+            synchronized (ActivityManagerService.this) {
+                if (mSystemServiceManager.isBootCompleted() && mHomeProcess != null) {
+
+                    // TODO: Ugly hack to unblock the release
+                    Slog.i(TAG, "Killing home process because of display size change");
+                    removeProcessLocked(mHomeProcess, false, true, "kill home screen size");
+                }
+            }
         }
     }
 
