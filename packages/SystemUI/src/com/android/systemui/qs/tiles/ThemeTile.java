@@ -16,16 +16,15 @@
 
 package com.android.systemui.qs.tiles;
 
+import android.app.ActivityManager;
+import android.app.UiModeManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.om.IOverlayManager;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.provider.Settings;
@@ -36,6 +35,8 @@ import android.widget.ListView;
 
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
+import com.android.internal.statusbar.ThemeAccentUtils;
+import com.android.internal.util.aquarios.AquaUtils;
 
 import com.android.systemui.Prefs;
 import com.android.systemui.R;
@@ -47,22 +48,12 @@ import com.android.systemui.qs.QSDetailItems.Item;
 import com.android.systemui.qs.QSDetailItemsList;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
-import com.android.internal.statusbar.ThemeAccentUtils;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
-import com.android.systemui.statusbar.NotificationLockscreenUserManager;
-import com.android.systemui.Dependency;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class ThemeTile extends QSTileImpl<BooleanState> {
-
-    private final String substratum = "projekt.substratum";
 
     static final List<ThemeTileItem> sThemeItems = new ArrayList<ThemeTileItem>();
     static {
@@ -124,14 +115,14 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
 
     static final List<ThemeTileItem> sStyleItems = new ArrayList<ThemeTileItem>();
     static {
-        sStyleItems.add(new ThemeTileItem(0, -1,
-                R.string.systemui_theme_style_auto, Settings.System.SYSTEM_THEME_STYLE));
-        sStyleItems.add(new ThemeTileItem(1, -1,
-                R.string.systemui_theme_style_light, Settings.System.SYSTEM_THEME_STYLE));
-        sStyleItems.add(new ThemeTileItem(2, -1,
-                R.string.systemui_theme_style_dark, Settings.System.SYSTEM_THEME_STYLE));
-        sStyleItems.add(new ThemeTileItem(3, -1,
-                R.string.systemui_theme_style_black, Settings.System.SYSTEM_THEME_STYLE));
+        sStyleItems.add(new ThemeTileItem(UiModeManager.MODE_NIGHT_AUTO, -1,
+                R.string.system_theme_style_auto));
+        sStyleItems.add(new ThemeTileItem(UiModeManager.MODE_NIGHT_YES, -1,
+                R.string.system_theme_style_dark));
+        sStyleItems.add(new ThemeTileItem(UiModeManager.MODE_NIGHT_NO, -1,
+                R.string.system_theme_style_light));
+        sStyleItems.add(new ThemeTileItem(UiModeManager.MODE_NIGHT_YES, -1,
+                R.string.system_theme_style_black));
     }
 
     private enum Mode {
@@ -140,15 +131,15 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
 
     private IOverlayManager mOverlayManager;
     private int mCurrentUserId;
-    protected NotificationLockscreenUserManager mLockscreenUserManager;
     private Mode mMode;
+    private static UiModeManager mUiModeManager;
 
     public ThemeTile(QSHost host) {
         super(host);
         mOverlayManager = IOverlayManager.Stub.asInterface(
                 ServiceManager.getService(Context.OVERLAY_SERVICE));
-        mLockscreenUserManager = Dependency.get(NotificationLockscreenUserManager.class);
-        mCurrentUserId = mLockscreenUserManager.getCurrentUserId();
+        mCurrentUserId = ActivityManager.getCurrentUser();
+        mUiModeManager = mContext.getSystemService(UiModeManager.class);
         mMode = Mode.ACCENT;
     }
 
@@ -176,6 +167,10 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
         public void commit(Context context) {
             Settings.System.putIntForUser(context.getContentResolver(),
                     uri, settingsVal, UserHandle.USER_CURRENT);
+        }
+
+        public void styleCommit(Context context) {
+            mUiModeManager.setNightMode(settingsVal);
         }
 
         public QSTile.Icon getIcon(Context context) {
@@ -208,11 +203,9 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
 
         @Override
         public CharSequence getTitle() {
-            if (mMode == Mode.ACCENT) {
-                return mContext.getString(R.string.quick_settings_theme_tile_accent_detail_title);
-            } else {
-                return mContext.getString(R.string.quick_settings_theme_tile_style_detail_title);
-            }
+            return mContext.getString(mMode == Mode.ACCENT ?
+                    R.string.quick_settings_theme_tile_accent_detail_title :
+                    R.string.quick_settings_theme_tile_style_detail_title);
         }
 
         @Override
@@ -273,7 +266,7 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
                 Item item = new Item();
                 item.tag = styleItem;
                 item.doDisableFocus = true;
-                item.iconResId = R.drawable.ic_qs_accent;
+                item.iconResId = R.drawable.ic_qs_style_list;
                 item.line1 = styleItem.getLabel(mContext);
                 items.add(item);
             }
@@ -301,7 +294,11 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
                 return;
             ThemeTileItem themeItem = (ThemeTileItem) item.tag;
             showDetail(false);
-            themeItem.commit(mContext);
+            if (mMode == Mode.ACCENT) {
+                themeItem.commit(mContext);
+            } else {
+                themeItem.styleCommit(mContext);
+            }
         }
     }
 
@@ -350,8 +347,9 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
     @Override
     protected void handleUpdateState(BooleanState state, Object arg) {
         state.label = mContext.getString(mMode == Mode.ACCENT
-                ? R.string.quick_settings_theme_tile_title : R.string.systemui_theme_style_title);
-        state.icon = ResourceIcon.get(R.drawable.ic_qs_accent);
+                ? R.string.quick_settings_theme_tile_title : R.string.system_theme_style_title);
+        state.icon = ResourceIcon.get(mMode == Mode.ACCENT
+                ? R.drawable.ic_qs_accent : R.drawable.ic_qs_style);
     }
 
     @Override
@@ -361,28 +359,17 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
 
     @Override
     public boolean isAvailable() {
-        return !isPackageInstalled();
-    }
-
-    private boolean isPackageInstalled() {
-        try {
-            PackageInfo info = mContext.getPackageManager()
-                    .getPackageInfo(substratum, PackageManager.GET_META_DATA);
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-        return true;
+        String SUBS_PACKAGE = "projekt.substratum";
+        return !AquaUtils.isPackageInstalled(mContext, SUBS_PACKAGE);
     }
 
     @Override
     public Intent getLongClickIntent() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     protected void handleSetListening(boolean listening) {
-        // TODO Auto-generated method stub
     }
 
     @Override
