@@ -213,6 +213,7 @@ import android.os.IBinder;
 import android.os.IDeviceIdleController;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Messenger;
 import android.os.PowerManager;
 import android.os.PowerManagerInternal;
 import android.os.Process;
@@ -879,8 +880,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private static final int MSG_POWER_VERY_LONG_PRESS = 28;
     private static final int MSG_NOTIFY_USER_ACTIVITY = 29;
     private static final int MSG_RINGER_TOGGLE_CHORD = 30;
-    private static final int MSG_DISPATCH_VOLKEY_SKIP_TRACK = 31;
-    private static final int MSG_TOGGLE_TORCH = 32;
+    private static final int MSG_TOGGLE_TORCH = 31;
+    private static final int MSG_CLEAR_PROXIMITY = 32;
+    private static final int MSG_DISPATCH_VOLKEY_SKIP_TRACK = 33;
 
     private static final int MSG_REQUEST_TRANSIENT_BARS_ARG_STATUS = 0;
     private static final int MSG_REQUEST_TRANSIENT_BARS_ARG_NAVIGATION = 1;
@@ -1999,7 +2001,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
     @Override
     public void screenRecordAction(int mode) {
-        mContext.enforceCallingOrSelfPermission(Manifest.permission.ACCESS_SURFACE_FLINGER,
+        mContext.enforceCallingOrSelfPermission(ACCESS_SURFACE_FLINGER,
                 TAG + "screenRecordAction permission denied");
         mHandler.removeCallbacks(mScreenrecordRunnable);
         mScreenrecordRunnable.setMode(mode);
@@ -8822,13 +8824,13 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     public void sendCustomAction(Intent intent) {
         String action = intent.getAction();
         if (action != null) {
-            if (Utils.INTENT_SCREENSHOT.equals(action)) {
+            if (AquaUtils.INTENT_SCREENSHOT.equals(action)) {
                 mContext.enforceCallingOrSelfPermission(ACCESS_SURFACE_FLINGER,
                         TAG + "sendCustomAction permission denied");
                 mHandler.removeCallbacks(mScreenshotRunnable);
                 mScreenshotRunnable.setScreenshotType(TAKE_SCREENSHOT_FULLSCREEN);
                 mHandler.post(mScreenshotRunnable);
-            } else if (Utils.INTENT_REGION_SCREENSHOT.equals(action)) {
+            } else if (AquaUtils.INTENT_REGION_SCREENSHOT.equals(action)) {
                 mContext.enforceCallingOrSelfPermission(ACCESS_SURFACE_FLINGER,
                         TAG + "sendCustomAction permission denied");
                 mHandler.removeCallbacks(mScreenshotRunnable);
