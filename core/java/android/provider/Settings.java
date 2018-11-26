@@ -9297,6 +9297,36 @@ public final class Settings {
                 new SettingsValidators.InclusiveIntegerRangeValidator(0, 1);
 
         /**
+         * Pixel Anim Color
+         * @hide
+         */
+        public static final String DOT_TOP_COLOR = "dot_top_color";
+
+        /**
+         * Pixel Anim Color
+         * @hide
+         */
+        public static final String DOT_BOTTOM_COLOR = "dot_bottom_color";
+
+        /**
+         * Pixel Anim Color
+         * @hide
+         */
+        public static final String DOT_LEFT_COLOR = "dot_left_color";
+
+        /**
+         * Pixel Anim Color
+         * @hide
+         */
+        public static final String DOT_RIGHT_COLOR = "dot_right_color";
+
+        /**
+         * Pixel Anim Color
+         * @hide
+         */
+        public static final String DOT_COLOR_SWITCH = "dot_color_switch";
+
+        /**
          * This are the settings to be backed up.
          *
          * NOTE: Settings are backed up and restored in the order they appear
