@@ -56,6 +56,16 @@ public class ThemeAccentUtils {
         "com.accents.userseven", // 28
     };
 
+    // Vendor overlays to ignore
+    public static final String[] BLACKLIST_VENDOR_OVERLAYS = {
+        "SysuiDarkTheme",
+        "Pixel",
+        "DisplayCutoutEmulationCorner",
+        "DisplayCutoutEmulationDouble",
+        "DisplayCutoutEmulationNarrow",
+        "DisplayCutoutEmulationWide",
+    };
+
     private static final String[] DARK_THEMES = {
         "com.aquarios.system.theme.dark", // 0
         "com.aquarios.settings.theme.dark", // 1
