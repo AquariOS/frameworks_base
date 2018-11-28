@@ -64,4 +64,7 @@
   <!-- Whether device has dash charging support -->
   <java-symbol type="bool" name="config_hasDashCharger" />
 
+  <!-- Wallpaper component -->
+  <java-symbol type="string" name="default_wallpaper_component_custom" />
+
 </resources>

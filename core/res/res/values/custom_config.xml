@@ -42,4 +42,7 @@
   <!-- Whether device has dash charging support -->
   <bool name="config_hasDashCharger">false</bool>
 
+  <!-- Wallpaper component -->
+  <string name="default_wallpaper_component_custom" translatable="false">@null</string>
+
 </resources>
