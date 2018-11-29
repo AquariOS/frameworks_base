@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2007 The Android Open Source Project
  *
@@ -59,12 +60,6 @@ public class Build {
 
     /** The name of the underlying board, like "goldfish". */
     public static final String BOARD = getString("ro.product.board");
-
-    /**
-     * The build date
-     * @hide
-     */
-    public static final String DATE = getString("ro.build.date");
 
     /**
      * The name of the instruction set (CPU type + ABI convention) of native code.
@@ -1042,22 +1037,12 @@ public class Build {
      * 1) Checks that device fingerprint is defined and that it matches across
      *    various partitions.
      * 2) Verifies radio and bootloader partitions are those expected in the build.
-      *
-      * @hide
-      */
+     *
+     * @hide
+     */
     public static boolean isBuildConsistent() {
         // Don't care on eng builds.  Incremental build may trigger false negative.
         if (IS_ENG) return true;
-
-        if (IS_TREBLE_ENABLED && Build.VERSION.FIRST_SDK_INT >= VERSION_CODES.O) {
-            // If we can run this code, the device should already pass AVB.
-            // So, we don't need to check AVB here.
-            int result = VintfObject.verifyWithoutAvb();
-
-            if (result != 0) {
-                Slog.e(TAG, "Vendor interface is incompatible, error="
-                        + String.valueOf(result));
-            }
 
         if (IS_TREBLE_ENABLED && Build.VERSION.FIRST_SDK_INT >= VERSION_CODES.O) {
             // If we can run this code, the device should already pass AVB.
@@ -1101,7 +1086,6 @@ public class Build {
                 return false;
             }
         }
-
         if (!TextUtils.isEmpty(requiredBootloader)) {
             if (!Objects.equals(currentBootloader, requiredBootloader)) {
                 Slog.e(TAG, "Mismatched bootloader version: build requires " + requiredBootloader
@@ -1109,7 +1093,6 @@ public class Build {
                 return false;
             }
         }
-
         if (!TextUtils.isEmpty(requiredRadio)) {
             if (!Objects.equals(currentRadio, requiredRadio)) {
                 Slog.e(TAG, "Mismatched radio version: build requires " + requiredRadio
