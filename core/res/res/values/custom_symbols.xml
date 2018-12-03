@@ -80,4 +80,7 @@
   <java-symbol type="anim" name="smartnav_app_in" />
   <java-symbol type="anim" name="smartnav_app_out" />
 
+  <!-- Wallpaper component -->
+  <java-symbol type="string" name="default_wallpaper_component_custom" />
+
 </resources>
