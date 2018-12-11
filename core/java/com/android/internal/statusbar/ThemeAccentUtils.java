@@ -71,7 +71,8 @@ public class ThemeAccentUtils {
         "com.aquarios.settings.theme.dark", // 1
         "com.aquarios.systemui.theme.dark", // 2
         "com.aquarios.systemui.qstheme.dark", // 3
-        "com.aquarios.gboard.theme.dark", //4
+        "com.aquarios.gboard.theme.dark", // 4
+        "com.google.intelligence.sense.theme.dark" // 5
     };
 
     private static final String[] BLACK_THEMES = {
@@ -79,7 +80,13 @@ public class ThemeAccentUtils {
         "com.aquarios.settings.theme.black", // 1
         "com.aquarios.systemui.theme.black", // 2
         "com.aquarios.systemui.qstheme.black", // 3
-        "com.aquarios.gboard.theme.black", //4
+        "com.aquarios.gboard.theme.black", // 4
+        "com.google.intelligence.sense.theme.black" // 5
+    };
+
+    private static final String[] LIGHT_THEMES = {
+        "com.google.intelligence.sense.theme.light", // 0
+        "com.android.gboard.theme.light", // 1
     };
 
     private static final String[] QS_TILE_THEMES = {
@@ -121,9 +128,15 @@ public class ThemeAccentUtils {
                 try {
                     om.setEnabled(theme,
                         useDarkTheme, userId);
-                } catch (RemoteException e) {
-                    Log.w(TAG, "Can't change theme", e);
-                }
+            } catch (RemoteException e) {
+            }
+        }
+        for (String theme : LIGHT_THEMES) {
+                try {
+                    om.setEnabled(theme,
+                        !useDarkTheme, userId);
+            } catch (RemoteException e) {
+            }
         }
     }
 
@@ -132,9 +145,15 @@ public class ThemeAccentUtils {
                 try {
                     om.setEnabled(theme,
                         useBlackTheme, userId);
-                } catch (RemoteException e) {
-                    Log.w(TAG, "Can't change theme", e);
-                }
+            } catch (RemoteException e) {
+            }
+        }
+        for (String theme : LIGHT_THEMES) {
+                try {
+                    om.setEnabled(theme,
+                        !useBlackTheme, userId);
+            } catch (RemoteException e) {
+            }
         }
     }
 
