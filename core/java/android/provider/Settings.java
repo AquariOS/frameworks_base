@@ -4454,6 +4454,12 @@ public final class Settings {
         public static final String DOUBLE_TAP_SLEEP_ANYWHERE = "double_tap_sleep_anywhere";
 
         /**
+         * Forces ENTER key to be displayed, rather than Emoji key
+         * @hide
+         */
+        public static final String FORCE_SHOW_ENTER_KEY = "force_show_enter_key";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
