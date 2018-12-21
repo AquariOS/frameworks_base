@@ -152,6 +152,8 @@ public class VolumeDialogImpl implements VolumeDialog {
     private SafetyWarningDialog mSafetyWarning;
     private boolean mHovering = false;
 
+    private boolean mLeftVolumeRocker;
+
     private boolean isMediaShowing = false;
     private boolean isRingerShowing = false;
     private boolean isNotificationShowing = false;
@@ -201,6 +203,7 @@ public class VolumeDialogImpl implements VolumeDialog {
         mKeyguard = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         mAccessibilityMgr = Dependency.get(AccessibilityManagerWrapper.class);
         mDeviceProvisionedController = Dependency.get(DeviceProvisionedController.class);
+        mLeftVolumeRocker = mContext.getResources().getBoolean(R.bool.config_audioPanelOnLeftSide);
 
         settingsObserver = new SettingsObserver(mHandler);
         settingsObserver.observe();
@@ -1384,8 +1387,7 @@ public class VolumeDialogImpl implements VolumeDialog {
     }
 
     private boolean isAudioPanelOnLeftSide() {
-	return mContext.getResources()
-                .getBoolean(R.bool.config_audioPanelOnLeftSide);
+        return mLeftVolumeRocker;
     }
 
     private static class VolumeRow {
