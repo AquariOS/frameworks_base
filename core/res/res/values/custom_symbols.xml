@@ -66,10 +66,6 @@
   <!-- Fastscroller -->
   <java-symbol type="color" name="fastscroller_text_color" />
 
-  <!-- Ambient play -->
-  <java-symbol type="string" name="ambient_recognition_notification" />
-  <java-symbol type="string" name="ambient_recognition_information" />
-
   <java-symbol type="integer" name="config_flashlightProximityTimeout" />
 
   <!-- Device keyhandlers -->
