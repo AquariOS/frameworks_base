@@ -456,7 +456,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener,
                 }
             } else if (GLOBAL_ACTION_KEY_SCREENSHOT.equals(actionKey)) {
                 if (Settings.Secure.getIntForUser(mContext.getContentResolver(),
-                            Settings.Secure.SCREENSHOT_IN_POWER_MENU, 1, getCurrentUser().id) != 0) {
+                            Settings.Secure.SCREENSHOT_IN_POWER_MENU, 0, getCurrentUser().id) != 0) {
                     mItems.add(new ScreenshotAction());
                 }
             /*} else if (GLOBAL_ACTION_KEY_LOGOUT.equals(actionKey)) {
@@ -467,7 +467,7 @@ class GlobalActionsDialog implements DialogInterface.OnDismissListener,
                 }*/
             } else if (GLOBAL_ACTION_KEY_ADVANCED.equals(actionKey)) {
                 if (Settings.Secure.getIntForUser(mContext.getContentResolver(),
-                            Settings.Secure.ADVANCED_REBOOT_IN_POWER_MENU, 0,
+                            Settings.Secure.ADVANCED_REBOOT_IN_POWER_MENU, 1,
                             getCurrentUser().id) != 0) {
                     mItems.add(mShowAdvancedToggles);
                 }
