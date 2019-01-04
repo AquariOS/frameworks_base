@@ -589,7 +589,6 @@ public class WallpaperManagerService extends IWallpaperManager.Stub
      */
     private WallpaperColors getThemeColorsLocked(WallpaperColors colors) {
         if (colors == null) {
-            Slog.w(TAG, "Cannot get theme colors because WallpaperColors is null. Assuming Color.WHITE");
             colors = new WallpaperColors(Color.valueOf(Color.WHITE), null, null, 0);
         }
 

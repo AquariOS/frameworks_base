@@ -4101,8 +4101,8 @@ public class StatusBar extends SystemUI implements DemoMode,
                     true /* ignoreVisibility */).supportsDarkText();
             mStackScroller.updateDecorViews(useDarkText);
 
-            // Make sure we have the correct navbar/statusbar colors.
-            mStatusBarWindowManager.setKeyguardDark(useDarkText);
+         // Make sure we have the correct navbar/statusbar colors.
+         // mStatusBarWindowManager.setKeyguardDark(useDarkText);
         }
     }
 
