@@ -2223,18 +2223,8 @@ public class StatusBar extends SystemUI implements DemoMode,
         return ThemeAccentUtils.isUsingDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId());
     }
 
-     public boolean isUsingBlackTheme() {
+    public boolean isUsingBlackTheme() {
          return ThemeAccentUtils.isUsingBlackTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId());
-     }
-
-    // Unloads the stock dark theme
-    public void unloadStockDarkTheme() {
-        ThemeAccentUtils.unloadStockDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId());
-    }
-
-    // Check for black and white accent overlays
-    public void unfuckBlackWhiteAccent() {
-        ThemeAccentUtils.unfuckBlackWhiteAccent(mOverlayManager, mLockscreenUserManager.getCurrentUserId());
     }
 
     @Nullable
@@ -4089,7 +4079,7 @@ public class StatusBar extends SystemUI implements DemoMode,
      * Switches theme from light to dark and vice-versa.
      */
     protected void updateTheme() {
-        final boolean inflated = mStackScroller != null;
+        final boolean inflated = mStackScroller != null && mStatusBarWindowManager != null;
         boolean useDarkTheme = false;
         boolean useBlackTheme = false;
         if (mCurrentTheme == 0) {
@@ -4098,15 +4088,9 @@ public class StatusBar extends SystemUI implements DemoMode,
                 .getWallpaperColors(WallpaperManager.FLAG_SYSTEM);
             useDarkTheme = systemColors != null
                     && (systemColors.getColorHints() & WallpaperColors.HINT_SUPPORTS_DARK_THEME) != 0;
-            // Check for black and white accent so we don't end up
-            // with white on white or black on black
-            unfuckBlackWhiteAccent();
         } else {
             useDarkTheme = mCurrentTheme == 2;
             useBlackTheme = mCurrentTheme == 3;
-            // Check for black and white accent so we don't end up
-            // with white on white or black on black
-            unfuckBlackWhiteAccent();
         }
         if (isUsingDarkTheme() != useDarkTheme) {
             ThemeAccentUtils.setLightDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useDarkTheme);
