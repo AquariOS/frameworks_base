@@ -396,17 +396,22 @@ public class QuickStepController implements GestureHelper {
                     }
                     if (mBackActionScheduled) {
                         AquaUtils.sendKeycode(KeyEvent.KEYCODE_BACK, mHandler);
+                        endQuickScrub(true /* animate */);
                         mNavigationBarView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                     } else {
                         endQuickScrub(true /* animate */);
                     }
                     break;
-               }
+                }
+
+                endQuickScrub(true /* animate */);
+                break;
+        }
 
         // Proxy motion events to launcher if not handled by quick scrub
         // Proxy motion events up/cancel that would be sent after long press on any nav button
-        if (!mQuickScrubActive && (mAllowGestureDetection || action == MotionEvent.ACTION_CANCEL
-                || action == MotionEvent.ACTION_UP)) {
+        if (!mQuickScrubActive && (mAllowGestureDetection || mBackActionScheduled
+                || action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP)) {
             proxyMotionEvents(event);
         }
         return mQuickScrubActive || mQuickStepStarted || deadZoneConsumed;
