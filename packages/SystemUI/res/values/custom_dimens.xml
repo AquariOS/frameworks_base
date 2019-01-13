@@ -26,4 +26,8 @@
     <!-- System icon area layout weight -->
     <item name="system_icon_area_weight" format="float" type="integer">1</item>
 
+    <!-- Network traffic monitor -->
+    <dimen name="net_traffic_multi_text_size">8dp</dimen>
+    <dimen name="net_traffic_txt_img_padding">2dp</dimen>
+
 </resources>
