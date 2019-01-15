@@ -478,6 +478,7 @@ public class KeyguardStatusView extends GridLayout implements
                 mAquaClockTwoView.setVisibility(View.GONE);
                 mAquaClockThreeView.setVisibility(View.GONE);
                 mAquaClockFourView.setVisibility(View.GONE);
+                mKeyguardSlice.setPadding(0,0,0,0);
                 break;
             case 1: // digital (bold)
                 mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
@@ -487,6 +488,7 @@ public class KeyguardStatusView extends GridLayout implements
                 mAquaClockTwoView.setVisibility(View.GONE);
                 mAquaClockThreeView.setVisibility(View.GONE);
                 mAquaClockFourView.setVisibility(View.GONE);
+                mKeyguardSlice.setPadding(0,0,0,0);
                 break;
             case 2: // custom analog
                 mCustomClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
@@ -496,6 +498,10 @@ public class KeyguardStatusView extends GridLayout implements
                 mAquaClockTwoView.setVisibility(View.GONE);
                 mAquaClockThreeView.setVisibility(View.GONE);
                 mAquaClockFourView.setVisibility(View.GONE);
+                mKeyguardSlice.setPadding(0,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimensionPixelSize(R.dimen.custom_analog_clock_bottom_padding), 
+                    getResources().getDisplayMetrics()),0,0
+                );
                 break;
             case 3: // aqua analog one
                 mAquaClockOneView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
@@ -505,6 +511,10 @@ public class KeyguardStatusView extends GridLayout implements
                 mAquaClockTwoView.setVisibility(View.GONE);
                 mAquaClockThreeView.setVisibility(View.GONE);
                 mAquaClockFourView.setVisibility(View.GONE);
+                mKeyguardSlice.setPadding(0,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimensionPixelSize(R.dimen.custom_analog_clock_bottom_padding), 
+                    getResources().getDisplayMetrics()),0,0
+                );
                 break;
             case 4: // aqua analog two
                 mAquaClockTwoView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
@@ -514,6 +524,10 @@ public class KeyguardStatusView extends GridLayout implements
                 mAquaClockOneView.setVisibility(View.GONE);
                 mAquaClockThreeView.setVisibility(View.GONE);
                 mAquaClockFourView.setVisibility(View.GONE);
+                mKeyguardSlice.setPadding(0,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimensionPixelSize(R.dimen.custom_analog_clock_bottom_padding), 
+                    getResources().getDisplayMetrics()),0,0
+                );
                 break;
             case 5: // aqua analog three
                 mAquaClockThreeView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
@@ -523,6 +537,10 @@ public class KeyguardStatusView extends GridLayout implements
                 mAquaClockOneView.setVisibility(View.GONE);
                 mAquaClockTwoView.setVisibility(View.GONE);
                 mAquaClockFourView.setVisibility(View.GONE);
+                mKeyguardSlice.setPadding(0,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimensionPixelSize(R.dimen.custom_analog_clock_bottom_padding), 
+                    getResources().getDisplayMetrics()),0,0
+                );
                 break;
             case 6: // aqua analog four
                 mAquaClockFourView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
@@ -532,6 +550,10 @@ public class KeyguardStatusView extends GridLayout implements
                 mAquaClockOneView.setVisibility(View.GONE);
                 mAquaClockTwoView.setVisibility(View.GONE);
                 mAquaClockThreeView.setVisibility(View.GONE);
+                mKeyguardSlice.setPadding(0,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
+                    getResources().getDimensionPixelSize(R.dimen.custom_analog_clock_bottom_padding), 
+                    getResources().getDisplayMetrics()),0,0
+                );
                 break;
             case 7: // sammy
                 mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
@@ -541,6 +563,7 @@ public class KeyguardStatusView extends GridLayout implements
                 mAquaClockTwoView.setVisibility(View.GONE);
                 mAquaClockThreeView.setVisibility(View.GONE);
                 mAquaClockFourView.setVisibility(View.GONE);
+                mKeyguardSlice.setPadding(0,0,0,0);
                 break;
             case 8: // sammy (bold)
                 mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
@@ -550,6 +573,7 @@ public class KeyguardStatusView extends GridLayout implements
                 mAquaClockTwoView.setVisibility(View.GONE);
                 mAquaClockThreeView.setVisibility(View.GONE);
                 mAquaClockFourView.setVisibility(View.GONE);
+                mKeyguardSlice.setPadding(0,0,0,0);
                 break;
         }
     }
