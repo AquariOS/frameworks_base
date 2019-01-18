@@ -4514,6 +4514,28 @@ public final class Settings {
         public static final Validator STATUS_BAR_BRIGHTNESS_CONTROL_VALIDATOR = BOOLEAN_VALIDATOR;
 
         /**
+         * Hold current font name and name of the originating package Uses "|" as a delimiter
+         *
+         * @hide
+         */
+        public static final String FONT_INFO = "font_info";
+
+        /**
+         * Hold list of installed font provider packages. Uses "|" as a delimiter
+         *
+         * @hide
+         */
+        public static final String FONT_PACKAGES = "font_packages";
+
+        /**
+         * Position of date
+         * 0 - Left of clock
+         * 1 - Right of clock
+         * @hide
+         */
+        public static final String STATUSBAR_CLOCK_DATE_POSITION = "statusbar_clock_date_position";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
@@ -8109,11 +8131,16 @@ public final class Settings {
                 new SettingsValidators.DiscreteValueValidator(new String[]{"0", "1"});
 
         /**
-         * Lower the display persistence while the system is in VR mode.
-         *
-         * @see PackageManager#FEATURE_VR_MODE_HIGH_PERFORMANCE
-         *
-         * @hide.
+         * Disable hw buttons - actions, brightness, haptic feedback, overflow menu
+         * @hide
+         */
+        public static final String HARDWARE_KEYS_DISABLE = "hardware_keys_disable";
+
+        /**
+         * The current night mode that has been selected by the user.  Owned
+         * and controlled by UiModeManagerService.  Constants are as per
+         * UiModeManager.
+         * @hide
          */
         public static final int VR_DISPLAY_MODE_LOW_PERSISTENCE = 0;
 

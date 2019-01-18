@@ -604,6 +604,9 @@
     <protected-broadcast android:name="android.intent.action.DOCK_IDLE" />
     <protected-broadcast android:name="android.intent.action.DOCK_ACTIVE" />
 
+    <!-- Font service -->
+    <protected-broadcast android:name="com.android.server.ACTION_FONT_CHANGED" />
+
     <!-- ====================================================================== -->
     <!--                          RUNTIME PERMISSIONS                           -->
     <!-- ====================================================================== -->
@@ -3558,6 +3561,13 @@
     -->
     <permission android:name="android.permission.BIND_PACKAGE_VERIFIER"
         android:protectionLevel="signature" />
+
+    <!-- Allows an application to access the font manager
+         @hide -->
+    <permission android:name="android.permission.ACCESS_FONT_MANAGER"
+        android:label="@string/permlab_accessFontManager"
+        android:description="@string/permdesc_accessFontManager"
+        android:protectionLevel="signatureOrSystem" />
 
     <!-- @SystemApi @hide Allows an application to mark other applications as harmful -->
     <permission android:name="android.permission.SET_HARMFUL_APP_WARNINGS"
