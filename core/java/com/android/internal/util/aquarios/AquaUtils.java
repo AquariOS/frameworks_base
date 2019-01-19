@@ -22,6 +22,7 @@ import android.app.ActivityManagerNative;
 import android.app.IActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -31,6 +32,7 @@ import android.content.res.Resources;import android.hardware.fingerprint.Fingerp
 import android.hardware.input.InputManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.BatteryManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemProperties;
