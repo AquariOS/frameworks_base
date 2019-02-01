@@ -4876,6 +4876,21 @@ public final class Settings {
          */
         public static final String QS_RUNNING_SERVICES_TOGGLE = "qs_running_services_toggle";
 
+         /**
+         * Whether to enable DOZE only when charging
+         * @hide
+         */
+        public static final String DOZE_ON_CHARGE = "doze_on_charge";
+
+        private static final Validator DOZE_ON_CHARGE_VALIDATOR =
+                BOOLEAN_VALIDATOR;
+
+        /**
+         * hidden stting of the current state of DOZE only when charging
+         * @hide
+         */
+        public static final String DOZE_ON_CHARGE_NOW = "doze_on_charge_now";
+
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
@@ -4952,6 +4967,7 @@ public final class Settings {
             OMNI_BUTTON_EXTRA_KEY_MAPPING,
             OMNI_DEVICE_PROXI_CHECK_ENABLED,
             OMNI_DEVICE_FEATURE_SETTINGS,
+            DOZE_ON_CHARGE,
         };
 
         /**
@@ -5093,6 +5109,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(OMNI_BUTTON_EXTRA_KEY_MAPPING);
             PRIVATE_SETTINGS.add(OMNI_DEVICE_PROXI_CHECK_ENABLED);
             PRIVATE_SETTINGS.add(OMNI_DEVICE_FEATURE_SETTINGS);
+            PRIVATE_SETTINGS.add(DOZE_ON_CHARGE);
         }
 
         /**
@@ -5201,6 +5218,7 @@ public final class Settings {
             VALIDATORS.put(OMNI_BUTTON_EXTRA_KEY_MAPPING, OMNI_BUTTON_EXTRA_KEY_MAPPING_VALIDATOR);
             VALIDATORS.put(OMNI_DEVICE_PROXI_CHECK_ENABLED, OMNI_DEVICE_PROXI_CHECK_ENABLED_VALIDATOR);
             VALIDATORS.put(OMNI_DEVICE_FEATURE_SETTINGS, OMNI_DEVICE_FEATURE_SETTINGS_VALIDATOR);
+            VALIDATORS.put(DOZE_ON_CHARGE, DOZE_ON_CHARGE_VALIDATOR);
         }
 
         /**
