@@ -3979,10 +3979,9 @@ public class PackageManagerService extends IPackageManager.Stub
             // Compute granted permissions only if package has requested permissions
             final Set<String> permissions = ArrayUtils.isEmpty(p.requestedPermissions)
                     ? Collections.<String>emptySet() : permissionsState.getPermissions(userId);
-
-            PackageInfo packageInfo = mayFakeSignature(p, PackageParser.generatePackageInfo(p, gids, flags,
-                ps.firstInstallTime, ps.lastUpdateTime, permissions, state, userId),
-                permissions);
+	        PackageInfo packageInfo = mayFakeSignature(p, PackageParser.generatePackageInfo(p, gids, flags,
+	                ps.firstInstallTime, ps.lastUpdateTime, permissions, state, userId),
+	                permissions);
 
             if (packageInfo == null) {
                 return null;

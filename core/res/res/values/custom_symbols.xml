@@ -123,4 +123,5 @@
 
   <!-- Ambient display music ticker -->
   <java-symbol type="bool" name="config_canForceDozeNotifications" />
+
 </resources>

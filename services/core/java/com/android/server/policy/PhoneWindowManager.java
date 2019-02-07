@@ -2570,7 +2570,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
         }
         if (DEBUG) Slog.d(TAG, "" + mDeviceKeyHandlers.size() + " device key handlers loaded");
-
         String deviceKeyHandlerLib = mContext.getResources().getString(
                 com.android.internal.R.string.config_deviceKeyHandlerLib);
          String deviceKeyHandlerClass = mContext.getResources().getString(
@@ -2590,7 +2589,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                         + deviceKeyHandlerLib, e);
             }
         }
-
     }
 
     /**
@@ -4384,6 +4382,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         if (dispatchKeyToKeyHandlers(event)) {
             return -1;
         }
+
         if (mDeviceKeyHandler != null) {
             try {
                 // The device only will consume known keys.
@@ -6623,6 +6622,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             } catch (Exception e) {
                 Slog.w(TAG, "Could not dispatch event to device key handler", e);
             }
+        }
+
+        // Specific device key handling
+        if (dispatchKeyToKeyHandlers(event)) {
+            return 0;
         }
 
         // Handle special keys.
