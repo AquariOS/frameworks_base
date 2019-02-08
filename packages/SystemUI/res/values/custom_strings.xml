@@ -111,8 +111,4 @@
     <string name="quick_settings_navigation_default">Stock</string>
     <string name="quick_settings_navigation_disabled">Disabled</string>
 
-    <!-- Elmyra -->
-    <string name="elmyra_raw_sensor_string_type">com.google.sensor.elmyra.raw</string>
-    <string name="google_camera_app_package_name">com.google.android.GoogleCamera</string>
-
 </resources>
