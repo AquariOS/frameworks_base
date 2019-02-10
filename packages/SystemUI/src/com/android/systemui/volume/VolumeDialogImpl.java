@@ -201,6 +201,9 @@ public class VolumeDialogImpl implements VolumeDialog {
         mKeyguard = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         mAccessibilityMgr = Dependency.get(AccessibilityManagerWrapper.class);
         mDeviceProvisionedController = Dependency.get(DeviceProvisionedController.class);
+
+        settingsObserver = new SettingsObserver(mHandler);
+        settingsObserver.observe();
     }
 
     public void init(int windowType, Callback callback) {
@@ -309,9 +312,6 @@ public class VolumeDialogImpl implements VolumeDialog {
         } else {
             addExistingRows();
         }
-
-        settingsObserver = new SettingsObserver(mHandler);
-        settingsObserver.observe();
 
         updateRowsH(getActiveRow());
         initRingerH();
