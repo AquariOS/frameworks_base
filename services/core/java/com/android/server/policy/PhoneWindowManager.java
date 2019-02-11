@@ -9094,6 +9094,15 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 mHandler.removeCallbacks(mScreenshotRunnable);
                 mScreenshotRunnable.setScreenshotType(TAKE_SCREENSHOT_SELECTED_REGION);
                 mHandler.post(mScreenshotRunnable);
+            } else if (ActionHandler.INTENT_TOGGLE_SCREENRECORD.equals(action)) {
+                mContext.enforceCallingOrSelfPermission(ACCESS_SURFACE_FLINGER,
+                        TAG + "screenRecordAction permission denied");
+                int mode = Settings.System.getIntForUser(mContext.getContentResolver(),
+                        Settings.System.SCREENRECORD_QUALITY_MODE, SCREEN_RECORD_LOW_QUALITY,
+                        UserHandle.USER_CURRENT);
+                mHandler.removeCallbacks(mScreenrecordRunnable);
+                mScreenrecordRunnable.setMode(mode);
+                mHandler.post(mScreenrecordRunnable);
             }
         }
     }
