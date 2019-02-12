@@ -4140,16 +4140,6 @@ public final class Settings {
                 new SettingsValidators.InclusiveIntegerRangeValidator(0, 2);
 
         /**
-         * Weather lockscreen temperature scale
-         * @hide
-         */
-        public static final String WEATHER_LOCKSCREEN_UNIT = "weather_lockscreen_unit";
-
-        /** @hide */
-        private static final Validator WEATHER_LOCKSCREEN_UNIT_VALIDATOR =
-               BOOLEAN_VALIDATOR;
-
-        /**
          * IMPORTANT: If you add a new public settings you also have to add it to
          * PUBLIC_SETTINGS below. If the new setting is hidden you have to add
          * it to PRIVATE_SETTINGS below. Also add a validator that can validate
@@ -4923,7 +4913,6 @@ public final class Settings {
             PRIVATE_SETTINGS.add(INCREASING_RING);
             PRIVATE_SETTINGS.add(INCREASING_RING_START_VOLUME);
             PRIVATE_SETTINGS.add(INCREASING_RING_RAMP_UP_TIME);
-            PRIVATE_SETTINGS.add(WEATHER_LOCKSCREEN_UNIT);
             PRIVATE_SETTINGS.add(ASPECT_RATIO_APPS_ENABLED);
             PRIVATE_SETTINGS.add(ASPECT_RATIO_APPS_LIST);
             PRIVATE_SETTINGS.add(STATUS_BAR_BRIGHTNESS_CONTROL);
@@ -5029,7 +5018,6 @@ public final class Settings {
             VALIDATORS.put(INCREASING_RING, INCREASING_RING_VALIDATOR);
             VALIDATORS.put(INCREASING_RING_START_VOLUME, INCREASING_RING_START_VOLUME_VALIDATOR);
             VALIDATORS.put(INCREASING_RING_RAMP_UP_TIME, INCREASING_RING_RAMP_UP_TIME_VALIDATOR);
-            VALIDATORS.put(WEATHER_LOCKSCREEN_UNIT, WEATHER_LOCKSCREEN_UNIT_VALIDATOR);
             VALIDATORS.put(ASPECT_RATIO_APPS_ENABLED, ASPECT_RATIO_APPS_ENABLED_VALIDATOR);
             VALIDATORS.put(ASPECT_RATIO_APPS_LIST, ASPECT_RATIO_APPS_LIST_VALIDATOR);
             VALIDATORS.put(STATUS_BAR_BRIGHTNESS_CONTROL, STATUS_BAR_BRIGHTNESS_CONTROL_VALIDATOR);
