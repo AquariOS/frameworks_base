@@ -17,10 +17,15 @@
 package com.android.systemui.statusbar.phone;
 
 import static android.view.MotionEvent.ACTION_DOWN;
+import static com.android.systemui.shared.system.NavigationBarCompat.FLAG_DISABLE_QUICK_SCRUB;
+import static com.android.systemui.shared.system.NavigationBarCompat.FLAG_SHOW_OVERVIEW_BUTTON;
 import static com.android.systemui.shared.system.NavigationBarCompat.HIT_TARGET_BACK;
 import static com.android.systemui.shared.system.NavigationBarCompat.HIT_TARGET_DEAD_ZONE;
 import static com.android.systemui.shared.system.NavigationBarCompat.HIT_TARGET_HOME;
+import static com.android.systemui.shared.system.NavigationBarCompat.HIT_TARGET_IME_BUTTON;
+import static com.android.systemui.shared.system.NavigationBarCompat.HIT_TARGET_OVERVIEW;
 import static com.android.systemui.shared.system.NavigationBarCompat.HIT_TARGET_NONE;
+import static com.android.systemui.shared.system.NavigationBarCompat.HIT_TARGET_ROTATION;
 
 import android.animation.LayoutTransition;
 import android.animation.LayoutTransition.TransitionListener;
@@ -87,11 +92,6 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.function.Consumer;
 
-import static com.android.systemui.shared.system.NavigationBarCompat.FLAG_DISABLE_QUICK_SCRUB;
-import static com.android.systemui.shared.system.NavigationBarCompat.FLAG_SHOW_OVERVIEW_BUTTON;
-import static com.android.systemui.shared.system.NavigationBarCompat.HIT_TARGET_OVERVIEW;
-import static com.android.systemui.shared.system.NavigationBarCompat.HIT_TARGET_ROTATION;
-
 public class NavigationBarView extends FrameLayout implements Navigator {
     final static boolean DEBUG = false;
     final static String TAG = "StatusBar/NavBarView";
@@ -120,6 +120,7 @@ public class NavigationBarView extends FrameLayout implements Navigator {
     private Rect mBackButtonBounds = new Rect();
     private Rect mRecentsButtonBounds = new Rect();
     private Rect mRotationButtonBounds = new Rect();
+    private Rect mImeButtonBounds = new Rect();
     private int[] mTmpPosition = new int[2];
     private Rect mTmpRect = new Rect();
 
@@ -352,6 +353,9 @@ public class NavigationBarView extends FrameLayout implements Navigator {
                 } else if (getRotateSuggestionButton().isVisible()
                         && mRotationButtonBounds.contains(x, y)) {
                     mDownHitTarget = HIT_TARGET_ROTATION;
+                } else if (getImeSwitchButton().isVisible()
+                        && mImeButtonBounds.contains(x, y)) {
+                    mDownHitTarget = HIT_TARGET_IME_BUTTON;
                 }
                 break;
         }
@@ -960,6 +964,7 @@ public class NavigationBarView extends FrameLayout implements Navigator {
         updateButtonLocationOnScreen(getHomeButton(), mHomeButtonBounds);
         updateButtonLocationOnScreen(getRecentsButton(), mRecentsButtonBounds);
         updateButtonLocationOnScreen(getRotateSuggestionButton(), mRotationButtonBounds);
+        updateButtonLocationOnScreen(getImeSwitchButton(), mImeButtonBounds);
         mGestureHelper.onLayout(changed, left, top, right, bottom);
         mRecentsOnboarding.setNavBarHeight(getMeasuredHeight());
     }
