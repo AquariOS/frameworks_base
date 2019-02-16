@@ -26,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;import android.hardware.fingerprint.FingerprintManager;
 import android.hardware.input.InputManager;
+import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -53,6 +54,18 @@ public class AquaUtils {
 
     public static final String INTENT_SCREENSHOT = "action_take_screenshot";
     public static final String INTENT_REGION_SCREENSHOT = "action_take_region_screenshot";
+
+    private static IStatusBarService mStatusBarService = null;
+
+    private static IStatusBarService getStatusBarService() {
+        synchronized (AquaUtils.class) {
+            if (mStatusBarService == null) {
+                mStatusBarService = IStatusBarService.Stub.asInterface(
+                        ServiceManager.getService("statusbar"));
+            }
+            return mStatusBarService;
+        }
+    }
 
     public static void switchScreenOff(Context ctx) {
         PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
@@ -108,15 +121,58 @@ public class AquaUtils {
                 return mStatusBarService;
             }
         }
+    }
 
-        public static void toggleCameraFlash() {
-            IStatusBarService service = getStatusBarService();
-            if (service != null) {
-                try {
-                    service.toggleCameraFlash();
-                } catch (RemoteException e) {
-                    // do nothing.
-                }
+    // Toggle camera
+    public static void toggleCameraFlash() {
+        IStatusBarService service = getStatusBarService();
+        if (service != null) {
+            try {
+                service.toggleCameraFlash();
+            } catch (RemoteException e) {
+                // do nothing.
+            }
+        }
+    }
+
+    // Toggle volume panel
+    public static void toggleVolumePanel(Context context) {
+        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        am.adjustVolume(AudioManager.ADJUST_SAME, AudioManager.FLAG_SHOW_UI);
+    }
+
+    // Clear notifications
+    public static void clearAllNotifications() {
+        IStatusBarService service = getStatusBarService();
+        if (service != null) {
+            try {
+                service.onClearAllNotifications(ActivityManager.getCurrentUser());
+            } catch (RemoteException e) {
+                // do nothing.
+            }
+        }
+    }
+
+    // Toggle notifications panel
+    public static void toggleNotifications() {
+        IStatusBarService service = getStatusBarService();
+        if (service != null) {
+            try {
+                service.expandNotificationsPanel();
+            } catch (RemoteException e) {
+                // do nothing.
+            }
+        }
+    }
+
+    // Toggle qs panel
+    public static void toggleQsPanel() {
+        IStatusBarService service = getStatusBarService();
+        if (service != null) {
+            try {
+                service.expandSettingsPanel(null);
+            } catch (RemoteException e) {
+                // do nothing.
             }
         }
     }
