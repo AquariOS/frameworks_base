@@ -58,6 +58,8 @@ import android.widget.FrameLayout;
 
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
+import com.android.internal.utils.ActionHandler;
+import com.android.internal.utils.Config.ActionConfig;
 import com.android.keyguard.KeyguardStatusView;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
@@ -306,7 +308,7 @@ public class NotificationPanelView extends PanelView implements
     private Handler mHandler = new Handler();
     private SettingsObserver mSettingsObserver;
 
-    private boolean mDoubleTapToSleepEnabled;
+    private String mDoubleTapAction = ActionHandler.SYSTEMUI_TASK_NO_ACTION;
     private boolean mDoubleTapToSleepAnywhere;
     private int mStatusBarHeaderHeight;
     private GestureDetector mDoubleTapGesture;
@@ -322,15 +324,16 @@ public class NotificationPanelView extends PanelView implements
         setPanelAlpha(255, false /* animate */);
 
         mSettingsObserver = new SettingsObserver(mHandler);
-        mDoubleTapGesture = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public boolean onDoubleTap(MotionEvent e) {
-                PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
-                if(pm != null)
-                    pm.goToSleep(e.getEventTime());
-                return true;
-            }
-        });
+        mDoubleTapGesture = new GestureDetector(mContext,
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+                        if (!ActionHandler.SYSTEMUI_TASK_NO_ACTION.equals(mDoubleTapAction)) {
+                            ActionHandler.performTask(mContext, mDoubleTapAction);
+                        }
+                        return true;
+                    }
+                });
     }
 
     public void setStatusBar(StatusBar bar) {
@@ -909,7 +912,7 @@ public class NotificationPanelView extends PanelView implements
         if (mBlockTouches || (mQs != null && mQs.isCustomizing())) {
             return false;
         }
-        if (mDoubleTapToSleepEnabled
+        if (isDoubleTapActionEnabled()
                 && mStatusBarState == StatusBarState.KEYGUARD
                 && event.getY() < mStatusBarHeaderHeight) {
             mDoubleTapGesture.onTouchEvent(event);
@@ -2726,6 +2729,10 @@ public class NotificationPanelView extends PanelView implements
         mGroupManager = groupManager;
       }
 
+    private boolean isDoubleTapActionEnabled() {
+        return mDoubleTapAction != ActionHandler.SYSTEMUI_TASK_NO_ACTION;
+    }
+
     class SettingsObserver extends ContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
@@ -2734,7 +2741,7 @@ public class NotificationPanelView extends PanelView implements
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.DOUBLE_TAP_SLEEP_GESTURE), false, this);
+                    Settings.System.DOUBLE_TAP_SLEEP_GESTURE_V2), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_ANYWHERE), false, this);
             update();
@@ -2756,8 +2763,10 @@ public class NotificationPanelView extends PanelView implements
         }
         public void update() {
             ContentResolver resolver = mContext.getContentResolver();
-            mDoubleTapToSleepEnabled = Settings.System.getInt(
-                    resolver, Settings.System.DOUBLE_TAP_SLEEP_GESTURE, 0) == 1;
+            String configString = Settings.System.getString(
+                    resolver, Settings.System.DOUBLE_TAP_SLEEP_GESTURE_V2);
+            mDoubleTapAction = ActionConfig.getActionFromDelimitedString(mContext, configString,
+                    ActionHandler.SYSTEMUI_TASK_NO_ACTION);
             mDoubleTapToSleepAnywhere = Settings.System.getInt(
                     resolver, Settings.System.DOUBLE_TAP_SLEEP_ANYWHERE, 0) == 1;
         }

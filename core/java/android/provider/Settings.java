@@ -4380,9 +4380,16 @@ public final class Settings {
 
         /**
          *  Enable statusbar double tap gesture on to put device to sleep
+         *  Memory hole this URI for V2
          * @hide
          */
         public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
+
+        /**
+         *  Enable statusbar double tap gesture on to execute any assigned action
+         * @hide
+         */
+        public static final String DOUBLE_TAP_SLEEP_GESTURE_V2 = "double_tap_sleep_gesture_v2";
 
         /**
          * Enable double tap gesture anywhere on the lock screen put device to sleep

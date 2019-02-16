@@ -68,6 +68,8 @@ import android.view.WindowManagerGlobal;
 import android.widget.FrameLayout;
 
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.internal.utils.ActionHandler;
+import com.android.internal.utils.Config.ActionConfig;
 import com.android.internal.view.FloatingActionMode;
 import com.android.internal.widget.FloatingToolbar;
 import com.android.systemui.R;
@@ -117,7 +119,7 @@ public class StatusBarWindowView extends FrameLayout {
 
     private int mStatusBarHeaderHeight;
 
-    private boolean mDoubleTapToSleepEnabled;
+    private String mDoubleTapAction = ActionHandler.SYSTEMUI_TASK_NO_ACTION;
     private GestureDetector mDoubleTapGesture;
     private Handler mHandler = new Handler();
     private SettingsObserver mSettingsObserver;
@@ -253,19 +255,16 @@ public class StatusBarWindowView extends FrameLayout {
         super.onAttachedToWindow();
 
         mSettingsObserver.observe();
-        mDoubleTapGesture = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
-            @Override
-            public boolean onDoubleTap(MotionEvent e) {
-                PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
-                Log.d(TAG, "Gesture!!");
-                if(pm != null)
-                    pm.goToSleep(e.getEventTime());
-                else
-                    Log.d(TAG, "getSystemService returned null PowerManager");
-
-                return true;
-            }
-        });
+        mDoubleTapGesture = new GestureDetector(mContext,
+                new GestureDetector.SimpleOnGestureListener() {
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+                        if (!ActionHandler.SYSTEMUI_TASK_NO_ACTION.equals(mDoubleTapAction)) {
+                            ActionHandler.performTask(mContext, mDoubleTapAction);
+                        }
+                        return true;
+                    }
+                });
 
         // We need to ensure that our window doesn't suffer from overdraw which would normally
         // occur if our window is translucent. Since we are drawing the whole window anyway with
@@ -404,7 +403,7 @@ public class StatusBarWindowView extends FrameLayout {
         }
 
         boolean intercept = false;
-        if (mDoubleTapToSleepEnabled
+        if (isDoubleTapActionEnabled()
                 && ev.getY() < mStatusBarHeaderHeight) {
             if (DEBUG) Log.w(TAG, "logging double tap gesture");
             mDoubleTapGesture.onTouchEvent(ev);
@@ -881,6 +880,10 @@ public class StatusBarWindowView extends FrameLayout {
         }
     }
 
+    private boolean isDoubleTapActionEnabled() {
+        return mDoubleTapAction != ActionHandler.SYSTEMUI_TASK_NO_ACTION;
+    }
+
     class SettingsObserver extends ContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
@@ -889,7 +892,7 @@ public class StatusBarWindowView extends FrameLayout {
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.DOUBLE_TAP_SLEEP_GESTURE), false, this);
+                    Settings.System.DOUBLE_TAP_SLEEP_GESTURE_V2), false, this);
             update();
         }
 
@@ -910,8 +913,10 @@ public class StatusBarWindowView extends FrameLayout {
 
         public void update() {
             ContentResolver resolver = mContext.getContentResolver();
-            mDoubleTapToSleepEnabled = Settings.System.getInt(
-                    resolver, Settings.System.DOUBLE_TAP_SLEEP_GESTURE, 0) == 1;
+            String configString = Settings.System.getString(
+                    resolver, Settings.System.DOUBLE_TAP_SLEEP_GESTURE_V2);
+            mDoubleTapAction = ActionConfig.getActionFromDelimitedString(mContext, configString,
+                    ActionHandler.SYSTEMUI_TASK_NO_ACTION);
         }
     }
 }
