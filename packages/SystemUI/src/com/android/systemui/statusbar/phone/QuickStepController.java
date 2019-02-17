@@ -264,8 +264,11 @@ public class QuickStepController implements GestureHelper {
                     mHandler.removeCallbacksAndMessages(null);
                     int deltaX = (int) mPreviousUpEventX - (int) event.getX();
                     int deltaY = (int) mPreviousUpEventY - (int) event.getY();
-                    boolean isDoubleTapReally = deltaX * deltaX + deltaY * deltaY < sDoubleTapSquare;
-                    if (isDoubleTapReally) AquaUtils.switchScreenOff(mContext);
+                    boolean intentionalDoubleTap = deltaX * deltaX + deltaY * deltaY < sDoubleTapSquare;
+                    if (intentionalDoubleTap) {
+                        mNavigationBarView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                        AquaUtils.switchScreenOff(mContext);
+                    }
                 } else {
                     // this is the first tap, let's go further and schedule a
                     // mDoubleTapCancelTimeout call in the action up event so after the set time
@@ -424,6 +427,7 @@ public class QuickStepController implements GestureHelper {
             isDoubleTapPending = false;
             // it was a single tap, let's trigger the home button action
             mHandler.removeCallbacksAndMessages(null);
+            mNavigationBarView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             AquaUtils.sendKeycode(KeyEvent.KEYCODE_HOME, mHandler);
         }
     };
@@ -439,6 +443,7 @@ public class QuickStepController implements GestureHelper {
 
         @Override
         public void run() {
+            mNavigationBarView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
             moveKbCursor(isRight, true);
         }
     }
