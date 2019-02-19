@@ -94,6 +94,7 @@ import android.media.session.PlaybackState;
 import android.metrics.LogMaker;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -4285,6 +4286,16 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
                 Settings.System.SYSTEM_THEME_STYLE, 2, mLockscreenUserManager.getCurrentUserId());
     }
 
+    private boolean themeNeedsRefresh(){
+        if (mContext.getSharedPreferences("systemui_theming", 0).getString(
+                "build_fingerprint", "").equals(Build.AQUA_FINGERPRINT)){
+            return false;
+        }
+        mContext.getSharedPreferences("systemui_theming", 0).edit().putString(
+                "build_fingerprint", Build.AQUA_FINGERPRINT).commit();
+        return true;
+    }
+
     /**
      * Switches theme from light to dark and vice-versa.
      */
@@ -4302,11 +4313,11 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             useDarkTheme = mCurrentTheme == 2;
             useBlackTheme = mCurrentTheme == 3;
         }
-        if (isUsingDarkTheme() != useDarkTheme) {
+        if (themeNeedsRefresh() || isUsingDarkTheme() != useDarkTheme) {
             ThemeAccentUtils.setLightDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useDarkTheme);
             mNotificationPanel.setLockscreenClockTheme(useDarkTheme);
         }
-        if (isUsingBlackTheme() != useBlackTheme) {
+        if (themeNeedsRefresh() || isUsingBlackTheme() != useBlackTheme) {
             ThemeAccentUtils.setLightBlackTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useBlackTheme);
             mNotificationPanel.setLockscreenClockTheme(useDarkTheme);
         }
