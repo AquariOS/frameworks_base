@@ -52,6 +52,10 @@ import android.database.ContentObserver;
 import android.hardware.fingerprint.FingerprintManager;
 import android.hardware.fingerprint.FingerprintManager.AuthenticationCallback;
 import android.hardware.fingerprint.FingerprintManager.AuthenticationResult;
+import android.hardware.fingerprint.FingerprintManager.LockoutResetCallback;
+import android.hardware.fingerprint.IFingerprintClientActiveCallback;
+import android.hardware.fingerprint.IFingerprintClientActiveCallback.Stub;
+import android.hardware.fingerprint.IFingerprintService;
 import android.media.AudioManager;
 import android.os.BatteryManager;
 import android.os.CancellationSignal;
@@ -84,6 +88,7 @@ import com.android.internal.telephony.PhoneConstants;
 import com.android.internal.telephony.TelephonyIntents;
 import com.android.internal.util.Preconditions;
 import com.android.internal.widget.LockPatternUtils;
+import com.android.systemui.fingerprint.CustomFingerprintDialogView;
 import com.android.settingslib.WirelessUtils;
 import com.android.systemui.recents.misc.SysUiTaskStackChangeListener;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
@@ -174,6 +179,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     private static final ComponentName FALLBACK_HOME_COMPONENT = new ComponentName(
             "com.android.settings", "com.android.settings.FallbackHome");
 
+    private CustomFingerprintDialogView mFingerprintDialogView;
 
     /**
      * If true, the system is in the half-boot-to-decryption-screen state.
@@ -211,6 +217,8 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
 
     // Device provisioning state
     private boolean mDeviceProvisioned;
+    
+    protected boolean mPulsing;
 
     // Battery status
     private BatteryStatus mBatteryStatus;
@@ -247,6 +255,42 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
     private int mHardwareUnavailableRetryCount = 0;
     private static final int HW_UNAVAILABLE_TIMEOUT = 3000; // ms
     private static final int HW_UNAVAILABLE_RETRY_MAX = 3;
+
+   private final IFingerprintClientActiveCallback mFingerprintClientActiveCallback = new Stub() {
+        @Override
+        public void onClientActiveChanged(boolean isActive) {
+        }
+
+        @Override
+        public void onClientActiveChangedWithPkg(boolean isActive, String pkg) {
+            if (true) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("onClientActiveChanged, ");
+                stringBuilder.append(isActive);
+                stringBuilder.append(", ");
+                stringBuilder.append(pkg);
+                Log.d("KeyguardUpdateMonitor", stringBuilder.toString());
+            }
+            if (KeyguardUpdateMonitor.this.mFingerprintDialogView != null) {
+                KeyguardUpdateMonitor.this.mFingerprintDialogView.setOwnerString(pkg);
+            }
+        }
+
+        @Override
+        public void onFingerprintEventCallback(int msg, int event, int reservedCode, int reservedCode2) {
+            if (true) {
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("onFingerprintEventCallback, ");
+                stringBuilder.append(msg);
+                stringBuilder.append(", ");
+                stringBuilder.append(event);
+                Log.d("KeyguardUpdateMonitor", stringBuilder.toString());
+            }
+            if (KeyguardUpdateMonitor.this.mFingerprintDialogView != null) {
+                KeyguardUpdateMonitor.this.mFingerprintDialogView.onFingerprintEventCallback(msg, event);
+            }
+        }
+    };
 
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -1266,6 +1310,15 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
             mFpm.addLockoutResetCallback(mLockoutResetCallback);
         }
 
+        IFingerprintService ifp = IFingerprintService.Stub.asInterface(ServiceManager.getService("fingerprint"));
+        if (ifp != null) {
+            try {
+                ifp.addClientActiveCallback(this.mFingerprintClientActiveCallback);
+            } catch (RemoteException e2) {
+                Log.e("KeyguardUpdateMonitor", "addClientActiveCallback: ", e2);
+            }
+        }
+
         ActivityManagerWrapper.getInstance().registerTaskStackListener(mTaskStackListener);
         mUserManager = context.getSystemService(UserManager.class);
         mDevicePolicyManager = context.getSystemService(DevicePolicyManager.class);
@@ -1803,6 +1856,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
         callback.onRefreshCarrierInfo();
         callback.onClockVisibilityChanged();
         callback.onKeyguardVisibilityChangedRaw(mKeyguardIsVisible);
+        callback.onPulsing(mPulsing);
         callback.onTelephonyCapable(mTelephonyCapable);
         for (Entry<Integer, SimData> data : mSimDatas.entrySet()) {
             final SimData state = data.getValue();
@@ -2114,5 +2168,20 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener {
             pw.println("    strongAuthFlags=" + Integer.toHexString(strongAuthFlags));
             pw.println("    trustManaged=" + getUserTrustIsManaged(userId));
         }
+    }
+
+    public void setFingerprintDialogView(CustomFingerprintDialogView fpView) {
+        mFingerprintDialogView = fpView;
+    }
+
+    public boolean setPulsing(boolean pulsing) {
+        mPulsing = pulsing;
+        for (int i = 0; i < mCallbacks.size(); i++) {
+            KeyguardUpdateMonitorCallback cb = mCallbacks.get(i).get();
+            if (cb != null) {
+                cb.onPulsing(mPulsing);
+            }
+        }
+        return mPulsing;
     }
 }

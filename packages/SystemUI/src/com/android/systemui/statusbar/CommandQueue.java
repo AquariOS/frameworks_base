@@ -100,6 +100,8 @@ public class CommandQueue extends IStatusBar.Stub {
     private static final int MSG_TOGGLE_FLASHLIGHT             = 50 << MSG_SHIFT;
     private static final int MSG_TOGGLE_NAVIGATION_EDITOR      = 51 << MSG_SHIFT;
     private static final int MSG_DISPATCH_NAVIGATION_EDITOR_RESULTS = 52 << MSG_SHIFT;
+    private static final int MSG_CUSTOM_FINGERPRINT_SHOW       = 53 << MSG_SHIFT;
+    private static final int MSG_CUSTOM_FINGERPRINT_HIDE       = 54 << MSG_SHIFT;
 
     public static final int FLAG_EXCLUDE_NONE = 0;
     public static final int FLAG_EXCLUDE_SEARCH_PANEL = 1 << 0;
@@ -168,11 +170,12 @@ public class CommandQueue extends IStatusBar.Stub {
         default void onRotationProposal(int rotation, boolean isValid) { }
 
         default void showFingerprintDialog(Bundle bundle, IBiometricPromptReceiver receiver) { }
+        default void showCustomFingerprintDialog(Bundle bundle, IBiometricPromptReceiver receiver) { }
         default void onFingerprintAuthenticated() { }
         default void onFingerprintHelp(String message) { }
         default void onFingerprintError(String error) { }
         default void hideFingerprintDialog() { }
-
+        default void hideCustomFingerprintDialog() { }
         default void toggleCameraFlash() { }
 
         default void screenPinningStateChanged(boolean enabled) {}
@@ -577,6 +580,17 @@ public class CommandQueue extends IStatusBar.Stub {
     }
 
     @Override
+    public void showCustomFingerprintDialog(Bundle bundle, IBiometricPromptReceiver receiver) {
+        synchronized (mLock) {
+            SomeArgs args = SomeArgs.obtain();
+            args.arg1 = bundle;
+            args.arg2 = receiver;
+            mHandler.obtainMessage(MSG_CUSTOM_FINGERPRINT_SHOW, args)
+                    .sendToTarget();
+        }
+    }
+
+    @Override
     public void onFingerprintAuthenticated() {
         synchronized (mLock) {
             mHandler.obtainMessage(MSG_FINGERPRINT_AUTHENTICATED).sendToTarget();
@@ -604,6 +618,14 @@ public class CommandQueue extends IStatusBar.Stub {
         }
     }
 
+    @Override
+    public void hideCustomFingerprintDialog() {
+        synchronized (mLock) {
+            mHandler.obtainMessage(MSG_CUSTOM_FINGERPRINT_HIDE).sendToTarget();
+        }
+    }
+
+    @Override
     public void toggleCameraFlash() {
         synchronized (mLock) {
             mHandler.removeMessages(MSG_TOGGLE_CAMERA_FLASH);
@@ -822,6 +844,16 @@ public class CommandQueue extends IStatusBar.Stub {
                                 (IBiometricPromptReceiver)((SomeArgs)msg.obj).arg2);
                     }
                     break;
+                case MSG_CUSTOM_FINGERPRINT_SHOW:
+                    mHandler.removeMessages(MSG_FINGERPRINT_ERROR);
+                    mHandler.removeMessages(MSG_FINGERPRINT_HELP);
+                    mHandler.removeMessages(MSG_FINGERPRINT_AUTHENTICATED);
+                    for (int i = 0; i < mCallbacks.size(); i++) {
+                        mCallbacks.get(i).showCustomFingerprintDialog(
+                                (Bundle)((SomeArgs)msg.obj).arg1,
+                                (IBiometricPromptReceiver)((SomeArgs)msg.obj).arg2);
+                    }
+                    break;
                 case MSG_FINGERPRINT_AUTHENTICATED:
                     for (int i = 0; i < mCallbacks.size(); i++) {
                         mCallbacks.get(i).onFingerprintAuthenticated();
@@ -840,6 +872,11 @@ public class CommandQueue extends IStatusBar.Stub {
                 case MSG_FINGERPRINT_HIDE:
                     for (int i = 0; i < mCallbacks.size(); i++) {
                         mCallbacks.get(i).hideFingerprintDialog();
+                    }
+                    break;
+                case MSG_CUSTOM_FINGERPRINT_HIDE:
+                    for (int i = 0; i < mCallbacks.size(); i++) {
+                        mCallbacks.get(i).hideCustomFingerprintDialog();
                     }
                     break;
                 case MSG_SHOW_CHARGING_ANIMATION:

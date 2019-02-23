@@ -137,8 +137,12 @@
 
   <java-symbol type="bool" name="config_checkVendorFingerprint"/>
 
-
   <!-- On-The-Go -->
   <java-symbol type="string" name="global_action_onthego" />
   <java-symbol type="drawable" name="ic_lock_onthego" />
+
+   <!-- custom fingerprint reader -->
+  <java-symbol type="bool" name="config_showCustomFingerprintDialog" />
+  <java-symbol type="string" name="config_customFingerprintDialogLib" />
+  <java-symbol type="string" name="config_customFingerprintDialogClass" />
 </resources>
