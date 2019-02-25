@@ -67,7 +67,7 @@ import android.view.InputDevice;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.WindowManagerGlobal;
-//import android.view.WindowManagerPolicyControl;
+import android.view.WindowManagerPolicyControl;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -152,7 +152,6 @@ public class ActionHandler {
     static {
         sDisabledActions.add(SYSTEMUI_TASK_ONE_HANDED_MODE_LEFT);
         sDisabledActions.add(SYSTEMUI_TASK_ONE_HANDED_MODE_RIGHT);
-        sDisabledActions.add(SYSTEMUI_TASK_EXPANDED_DESKTOP);
     }
 
     static enum SystemAction {
@@ -545,9 +544,9 @@ public class ActionHandler {
             return;
             // } else if (action.equals(SYSTEMUI_TASK_AUDIORECORD)) {
             // takeAudiorecord();
-//        } else if (action.equals(SYSTEMUI_TASK_EXPANDED_DESKTOP)) {
-//            toggleExpandedDesktop(context);
-//            return;
+        } else if (action.equals(SYSTEMUI_TASK_EXPANDED_DESKTOP)) {
+            toggleExpandedDesktop(context);
+            return;
         } else if (action.equals(SYSTEMUI_TASK_SCREENOFF)) {
             screenOff(context);
             return;
@@ -796,7 +795,7 @@ public class ActionHandler {
             }
         }
     }
-/*
+
     private static void toggleExpandedDesktop(Context context) {
         ContentResolver cr = context.getContentResolver();
         String newVal = "";
@@ -812,7 +811,7 @@ public class ActionHandler {
             WindowManagerPolicyControl.reloadFromSetting(context);
         }
     }
-*/
+
     private static void launchVoiceSearch(Context context) {
         sendCloseSystemWindows("assist");
         // launch the search activity
