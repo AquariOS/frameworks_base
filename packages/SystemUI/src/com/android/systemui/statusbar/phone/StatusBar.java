@@ -912,11 +912,10 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
     // ================================================================================
     protected void makeStatusBarView() {
         final Context context = mContext;
-
         updateDisplaySize(); // populates mDisplayMetrics
         updateResources();
         getCurrentThemeSetting();
-        updateTheme();
+        updateTheme(themeNeedsRefresh());
 
         inflateStatusBarWindow(context);
         mStatusBarWindow.setService(this);
@@ -2320,7 +2319,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
 
     @Override
     public void onColorsChanged(ColorExtractor extractor, int which) {
-        updateTheme();
+        updateTheme(false);
     }
 
     // Check for the dark system theme
@@ -3536,7 +3535,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
     public void onConfigChanged(Configuration newConfig) {
         updateResources();
         updateDisplaySize(); // populates mDisplayMetrics
-        updateTheme();
+        updateTheme(false);
 
         if (DEBUG) {
             Log.v(TAG, "configuration changed: " + mContext.getResources().getConfiguration());
@@ -4259,7 +4258,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         }
 
         mNotificationPanel.setBarState(mState, mKeyguardFadingAway, goingToFullShade);
-        updateTheme();
+        updateTheme(false);
         updateDozingState();
         updatePublicMode();
         updateStackScrollerState(goingToFullShade, fromShadeLocked);
@@ -4291,7 +4290,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
     /**
      * Switches theme from light to dark and vice-versa.
      */
-    protected void updateTheme() {
+    protected void updateTheme(boolean themeNeedsRefresh) {
         final boolean inflated = mStackScroller != null && mStatusBarWindowManager != null;
         boolean useDarkTheme = false;
         boolean useBlackTheme = false;
@@ -4305,11 +4304,11 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             useDarkTheme = mCurrentTheme == 2;
             useBlackTheme = mCurrentTheme == 3;
         }
-        if (themeNeedsRefresh() || isUsingDarkTheme() != useDarkTheme) {
+        if (themeNeedsRefresh || isUsingDarkTheme() != useDarkTheme) {
             ThemeAccentUtils.setLightDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useDarkTheme);
             mNotificationPanel.setLockscreenClockTheme(useDarkTheme);
         }
-        if (themeNeedsRefresh() || isUsingBlackTheme() != useBlackTheme) {
+        if (themeNeedsRefresh || isUsingBlackTheme() != useBlackTheme) {
             ThemeAccentUtils.setLightBlackTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useBlackTheme);
             mNotificationPanel.setLockscreenClockTheme(useDarkTheme);
         }
@@ -4530,7 +4529,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         mStackScroller.setStatusBarState(state);
         updateReportRejectedTouchVisibility();
         updateDozing();
-        updateTheme();
+        updateTheme(false);
         touchAutoDim();
         mNotificationShelf.setStatusBarState(state);
     }
@@ -5707,7 +5706,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.SYSTEM_THEME_STYLE))) {
                 getCurrentThemeSetting();
-                updateTheme();
+                updateTheme(false);
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.QS_TILE_STYLE))) {
                 unlockQsTileStyles();
