@@ -71,7 +71,11 @@ public class KeyguardStatusView extends GridLayout implements
 
     private TextView mLogoutView;
     private CustomAnalogClock mCustomClockView;
-    private CustomAnalogClock mDuClockView;
+    private CustomAnalogClock mAquaClockOneView;
+    private CustomAnalogClock mAquaClockTwoView;
+    private CustomAnalogClock mAquaClockThreeView;
+    private CustomAnalogClock mAquaClockFourView;
+
     private TextClock mClockView;
     private View mClockSeparator;
     private TextView mOwnerInfo;
@@ -191,11 +195,15 @@ public class KeyguardStatusView extends GridLayout implements
             mClockView.setAccessibilityDelegate(new KeyguardClockAccessibilityDelegate(mContext));
         }
         mCustomClockView = findViewById(R.id.custom_clock_view);
-        mDuClockView = findViewById(R.id.du_clock_view);
+        mAquaClockOneView = findViewById(R.id.aqua_clock_one_view);
+        mAquaClockTwoView = findViewById(R.id.aqua_clock_two_view);
+        mAquaClockThreeView = findViewById(R.id.aqua_clock_three_view);
+        mAquaClockFourView = findViewById(R.id.aqua_clock_four_view);
         mOwnerInfo = findViewById(R.id.owner_info);
         mKeyguardSlice = findViewById(R.id.keyguard_status_area);
         mClockSeparator = findViewById(R.id.clock_separator);
-        mVisibleInDoze = Sets.newArraySet(mClockView, mKeyguardSlice, mCustomClockView, mDuClockView);
+        mVisibleInDoze = Sets.newArraySet(mClockView, mKeyguardSlice, mCustomClockView, mAquaClockOneView,
+               mAquaClockTwoView, mAquaClockThreeView, mAquaClockFourView);
         mTextColor = mClockView.getCurrentTextColor();
 
         int clockStroke = getResources().getDimensionPixelSize(R.dimen.widget_small_font_stroke);
@@ -221,7 +229,10 @@ public class KeyguardStatusView extends GridLayout implements
 
     public void onThemeChanged(boolean useDarkTheme) {
         mCustomClockView.onThemeChanged(useDarkTheme, true);
-        mDuClockView.onThemeChanged(useDarkTheme, true);
+        mAquaClockOneView.onThemeChanged(useDarkTheme, true);
+        mAquaClockTwoView.onThemeChanged(useDarkTheme, true);
+        mAquaClockThreeView.onThemeChanged(useDarkTheme, true);
+        mAquaClockFourView.onThemeChanged(useDarkTheme, true);
     }
 
     /**
@@ -237,6 +248,7 @@ public class KeyguardStatusView extends GridLayout implements
         int height = mClockView.getHeight();
         layoutParams.bottomMargin = (int) -(height - (clockScale * height));
         mClockView.setLayoutParams(layoutParams);
+        updateSettings();
 
         // Custom analog clock
         RelativeLayout.LayoutParams customlayoutParams =
@@ -245,12 +257,33 @@ public class KeyguardStatusView extends GridLayout implements
                 R.dimen.keyguard_security_view_top_margin);
         mCustomClockView.setLayoutParams(customlayoutParams);
 
-        // Du analog clock
-        RelativeLayout.LayoutParams dulayoutParams =
-                (RelativeLayout.LayoutParams) mDuClockView.getLayoutParams();
-        dulayoutParams.bottomMargin = getResources().getDimensionPixelSize(
+        // Aqua analog clock one
+        RelativeLayout.LayoutParams aquaonelayoutParams =
+                (RelativeLayout.LayoutParams) mAquaClockOneView.getLayoutParams();
+        aquaonelayoutParams.bottomMargin = getResources().getDimensionPixelSize(
                 R.dimen.keyguard_security_view_top_margin);
-        mDuClockView.setLayoutParams(dulayoutParams);
+        mAquaClockOneView.setLayoutParams(aquaonelayoutParams);
+
+        // Aqua analog clock two
+        RelativeLayout.LayoutParams aquatwolayoutParams =
+                (RelativeLayout.LayoutParams) mAquaClockTwoView.getLayoutParams();
+        aquatwolayoutParams.bottomMargin = getResources().getDimensionPixelSize(
+                R.dimen.keyguard_security_view_top_margin);
+        mAquaClockTwoView.setLayoutParams(aquatwolayoutParams);
+
+        // Aqua analog clock three
+        RelativeLayout.LayoutParams aquathreelayoutParams =
+                (RelativeLayout.LayoutParams) mAquaClockThreeView.getLayoutParams();
+        aquathreelayoutParams.bottomMargin = getResources().getDimensionPixelSize(
+                R.dimen.keyguard_security_view_top_margin);
+        mAquaClockThreeView.setLayoutParams(aquathreelayoutParams);
+
+        // Aqua analog clock four
+        RelativeLayout.LayoutParams aquafourlayoutParams =
+                (RelativeLayout.LayoutParams) mAquaClockFourView.getLayoutParams();
+        aquafourlayoutParams.bottomMargin = getResources().getDimensionPixelSize(
+                R.dimen.keyguard_security_view_top_margin);
+        mAquaClockFourView.setLayoutParams(aquafourlayoutParams);
 
         layoutParams = (RelativeLayout.LayoutParams) mClockSeparator.getLayoutParams();
         layoutParams.topMargin = smallClock ? (int) mWidgetPadding : 0;
@@ -360,7 +393,7 @@ public class KeyguardStatusView extends GridLayout implements
         } else if (mClockSelection == 1) {
             mClockView.setFormat12Hour(Html.fromHtml("<strong>h</strong>mm"));
             mClockView.setFormat24Hour(Html.fromHtml("<strong>kk</strong>mm"));
-        } else if (mClockSelection == 5) {
+        } else if (mClockSelection == 8) {
             mClockView.setFormat12Hour(Html.fromHtml("<strong>hh</strong><br>mm"));
             mClockView.setFormat24Hour(Html.fromHtml("<strong>kk</strong><br>mm"));
         } else {
@@ -441,37 +474,82 @@ public class KeyguardStatusView extends GridLayout implements
                 mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                        View.GONE) : View.VISIBLE);
                 mCustomClockView.setVisibility(View.GONE);
-                mDuClockView.setVisibility(View.GONE);
+                mAquaClockOneView.setVisibility(View.GONE);
+                mAquaClockTwoView.setVisibility(View.GONE);
+                mAquaClockThreeView.setVisibility(View.GONE);
+                mAquaClockFourView.setVisibility(View.GONE);
                 break;
             case 1: // digital (bold)
                 mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                        View.GONE) : View.VISIBLE);
                 mCustomClockView.setVisibility(View.GONE);
-                mDuClockView.setVisibility(View.GONE);
+                mAquaClockOneView.setVisibility(View.GONE);
+                mAquaClockTwoView.setVisibility(View.GONE);
+                mAquaClockThreeView.setVisibility(View.GONE);
+                mAquaClockFourView.setVisibility(View.GONE);
                 break;
             case 2: // custom analog
                 mCustomClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                        View.GONE) : View.VISIBLE);
                 mClockView.setVisibility(View.GONE);
-                mDuClockView.setVisibility(View.GONE);
+                mAquaClockOneView.setVisibility(View.GONE);
+                mAquaClockTwoView.setVisibility(View.GONE);
+                mAquaClockThreeView.setVisibility(View.GONE);
+                mAquaClockFourView.setVisibility(View.GONE);
                 break;
-            case 3: // du analog
-                mDuClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
+            case 3: // aqua analog one
+                mAquaClockOneView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                        View.GONE) : View.VISIBLE);
                 mClockView.setVisibility(View.GONE);
                 mCustomClockView.setVisibility(View.GONE);
+                mAquaClockTwoView.setVisibility(View.GONE);
+                mAquaClockThreeView.setVisibility(View.GONE);
+                mAquaClockFourView.setVisibility(View.GONE);
                 break;
-            case 4: // sammy
+            case 4: // aqua analog two
+                mAquaClockTwoView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
+                       View.GONE) : View.VISIBLE);
+                mClockView.setVisibility(View.GONE);
+                mCustomClockView.setVisibility(View.GONE);
+                mAquaClockOneView.setVisibility(View.GONE);
+                mAquaClockThreeView.setVisibility(View.GONE);
+                mAquaClockFourView.setVisibility(View.GONE);
+                break;
+            case 5: // aqua analog three
+                mAquaClockThreeView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
+                       View.GONE) : View.VISIBLE);
+                mClockView.setVisibility(View.GONE);
+                mCustomClockView.setVisibility(View.GONE);
+                mAquaClockOneView.setVisibility(View.GONE);
+                mAquaClockTwoView.setVisibility(View.GONE);
+                mAquaClockFourView.setVisibility(View.GONE);
+                break;
+            case 6: // aqua analog four
+                mAquaClockFourView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
+                       View.GONE) : View.VISIBLE);
+                mClockView.setVisibility(View.GONE);
+                mCustomClockView.setVisibility(View.GONE);
+                mAquaClockOneView.setVisibility(View.GONE);
+                mAquaClockTwoView.setVisibility(View.GONE);
+                mAquaClockThreeView.setVisibility(View.GONE);
+                break;
+            case 7: // sammy
                 mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                        View.GONE) : View.VISIBLE);
                 mCustomClockView.setVisibility(View.GONE);
-                mDuClockView.setVisibility(View.GONE);
+                mAquaClockOneView.setVisibility(View.GONE);
+                mAquaClockTwoView.setVisibility(View.GONE);
+                mAquaClockThreeView.setVisibility(View.GONE);
+                mAquaClockFourView.setVisibility(View.GONE);
                 break;
-            case 5: // sammy (bold)
+            case 8: // sammy (bold)
                 mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                        View.GONE) : View.VISIBLE);
                 mCustomClockView.setVisibility(View.GONE);
-                mDuClockView.setVisibility(View.GONE);
+                mAquaClockOneView.setVisibility(View.GONE);
+                mAquaClockTwoView.setVisibility(View.GONE);
+                mAquaClockThreeView.setVisibility(View.GONE);
+                mAquaClockFourView.setVisibility(View.GONE);
                 break;
         }
     }
@@ -505,15 +583,24 @@ public class KeyguardStatusView extends GridLayout implements
             case 2: // custom analog
                 params.addRule(RelativeLayout.BELOW, R.id.custom_clock_view);
                 break;
-            case 3: // du analog
-                params.addRule(RelativeLayout.BELOW, R.id.du_clock_view);
+            case 3: // aqua clock 1
+                params.addRule(RelativeLayout.BELOW, R.id.aqua_clock_one_view);
                 break;
-            case 4: // sammy
+            case 4: // aqua clock 2
+                params.addRule(RelativeLayout.BELOW, R.id.aqua_clock_two_view);
+                break;
+            case 5: // aqua clock 3
+                params.addRule(RelativeLayout.BELOW, R.id.aqua_clock_three_view);
+                break;
+            case 6: // aqua clock 4
+                params.addRule(RelativeLayout.BELOW, R.id.aqua_clock_four_view);
+                break;
+            case 7: // sammy
                 params.addRule(RelativeLayout.BELOW, R.id.clock_view);
                 mClockView.setSingleLine(false);
                 mClockView.setGravity(Gravity.CENTER);
                 break;
-            case 5: // sammy (bold)
+            case 8: // sammy (bold)
                 params.addRule(RelativeLayout.BELOW, R.id.clock_view);
                 mClockView.setSingleLine(false);
                 mClockView.setGravity(Gravity.CENTER);
@@ -536,7 +623,11 @@ public class KeyguardStatusView extends GridLayout implements
             mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
                     View.GONE) : View.VISIBLE);
             mCustomClockView.setVisibility(View.GONE);
-            mDuClockView.setVisibility(View.GONE);
+            mAquaClockOneView.setVisibility(View.GONE);
+            mAquaClockTwoView.setVisibility(View.GONE);
+            mAquaClockThreeView.setVisibility(View.GONE);
+            mAquaClockFourView.setVisibility(View.GONE);
+
         } else {
             setStyle();
             refreshTime();
@@ -607,8 +698,12 @@ public class KeyguardStatusView extends GridLayout implements
         mClockView.setTextColor(blendedTextColor);
         mClockSeparator.setBackgroundColor(blendedTextColor);
         mCustomClockView.setDark(dark);
-        mDuClockView.setDark(dark);
+        mAquaClockOneView.setDark(dark);
+        mAquaClockTwoView.setDark(dark);
+        mAquaClockThreeView.setDark(dark);
+        mAquaClockFourView.setDark(dark);
         updateVisibilities();
+        updateSettings();
     }
 
     private void layoutOwnerInfo() {

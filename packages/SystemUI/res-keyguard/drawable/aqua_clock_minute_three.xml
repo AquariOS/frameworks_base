@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2019 AquariOS
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+         http://www.apache.org/licenses/LICENSE-2.0
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt"
+    android:viewportWidth="512"
+    android:viewportHeight="512"
+    android:width="150dp"
+    android:height="150dp">
+    <path
+        android:pathData="M260.9 242.4L261 152v-36c-0.4 -8.3 -1.3 -15 -4.3 -15c-3.1 0 -4.3 6.6 -4.7 15v36v90.4c-6.4 2.6 -9.1 7.4 -8.9 13.2c0.2 5.3 2.1 9.9 9 12.6L252 287h9l0.2 -18.8c5.6 -2.1 8.9 -6.8 9 -12.9C270.3 250.1 267.1 244.4 260.9 242.4zM262.9 261c-1.5 1.8 -3.8 2.9 -6.3 2.9c-2.4 0 -4.6 -1 -6.1 -2.7c-1.4 -1.5 -2.3 -3.5 -2.3 -5.7c0 -2.2 0.9 -4.2 2.2 -5.7c1.5 -1.7 3.7 -2.7 6.1 -2.7c2.5 0 4.8 1.1 6.3 2.9c1.3 1.5 2 3.4 2 5.5C265 257.6 264.2 259.5 262.9 261z"
+        android:fillColor="#FFFFFF" />
+    <path
+        android:pathData="M260.9 242.4L261 152v-36c-0.4 -8.3 -1.3 -15 -4.3 -15c-3.1 0 -4.3 6.6 -4.7 15v36v90.4c-6.4 2.6 -9.1 7.4 -8.9 13.2c0.2 5.3 2.1 9.9 9 12.6L252 287h9l0.2 -18.8c5.6 -2.1 8.9 -6.8 9 -12.9C270.3 250.1 267.1 244.4 260.9 242.4zM262.9 261c-1.5 1.8 -3.8 2.9 -6.3 2.9c-2.4 0 -4.6 -1 -6.1 -2.7c-1.4 -1.5 -2.3 -3.5 -2.3 -5.7c0 -2.2 0.9 -4.2 2.2 -5.7c1.5 -1.7 3.7 -2.7 6.1 -2.7c2.5 0 4.8 1.1 6.3 2.9c1.3 1.5 2 3.4 2 5.5C265 257.6 264.2 259.5 262.9 261z"
+        android:fillColor="#000000" />
+</vector>
