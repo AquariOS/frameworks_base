@@ -137,4 +137,8 @@
 
     <!-- OnTheGo Tile -->
     <string name="quick_settings_onthego_label">On-The-Go</string>
+
+    <!-- Font Tile -->
+    <string name="quick_settings_font_label">Fonts</string>
+    <string name="quick_settings_font_detail_label">Select a font</string>
 </resources>
