@@ -24,4 +24,19 @@
         <item name="android:layout_centerVertical">true</item>
     </style>
 
+    <!-- Custom style for FontTile (no font family) -->
+    <style name="TextAppearance.QSFont">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="TextAppearance.QSFont.DetailItemPrimary">
+        <item name="android:textSize">@dimen/qs_detail_item_primary_text_size</item>
+    </style>
+
+    <style name="TextAppearance.QSFont.DetailItemSecondary">
+        <item name="android:textSize">@dimen/qs_detail_item_secondary_text_size</item>
+        <item name="android:textColor">?android:attr/colorAccent</item>
+    </style>
+
 </resources>
