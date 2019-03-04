@@ -72,7 +72,8 @@ public class ThemeAccentUtils {
         "com.aquarios.systemui.theme.dark", // 2
         "com.aquarios.systemui.qstheme.dark", // 3
         "com.aquarios.gboard.theme.dark", // 4
-        "com.google.intelligence.sense.theme.dark" // 5
+        "com.google.intelligence.sense.theme.dark", // 5
+        "com.android.wellbeing.theme.dark", // 6
     };
 
     private static final String[] BLACK_THEMES = {
@@ -81,7 +82,8 @@ public class ThemeAccentUtils {
         "com.aquarios.systemui.theme.black", // 2
         "com.aquarios.systemui.qstheme.black", // 3
         "com.aquarios.gboard.theme.black", // 4
-        "com.google.intelligence.sense.theme.black" // 5
+        "com.google.intelligence.sense.theme.black", // 5
+        "com.android.wellbeing.theme.black", // 6
     };
 
     private static final String[] LIGHT_THEMES = {
