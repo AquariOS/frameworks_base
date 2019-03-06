@@ -234,13 +234,15 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener,
     private void setShown(boolean isShown) {
         if (mShown != isShown) {
             View clockView = mClockController.getClock();
-            boolean isRightClock = clockView.getId() == R.id.clock_right;
+            boolean isShowingClock = clockView.getId() == R.id.clock_right
+                    || clockView.getId() == R.id.clock
+                    || clockView.getId() == R.id.clock_center;
             mShown = isShown;
             if (isShown) {
                 mHeadsUpStatusBarView.setVisibility(View.VISIBLE);
                 CrossFadeHelper.fadeIn(mHeadsUpStatusBarView, CONTENT_FADE_DURATION /* duration */,
                         CONTENT_FADE_DELAY /* delay */);
-                if (!isRightClock) {
+                if (!isShowingClock) {
                     CrossFadeHelper.fadeOut(clockView, CONTENT_FADE_DURATION/* duration */,
                             0 /* delay */, () -> clockView.setVisibility(View.INVISIBLE));
                 }
@@ -249,7 +251,7 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener,
             } else {
                 CrossFadeHelper.fadeIn(mStatusBarContent, CONTENT_FADE_DURATION /* duration */,
                         CONTENT_FADE_DELAY /* delay */);
-                if (!isRightClock) {
+                if (!isShowingClock) {
                     CrossFadeHelper.fadeIn(clockView, CONTENT_FADE_DURATION /* duration */,
                             CONTENT_FADE_DELAY /* delay */);
                 }
