@@ -4313,12 +4313,16 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             useBlackTheme = mCurrentTheme == 3;
         }
         if (themeNeedsRefresh || isUsingDarkTheme() != useDarkTheme) {
+            final boolean useDark = useDarkTheme;
+            unloadAccents();
             ThemeAccentUtils.setLightDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useDarkTheme);
             mNotificationPanel.setLockscreenClockTheme(useDarkTheme);
         }
         if (themeNeedsRefresh || isUsingBlackTheme() != useBlackTheme) {
+            final boolean useBlack = useBlackTheme;
+            unloadAccents();
             ThemeAccentUtils.setLightBlackTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useBlackTheme);
-            mNotificationPanel.setLockscreenClockTheme(useDarkTheme);
+            mNotificationPanel.setLockscreenClockTheme(useBlackTheme);
         }
         // Lock wallpaper defines the color of the majority of the views, hence we'll use it
         // to set our default theme.
