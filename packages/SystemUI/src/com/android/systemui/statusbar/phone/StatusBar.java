@@ -4317,6 +4317,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         final boolean inflated = mStackScroller != null && mStatusBarWindowManager != null;
         boolean useDarkTheme = false;
         boolean useBlackTheme = false;
+        final UiModeManager umm = mContext.getSystemService(UiModeManager.class);
         if (mCurrentTheme == 0) {
         // The system wallpaper defines if QS should be light or dark.
         WallpaperColors systemColors = mColorExtractor
@@ -4327,17 +4328,28 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             useDarkTheme = mCurrentTheme == 2;
             useBlackTheme = mCurrentTheme == 3;
         }
+        if (isUsingDarkTheme() == false && isUsingBlackTheme() == false) {
+            mUiOffloadThread.submit(() -> {
+            umm.setNightMode(UiModeManager.MODE_NIGHT_NO);
+            });
+        }
         if (themeNeedsRefresh || isUsingDarkTheme() != useDarkTheme) {
             final boolean useDark = useDarkTheme;
             unloadAccents();
-            ThemeAccentUtils.setLightDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useDarkTheme);
-            mNotificationPanel.setLockscreenClockTheme(useDarkTheme);
+            mUiOffloadThread.submit(() -> {
+            ThemeAccentUtils.setLightDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useDark);
+            mNotificationPanel.setLockscreenClockTheme(useDark);
+            umm.setNightMode(UiModeManager.MODE_NIGHT_YES);
+            });
         }
         if (themeNeedsRefresh || isUsingBlackTheme() != useBlackTheme) {
             final boolean useBlack = useBlackTheme;
             unloadAccents();
-            ThemeAccentUtils.setLightBlackTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useBlackTheme);
-            mNotificationPanel.setLockscreenClockTheme(useBlackTheme);
+            mUiOffloadThread.submit(() -> {
+            ThemeAccentUtils.setLightBlackTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useBlack);
+            mNotificationPanel.setLockscreenClockTheme(useBlack);
+            umm.setNightMode(UiModeManager.MODE_NIGHT_YES);
+            });
         }
         // Lock wallpaper defines the color of the majority of the views, hence we'll use it
         // to set our default theme.
