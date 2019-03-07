@@ -290,7 +290,6 @@ public class BatteryMeterView extends LinearLayout implements
         final boolean showing = mBatteryPercentView != null;
         int percentageStyle = Settings.System.getIntForUser(getContext().getContentResolver(),
                 SHOW_BATTERY_PERCENT, 2, mUser);
-
         mShowPercent = percentageStyle;
         boolean showAnyway = alwaysShowPercentage() || mPowerSave || mCharging;
         if (!showAnyway
@@ -369,8 +368,7 @@ public class BatteryMeterView extends LinearLayout implements
                 (int) (batteryWidth * iconScaleFactor), (int) (batteryHeight * iconScaleFactor));
         scaledLayoutParams.setMargins(0, 0, 0, marginBottom);
 
-        mBatteryIconView.setLayoutParams(scaledLayoutParams);
-
+        mBatteryIconView.post(() -> mBatteryIconView.setLayoutParams(scaledLayoutParams));
     }
 
     @Override
