@@ -127,4 +127,7 @@
   <java-symbol type="bool" name="config_ledCanPulse" />
   <java-symbol type="bool" name="config_isCrappyLedDevice"/>
 
+  <!-- Does device have ActiveEdge -->
+  <java-symbol type="bool" name="config_hasActiveEdge" />
+
 </resources>
