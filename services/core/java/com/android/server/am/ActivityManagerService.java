@@ -2111,16 +2111,19 @@ public class ActivityManagerService extends IActivityManager.Stub
             case SHOW_FINGERPRINT_ERROR_UI_MSG: {
                 if (mShowDialogs) {
                     String buildfingerprint = SystemProperties.get("ro.build.fingerprint");
-                    String[] splitfingerprint = buildfingerprint.split("/");
-                    String vendorid = splitfingerprint[3];
-                    AlertDialog d = new BaseErrorDialog(mUiContext);
-                    d.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
-                    d.setCancelable(false);
-                    d.setTitle(mUiContext.getText(R.string.android_system_label));
-                    d.setMessage(mUiContext.getString(R.string.system_error_vendorprint, vendorid));
-                    d.setButton(DialogInterface.BUTTON_POSITIVE, mUiContext.getText(R.string.ok),
-                            obtainMessage(DISMISS_DIALOG_UI_MSG, d));
-                    d.show();
+                    final Resources res = mContext.getResources();
+                if (res.getBoolean(com.android.internal.R.bool.config_checkVendorFingerprint)) {
+                        String[] splitfingerprint = buildfingerprint.split("/");
+                        String vendorid = splitfingerprint[3];
+                        AlertDialog d = new BaseErrorDialog(mUiContext);
+                        d.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ERROR);
+                        d.setCancelable(false);
+                        d.setTitle(mUiContext.getText(R.string.android_system_label));
+                        d.setMessage(mUiContext.getString(R.string.system_error_vendorprint, vendorid));
+                        d.setButton(DialogInterface.BUTTON_POSITIVE, mUiContext.getText(R.string.ok),
+                                obtainMessage(DISMISS_DIALOG_UI_MSG, d));
+                        d.show();
+				    }
                 }
             } break;
             case SHOW_COMPAT_MODE_DIALOG_UI_MSG: {

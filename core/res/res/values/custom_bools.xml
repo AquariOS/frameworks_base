@@ -20,4 +20,6 @@
 
     <bool name="config_hasActiveEdge">false</bool>
 
+    <bool name="config_checkVendorFingerprint">true</bool>
+
 </resources>
