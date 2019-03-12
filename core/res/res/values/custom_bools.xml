@@ -18,4 +18,6 @@
 
     <bool name="config_isCrappyLedDevice">false</bool>
 
+    <bool name="config_checkVendorFingerprint">false</bool>
+
 </resources>
