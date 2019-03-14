@@ -262,10 +262,11 @@ public class CustomAnalogClock extends View {
             dialbuttons.setBounds(x - (wb / 2), y - (hb / 2), x + (wb / 2), y + (hb / 2));
         }
         if (mIsAmbientDisplay) {
-            dialbuttons.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+            dialbuttons.setColorFilter(getResources().getColor(
+                    R.color.analog_clock_dial_buttons_ambient), PorterDuff.Mode.SRC_ATOP);
         } else {
             dialbuttons.setColorFilter(getResources().getColor(
-                    R.color.analog_clock_hand_hour_color), PorterDuff.Mode.SRC_ATOP);
+                    R.color.analog_clock_dial_buttons_color), PorterDuff.Mode.SRC_ATOP);
         }
         dialbuttons.draw(canvas);
 
@@ -278,7 +279,8 @@ public class CustomAnalogClock extends View {
             hourHand.setBounds(x - (w / 2), y - (h / 2), x + (w / 2), y + (h / 2));
         }
         if (mIsAmbientDisplay) {
-            hourHand.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+            hourHand.setColorFilter(getResources().getColor(
+                    R.color.analog_clock_hand_hour_ambient), PorterDuff.Mode.SRC_ATOP);
         } else {
             hourHand.setColorFilter(getResources().getColor(
                     R.color.analog_clock_hand_hour_color), PorterDuff.Mode.SRC_ATOP);
@@ -294,14 +296,6 @@ public class CustomAnalogClock extends View {
             w = minuteHand.getIntrinsicWidth();
             h = minuteHand.getIntrinsicHeight();
             minuteHand.setBounds(x - (w / 2), y - (h / 2), x + (w / 2), y + (h / 2));
-        }
-        if (mIsAmbientDisplay) {
-            minuteHand.setColorFilter(getResources().getColor(
-                    android.R.color.white), PorterDuff.Mode.SRC_ATOP);
-        } else {
-            minuteHand.setColorFilter(mUseDarkTheme ? getResources().getColor(
-                    android.R.color.white) : getResources().getColor(
-                    android.R.color.black), PorterDuff.Mode.SRC_ATOP);
         }
         minuteHand.draw(canvas);
         canvas.restore();

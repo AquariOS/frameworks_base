@@ -44,7 +44,7 @@
         android:pathData="M43.6 129.8L47.8 122.6"
         android:fillColor="#FFFFFF"
         android:fillAlpha="0.8"
-        android:strokeColor="@*android:color/accent_device_default_light"
+        android:strokeColor="@color/analog_clock_aqua_face_color"
         android:strokeAlpha="0.8"
         android:strokeWidth="0.5"
         android:strokeMiterLimit="10" />
@@ -52,7 +52,7 @@
         android:pathData="M103.2 28L107.4 20.8"
         android:fillColor="#FFFFFF"
         android:fillAlpha="0.8"
-        android:strokeColor="@*android:color/accent_device_default_light"
+        android:strokeColor="@color/analog_clock_aqua_face_color"
         android:strokeAlpha="0.8"
         android:strokeWidth="0.5"
         android:strokeMiterLimit="10" />
@@ -60,7 +60,7 @@
         android:pathData="M20.2 106.7L27.5 102.6"
         android:fillColor="#FFFFFF"
         android:fillAlpha="0.8"
-        android:strokeColor="@*android:color/accent_device_default_light"
+        android:strokeColor="@color/analog_clock_aqua_face_color"
         android:strokeAlpha="0.8"
         android:strokeWidth="0.5"
         android:strokeMiterLimit="10" />
@@ -68,7 +68,7 @@
         android:pathData="M123.5 48L130.8 43.8"
         android:fillColor="#FFFFFF"
         android:fillAlpha="0.8"
-        android:strokeColor="@*android:color/accent_device_default_light"
+        android:strokeColor="@color/analog_clock_aqua_face_color"
         android:strokeAlpha="0.8"
         android:strokeWidth="0.5"
         android:strokeMiterLimit="10" />
@@ -76,7 +76,7 @@
         android:pathData="M20.2 43.8L27.5 48"
         android:fillColor="#FFFFFF"
         android:fillAlpha="0.8"
-        android:strokeColor="@*android:color/accent_device_default_light"
+        android:strokeColor="@color/analog_clock_aqua_face_color"
         android:strokeAlpha="0.8"
         android:strokeWidth="0.5"
         android:strokeMiterLimit="10" />
@@ -84,7 +84,7 @@
         android:pathData="M123.5 102.6L130.8 106.7"
         android:fillColor="#FFFFFF"
         android:fillAlpha="0.28"
-        android:strokeColor="@*android:color/accent_device_default_light"
+        android:strokeColor="@color/analog_clock_aqua_face_color"
         android:strokeAlpha="0.28"
         android:strokeWidth="0.5"
         android:strokeMiterLimit="10" />
@@ -92,7 +92,7 @@
         android:pathData="M43.6 20.8L47.8 28"
         android:fillColor="#FFFFFF"
         android:fillAlpha="0.8"
-        android:strokeColor="@*android:color/accent_device_default_light"
+        android:strokeColor="@color/analog_clock_aqua_face_color"
         android:strokeAlpha="0.8"
         android:strokeWidth="0.5"
         android:strokeMiterLimit="10" />
@@ -100,7 +100,7 @@
         android:pathData="M103.2 122.6L107.4 129.8"
         android:fillColor="#FFFFFF"
         android:fillAlpha="0.8"
-        android:strokeColor="@*android:color/accent_device_default_light"
+        android:strokeColor="@color/analog_clock_aqua_face_color"
         android:strokeAlpha="0.8"
         android:strokeWidth="0.5"
         android:strokeMiterLimit="10" />
