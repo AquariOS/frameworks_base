@@ -4335,19 +4335,15 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         }
         if (themeNeedsRefresh || isUsingDarkTheme() != useDarkTheme) {
             final boolean useDark = useDarkTheme;
-            unloadAccents();
             mUiOffloadThread.submit(() -> {
             ThemeAccentUtils.setLightDarkTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useDark);
-            mNotificationPanel.setLockscreenClockTheme(useDark);
             umm.setNightMode(UiModeManager.MODE_NIGHT_YES);
             });
         }
         if (themeNeedsRefresh || isUsingBlackTheme() != useBlackTheme) {
             final boolean useBlack = useBlackTheme;
-            unloadAccents();
             mUiOffloadThread.submit(() -> {
             ThemeAccentUtils.setLightBlackTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), useBlack);
-            mNotificationPanel.setLockscreenClockTheme(useBlack);
             umm.setNightMode(UiModeManager.MODE_NIGHT_YES);
             });
         }
