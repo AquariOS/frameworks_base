@@ -115,14 +115,14 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
 
     static final List<ThemeTileItem> sStyleItems = new ArrayList<ThemeTileItem>();
     static {
-        sStyleItems.add(new ThemeTileItem(UiModeManager.MODE_NIGHT_AUTO, -1,
-                R.string.system_theme_style_auto));
-        sStyleItems.add(new ThemeTileItem(UiModeManager.MODE_NIGHT_YES, -1,
-                R.string.system_theme_style_dark));
-        sStyleItems.add(new ThemeTileItem(UiModeManager.MODE_NIGHT_NO, -1,
-                R.string.system_theme_style_light));
-        sStyleItems.add(new ThemeTileItem(UiModeManager.MODE_NIGHT_YES, -1,
-                R.string.system_theme_style_black));
+        sStyleItems.add(new ThemeTileItem(0, -1,
+                R.string.system_theme_style_auto, Settings.System.SYSTEM_THEME_STYLE));
+        sStyleItems.add(new ThemeTileItem(2, -1,
+                R.string.system_theme_style_dark, Settings.System.SYSTEM_THEME_STYLE));
+        sStyleItems.add(new ThemeTileItem(1, -1,
+                R.string.system_theme_style_light, Settings.System.SYSTEM_THEME_STYLE));
+        sStyleItems.add(new ThemeTileItem(3, -1,
+                R.string.system_theme_style_black, Settings.System.SYSTEM_THEME_STYLE));
     }
 
     private enum Mode {
@@ -132,14 +132,12 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
     private IOverlayManager mOverlayManager;
     private int mCurrentUserId;
     private Mode mMode;
-    private static UiModeManager mUiModeManager;
 
     public ThemeTile(QSHost host) {
         super(host);
         mOverlayManager = IOverlayManager.Stub.asInterface(
                 ServiceManager.getService(Context.OVERLAY_SERVICE));
         mCurrentUserId = ActivityManager.getCurrentUser();
-        mUiModeManager = mContext.getSystemService(UiModeManager.class);
         mMode = Mode.ACCENT;
     }
 
@@ -167,10 +165,6 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
         public void commit(Context context) {
             Settings.System.putIntForUser(context.getContentResolver(),
                     uri, settingsVal, UserHandle.USER_CURRENT);
-        }
-
-        public void styleCommit(Context context) {
-            mUiModeManager.setNightMode(settingsVal);
         }
 
         public QSTile.Icon getIcon(Context context) {
@@ -294,11 +288,7 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
                 return;
             ThemeTileItem themeItem = (ThemeTileItem) item.tag;
             showDetail(false);
-            if (mMode == Mode.ACCENT) {
-                themeItem.commit(mContext);
-            } else {
-                themeItem.styleCommit(mContext);
-            }
+            themeItem.commit(mContext);
         }
     }
 
