@@ -295,6 +295,10 @@
             android:process=":screenrecord"
             android:exported="false" />
 
+        <service android:name=".aquarios.onthego.OnTheGoService"
+            android:process=":onthego"
+            android:exported="false" />
+
         <receiver android:name=".SysuiRestartReceiver"
             android:exported="false">
             <intent-filter>

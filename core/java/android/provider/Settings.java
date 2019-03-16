@@ -4671,6 +4671,48 @@ public final class Settings {
         public static final String LOCKSCREEN_INFO = "lockscreen_info";
 
         /**
+         * If On-The-Go should be displayed at the power menu.
+         *
+         * @hide
+         */
+        public static final String GLOBAL_ACTIONS_ONTHEGO = "global_actions_onthego";
+
+        /** @hide */
+        private static final Validator GLOBAL_ACTIONS_ONTHEGO_VALIDATOR =
+              BOOLEAN_VALIDATOR;
+
+        /**
+         * The alpha value of the On-The-Go overlay.
+         *
+         * @hide
+         */
+        public static final String ON_THE_GO_ALPHA = "on_the_go_alpha";
+
+        /**
+         * Whether the service should restart itself or not.
+         *
+         * @hide
+         */
+        public static final String ON_THE_GO_SERVICE_RESTART = "on_the_go_service_restart";
+
+        /** @hide */
+        private static final Validator ON_THE_GO_SERVICE_RESTART_VALIDATOR =
+              BOOLEAN_VALIDATOR;
+
+        /**
+         * The camera instance to use.
+         * 0 = Rear Camera
+         * 1 = Front Camera
+         *
+         * @hide
+         */
+        public static final String ON_THE_GO_CAMERA = "on_the_go_camera";
+
+        /** @hide */
+        private static final Validator ON_THE_GO_CAMERA_VALIDATOR =
+              new SettingsValidators.InclusiveIntegerRangeValidator(0, 1);
+
+        /**
          * Whether to disable showing arrows in network traffic indicators
          * @hide
          */
@@ -4879,6 +4921,10 @@ public final class Settings {
             PRIVATE_SETTINGS.add(STATUS_BAR_CUSTOM_HEADER_PROVIDER);
             PRIVATE_SETTINGS.add(STATUS_BAR_CUSTOM_HEADER_IMAGE);
             PRIVATE_SETTINGS.add(STATUS_BAR_FILE_HEADER_IMAGE);
+            PRIVATE_SETTINGS.add(GLOBAL_ACTIONS_ONTHEGO);
+            PRIVATE_SETTINGS.add(ON_THE_GO_SERVICE_RESTART);
+            PRIVATE_SETTINGS.add(ON_THE_GO_ALPHA);
+            PRIVATE_SETTINGS.add(ON_THE_GO_CAMERA);
         }
 
         /**
@@ -4982,6 +5028,9 @@ public final class Settings {
             VALIDATORS.put(STATUS_BAR_CUSTOM_HEADER_PROVIDER, STATUS_BAR_CUSTOM_HEADER_PROVIDER_VALIDATOR);
             VALIDATORS.put(STATUS_BAR_CUSTOM_HEADER_IMAGE, STATUS_BAR_CUSTOM_HEADER_IMAGE_VALIDATOR);
             VALIDATORS.put(STATUS_BAR_FILE_HEADER_IMAGE, STATUS_BAR_FILE_HEADER_IMAGE_VALIDATOR);
+            VALIDATORS.put(GLOBAL_ACTIONS_ONTHEGO,GLOBAL_ACTIONS_ONTHEGO_VALIDATOR);
+            VALIDATORS.put(ON_THE_GO_SERVICE_RESTART,ON_THE_GO_SERVICE_RESTART_VALIDATOR);
+            VALIDATORS.put(ON_THE_GO_CAMERA,ON_THE_GO_CAMERA_VALIDATOR);
         }
 
         /**

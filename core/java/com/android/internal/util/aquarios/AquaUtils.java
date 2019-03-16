@@ -23,6 +23,7 @@ import android.app.IActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -39,6 +40,7 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
@@ -266,6 +268,12 @@ public class AquaUtils {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
+    // Check if system has a front camera.
+    public static boolean hasFrontCamera(final Context context) {
+        final PackageManager pm = context.getPackageManager();
+        return pm != null && pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
+    }
+
     // Check to see if device supports NFC
     public static boolean hasNFC(Context context) {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_NFC);
@@ -328,6 +336,33 @@ public class AquaUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * Checks if a specific service is running.
+     *
+     * @param context     The context to retrieve the activity manager
+     * @param serviceName The name of the service
+     * @return Whether the service is running or not
+     */
+    public static boolean isServiceRunning(Context context, String serviceName) {
+        ActivityManager activityManager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningServiceInfo> services = activityManager
+                .getRunningServices(Integer.MAX_VALUE);
+
+        if (services != null) {
+            for (ActivityManager.RunningServiceInfo info : services) {
+                if (info.service != null) {
+                    if (info.service.getClassName() != null && info.service.getClassName()
+                            .equalsIgnoreCase(serviceName)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     // Method to check if task is in lock task mode
