@@ -4372,6 +4372,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         int accentSetting = Settings.System.getIntForUser(mContext.getContentResolver(),
                 Settings.System.ACCENT_PICKER, 0, mLockscreenUserManager.getCurrentUserId());
         ThemeAccentUtils.updateAccents(mOverlayManager, mLockscreenUserManager.getCurrentUserId(), accentSetting);
+        mNotificationPanel.setLockscreenClockTheme();
     }
 
     // Unload all the theme accents

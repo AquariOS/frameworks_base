@@ -31,6 +31,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RemoteViews.RemoteView;
 
+import com.android.internal.statusbar.ThemeAccentUtils;
 import com.android.systemui.R;
 
 import java.util.TimeZone;
@@ -62,6 +63,8 @@ public class CustomAnalogClock extends View {
     private float mMinutes;
     private float mHour;
     private boolean mChanged;
+    private boolean mUpdateAccents;
+
 
     public CustomAnalogClock(Context context) {
         this(context, null);
@@ -90,12 +93,23 @@ public class CustomAnalogClock extends View {
 
         mMinuteHand = a.getDrawable(R.styleable.CustomAnalogClock_custom_hand_minute);
 
+        final boolean updateAccents = (ThemeAccentUtils.updateAccents(
+                mOverlayManager, ActivityManager.getCurrentUsergetCurrentUser()));
+        onThemeChanged(updateAccents, false);
+
         a.recycle();
 
         mCalendar = new Time();
 
         mDialWidth = mDial.getIntrinsicWidth();
         mDialHeight = mDial.getIntrinsicHeight();
+    }
+
+    public void onThemeChanged(boolean updateAccents, boolean forceInvalidate) {
+        mUpdateAccents = updateAccents;
+        if (forceInvalidate) {
+            invalidate();
+        }
     }
 
     @Override
