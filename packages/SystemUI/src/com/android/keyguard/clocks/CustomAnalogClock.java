@@ -16,10 +16,12 @@
 
 package com.android.keyguard.clocks;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.om.IOverlayManager;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -31,6 +33,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RemoteViews.RemoteView;
 
+import com.android.internal.statusbar.ThemeAccentUtils;
 import com.android.systemui.R;
 
 import java.util.TimeZone;
@@ -62,6 +65,9 @@ public class CustomAnalogClock extends View {
     private float mMinutes;
     private float mHour;
     private boolean mChanged;
+    private boolean mUpdateAccents;
+
+    private IOverlayManager mOverlayManager;
 
     public CustomAnalogClock(Context context) {
         this(context, null);
@@ -78,6 +84,9 @@ public class CustomAnalogClock extends View {
     public CustomAnalogClock(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
 
+        mOverlayManager = IOverlayManager.Stub.asInterface(
+                ServiceManager.getService(Context.OVERLAY_SERVICE));
+
         final Resources r = context.getResources();
         final TypedArray a = context.obtainStyledAttributes(
                 attrs, R.styleable.CustomAnalogClock, defStyleAttr, defStyleRes);
@@ -90,12 +99,23 @@ public class CustomAnalogClock extends View {
 
         mMinuteHand = a.getDrawable(R.styleable.CustomAnalogClock_custom_hand_minute);
 
+        final boolean updateAccents = (ThemeAccentUtils.updateAccents(
+                mOverlayManager, ActivityManager.getCurrentUsergetCurrentUser()));
+        onThemeChanged(updateAccents, false);
+
         a.recycle();
 
         mCalendar = new Time();
 
         mDialWidth = mDial.getIntrinsicWidth();
         mDialHeight = mDial.getIntrinsicHeight();
+    }
+
+    public void onThemeChanged(boolean updateAccents, boolean forceInvalidate) {
+        mUpdateAccents = updateAccents;
+        if (forceInvalidate) {
+            invalidate();
+        }
     }
 
     @Override
