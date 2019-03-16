@@ -418,6 +418,10 @@ public class NotificationPanelView extends PanelView implements
         }
     }
 
+    public void setLockscreenClockTheme(boolean updateAccents) {
+        mKeyguardStatusView.onThemeChanged(updateAccents);
+    }
+
     public void onThemeChanged() {
         mQsNavbarScrim.setBackground(getResources().getDrawable(R.drawable.qs_navbar_scrim));
 
