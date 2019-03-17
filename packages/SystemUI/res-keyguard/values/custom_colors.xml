@@ -22,9 +22,9 @@
 <resources>
 
     <!-- Lockscreen clock styles -->
-    <color name="analog_clock_border_color">#d3d3d3</color>
-    <color name="analog_clock_face_color">#444444</color>
+    <color name="analog_clock_border_color">#f4f4f4</color>
+    <color name="analog_clock_face_color">#262626</color>
     <color name="analog_clock_accent_color">@*android:color/accent_device_default_light</color>
-    <color name="analog_clock_hand_minute_color">#f2f2f2</color>
+    <color name="analog_clock_hand_minute_color">#ededed</color>
 
 </resources>
