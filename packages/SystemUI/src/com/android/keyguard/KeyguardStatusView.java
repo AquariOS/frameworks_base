@@ -229,6 +229,14 @@ public class KeyguardStatusView extends GridLayout implements
         mClockView.setElegantTextHeight(false);
     }
 
+    public void onAccentChanged() {
+        mCustomClockView.onAccentChanged();
+        mAquaClockOneView.onAccentChanged();
+        mAquaClockTwoView.onAccentChanged();
+        mAquaClockThreeView.onAccentChanged();
+        mAquaClockFourView.onAccentChanged();
+    }
+
     /**
      * Moves clock and separator, adjusting margins when slice content changes.
      */

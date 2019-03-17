@@ -20,6 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -28,6 +29,8 @@ import android.graphics.drawable.Drawable;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews.RemoteView;
 
@@ -53,6 +56,11 @@ public class CustomAnalogClock extends View {
     private Drawable mMinuteHand;
     private Drawable mDial;
     private Drawable mDialButtons;
+
+    private int mHourHandRes;
+    private int mMinuteHandRes;
+    private int mDialRes;
+    private int mDialButtonsRes;
 
     private int mDialWidth;
     private int mDialHeight;
@@ -83,12 +91,16 @@ public class CustomAnalogClock extends View {
                 attrs, R.styleable.CustomAnalogClock, defStyleAttr, defStyleRes);
 
         mDial = a.getDrawable(R.styleable.CustomAnalogClock_custom_dial);
+        mDialRes = getDrawableResFromAttributes(a, R.styleable.CustomAnalogClock_custom_dial);
 
         mDialButtons = a.getDrawable(R.styleable.CustomAnalogClock_custom_dial_buttons);
+        mDialButtonsRes = getDrawableResFromAttributes(a, R.styleable.CustomAnalogClock_custom_dial_buttons);
 
         mHourHand = a.getDrawable(R.styleable.CustomAnalogClock_custom_hand_hour);
+        mHourHandRes = getDrawableResFromAttributes(a, R.styleable.CustomAnalogClock_custom_hand_hour);
 
         mMinuteHand = a.getDrawable(R.styleable.CustomAnalogClock_custom_hand_minute);
+        mMinuteHandRes = getDrawableResFromAttributes(a, R.styleable.CustomAnalogClock_custom_hand_minute);
 
         a.recycle();
 
@@ -96,6 +108,10 @@ public class CustomAnalogClock extends View {
 
         mDialWidth = mDial.getIntrinsicWidth();
         mDialHeight = mDial.getIntrinsicHeight();
+    }
+
+    public void onAccentChanged() {
+        updateDrawables();
     }
 
     @Override
@@ -287,6 +303,23 @@ public class CustomAnalogClock extends View {
         String contentDescription = DateUtils.formatDateTime(mContext,
                 time.toMillis(false), flags);
         setContentDescription(contentDescription);
+    }
+
+    private int getDrawableResFromAttributes(TypedArray ta, int styleableAttr) {
+        TypedValue tv = new TypedValue();
+        ta.getValue(styleableAttr, tv);
+        return tv.resourceId;
+    }
+
+    private void updateDrawables() {
+        mDial = mContext.getResources().getDrawable(mDialRes);
+        mDialButtons = mContext.getResources().getDrawable(mDialButtonsRes);
+        mHourHand = mContext.getResources().getDrawable(mHourHandRes);
+        mMinuteHand = mContext.getResources().getDrawable(mMinuteHandRes);
+        mDialWidth = mDial.getIntrinsicWidth();
+        mDialHeight = mDial.getIntrinsicHeight();
+        mChanged = true;
+        invalidate();
     }
 }
 
