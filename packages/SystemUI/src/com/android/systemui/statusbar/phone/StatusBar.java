@@ -3566,6 +3566,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
 
         mViewHierarchyManager.updateRowStates();
         mScreenPinningRequest.onConfigurationChanged();
+        mNotificationPanel.onAccentChanged(); // catch system accent overlay changes here
     }
 
     @Override
