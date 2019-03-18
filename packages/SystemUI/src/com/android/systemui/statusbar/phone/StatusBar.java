@@ -5737,16 +5737,20 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         public void onChange(boolean selfChange, Uri uri) {
             if (uri.equals(Settings.System.getUriFor(
                     Settings.System.ACCENT_PICKER))) {
-                unloadAccents(); // Unload the accents when users request it
-                updateAccents(); // Update the accents when users request it
+                mUiOffloadThread.submit(() -> {
+                    unloadAccents(); // Unload the accents when users request it
+                    updateAccents(); // Update the accents when users request it
+                });
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.SYSTEM_THEME_STYLE))) {
                 getCurrentThemeSetting();
                 updateTheme(false);
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.QS_TILE_STYLE))) {
-                unlockQsTileStyles();
-                updateTileStyle();
+                mUiOffloadThread.submit(() -> {
+                    unlockQsTileStyles();
+                    updateTileStyle();
+                });
             } else if (uri.equals(Settings.Secure.getUriFor(
                     Settings.Secure.FP_SWIPE_TO_DISMISS_NOTIFICATIONS))) {
                 setFpToDismissNotifications();
