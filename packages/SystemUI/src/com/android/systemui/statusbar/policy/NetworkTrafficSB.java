@@ -25,8 +25,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.internal.util.aquarios.AquaUtils;
-
 import com.android.systemui.Dependency;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.DarkIconDispatcher.DarkReceiver;
@@ -53,6 +51,7 @@ public class NetworkTrafficSB extends TextView  implements DarkReceiver {
 
     private boolean mIsEnabled;
     private boolean mAttached;
+    private boolean mTrafficInHeaderView;
     private long totalRxBytes;
     private long totalTxBytes;
     private long lastUpdateTime;
@@ -102,7 +101,8 @@ public class NetworkTrafficSB extends TextView  implements DarkReceiver {
                     setTextSize(TypedValue.COMPLEX_UNIT_PX, (float)txtSize);
                     setText(output);
                 }
-                setVisibility(AquaUtils.hasNotch(mContext) ? View.GONE : View.VISIBLE);
+                setVisibility(
+                mTrafficInHeaderView ? View.GONE : View.VISIBLE);
             }
 
             // Post delayed message to refresh in ~1000ms
@@ -152,6 +152,9 @@ public class NetworkTrafficSB extends TextView  implements DarkReceiver {
                     this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System
                     .getUriFor(Settings.System.NETWORK_TRAFFIC_AUTOHIDE_THRESHOLD), false,
+                    this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System
+                    .getUriFor(Settings.System.NETWORK_TRAFFIC_IN_HEADER), false,
                     this, UserHandle.USER_ALL);
         }
 
@@ -246,6 +249,10 @@ public class NetworkTrafficSB extends TextView  implements DarkReceiver {
     }
 
     private void updateSettings() {
+        final ContentResolver resolver = getContext().getContentResolver();
+
+        mTrafficInHeaderView = Settings.System.getIntForUser(resolver,
+                Settings.System.NETWORK_TRAFFIC_IN_HEADER, 0, UserHandle.USER_CURRENT) == 1;
         if (mIsEnabled) {
             if (mAttached) {
                 totalRxBytes = TrafficStats.getTotalRxBytes();
