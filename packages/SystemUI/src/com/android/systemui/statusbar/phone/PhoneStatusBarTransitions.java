@@ -16,6 +16,8 @@
 
 package com.android.systemui.statusbar.phone;
 
+import static android.provider.Settings.System.NETWORK_TRAFFIC_IN_HEADER;
+
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -26,7 +28,6 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.view.View;
 
-import com.android.internal.util.aquarios.AquaUtils;
 import com.android.systemui.R;
 
 public final class PhoneStatusBarTransitions extends BarTransitions {
@@ -54,7 +55,7 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
         mBattery = mView.findViewById(R.id.battery);
         mNetworkTraffic = mView.findViewById(R.id.networkTraffic);
         mNetworkTraffic.setVisibility(
-                AquaUtils.hasNotch(mView.getContext()) ? View.GONE : View.VISIBLE);
+            showTrafficHeaderView() ? View.GONE : View.VISIBLE);
         applyModeBackground(-1, getMode(), false /*animate*/);
         applyMode(getMode(), false /*animate*/);
     }
@@ -113,5 +114,10 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
             mClockCenter.setAlpha(newAlpha);
             mNetworkTraffic.setAlpha(newAlpha);
         }
+    }
+
+    private boolean showTrafficHeaderView() {
+        return Settings.System.getView(getContext().getContentResolver(),
+                NETWORK_TRAFFIC_IN_HEADER, 0) != 0;
     }
 }
