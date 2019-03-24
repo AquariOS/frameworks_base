@@ -32,6 +32,8 @@ import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 /** Quick settings tile: OnTheGo Mode **/
 public class OnTheGoTile extends QSTileImpl<BooleanState> {
 
+    private static final String SERVICE_NAME = "com.android.systemui.aquarios.onthego.OnTheGoService";
+
     private final Icon mIcon = ResourceIcon.get(R.drawable.ic_qs_onthego);
 
     public OnTheGoTile(QSHost host) {
@@ -57,6 +59,11 @@ public class OnTheGoTile extends QSTileImpl<BooleanState> {
 
     @Override
     protected void handleClick() {
+        mHost.collapsePanels();
+        //finish collapsing the panel
+        try {
+             Thread.sleep(1000); //1s
+        } catch (InterruptedException ie) {}
         toggleState();
         refreshState();
     }
@@ -67,24 +74,18 @@ public class OnTheGoTile extends QSTileImpl<BooleanState> {
     }
 
     @Override
-    public void handleLongClick() {
-       // do nothing
-    }
-
-    @Override
     public Intent getLongClickIntent() {
         return null;
     }
 
     @Override
     protected void handleUpdateState(BooleanState state, Object arg) {
+        state.icon = mIcon;
         state.contentDescription =  mContext.getString(
                 R.string.quick_settings_onthego_label);
         state.label = mContext.getString(R.string.quick_settings_onthego_label);
-        state.icon = ResourceIcon.get(R.drawable.ic_qs_onthego);
-        state.state = AquaUtils.isServiceRunning(mContext,
-                "com.android.systemui.aquarios.onthego.OnTheGoService")  ?
-                Tile.STATE_ACTIVE : Tile.STATE_INACTIVE;
+        state.value = AquaUtils.isServiceRunning(mContext, SERVICE_NAME);
+        state.state = state.value ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE;
     }
 
     @Override
