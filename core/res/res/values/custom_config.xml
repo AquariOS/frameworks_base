@@ -69,4 +69,7 @@
     Used to decide if we show pulse settings -->
     <bool name="config_ledCanPulse">false</bool>
 
+    <!-- Whether the Dreamliner (Pixel Stand) service should be enabled -->
+    <bool name="config_enableDreamlinerService">false</bool>
+
 </resources>
