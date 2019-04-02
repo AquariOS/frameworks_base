@@ -31,6 +31,7 @@ import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.display.DisplayManager;
@@ -112,6 +113,7 @@ public class Recents extends SystemUI
     private RecentsImpl mImpl;
     private TrustManager mTrustManager;
     private int mDraggingInRecentsCurrentUser;
+    private boolean mUsingPieRecents;
 
     // Only For system user, this is the callbacks instance we return to each secondary user
     private RecentsSystemUser mSystemToUserCallbacks;
@@ -172,6 +174,13 @@ public class Recents extends SystemUI
         @Override
         public void onServiceDisconnected(ComponentName name) {
             // Do nothing
+        }
+    };
+
+    private final ContentObserver mRecentsComponentObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            updateRecentsComponent();
         }
     };
 
@@ -241,6 +250,10 @@ public class Recents extends SystemUI
         putComponent(Recents.class, this);
 
         mTrustManager = (TrustManager) mContext.getSystemService(Context.TRUST_SERVICE);
+        mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                Settings.System.RECENTS_COMPONENT), false,
+                mRecentsComponentObserver, UserHandle.USER_ALL);
+        updateRecentsComponent();
     }
 
     @Override
@@ -260,7 +273,7 @@ public class Recents extends SystemUI
         }
 
         IOverviewProxy overviewProxy = mOverviewProxyService.getProxy();
-        if (overviewProxy != null) {
+        if (mUsingPieRecents && overviewProxy != null) {
             try {
                 overviewProxy.onOverviewShown(triggeredFromAltTab);
                 return;
@@ -305,7 +318,7 @@ public class Recents extends SystemUI
         }
 
         IOverviewProxy overviewProxy = mOverviewProxyService.getProxy();
-        if (overviewProxy != null) {
+        if (mUsingPieRecents && overviewProxy != null) {
             try {
                 overviewProxy.onOverviewHidden(triggeredFromAltTab, triggeredFromHomeKey);
                 return;
@@ -347,7 +360,7 @@ public class Recents extends SystemUI
 
         // If connected to launcher service, let it handle the toggle logic
         IOverviewProxy overviewProxy = mOverviewProxyService.getProxy();
-        if (overviewProxy != null) {
+        if (mUsingPieRecents && overviewProxy != null) {
             final Runnable toggleRecents = () -> {
                 try {
                     if (mOverviewProxyService.getProxy() != null) {
@@ -404,7 +417,7 @@ public class Recents extends SystemUI
             return;
         }
 
-        if (mOverviewProxyService.getProxy() != null) {
+        if (mUsingPieRecents && mOverviewProxyService.getProxy() != null) {
             // TODO: Proxy to Launcher
             return;
         }
@@ -437,7 +450,7 @@ public class Recents extends SystemUI
             return;
         }
 
-        if (mOverviewProxyService.getProxy() != null) {
+        if (mUsingPieRecents && mOverviewProxyService.getProxy() != null) {
             // TODO: Proxy to Launcher
             return;
         }
@@ -515,7 +528,7 @@ public class Recents extends SystemUI
                 }
                 mDraggingInRecentsCurrentUser = currentUser;
 
-                if (mOverviewProxyService.getProxy() != null) {
+                if (mUsingPieRecents && mOverviewProxyService.getProxy() != null) {
                     // The overview service is handling split screen, so just skip the wait for the
                     // first draw and notify the divider to start animating now
                     EventBus.getDefault().post(new RecentsDrawnEvent());
@@ -884,6 +897,11 @@ public class Recents extends SystemUI
         ContentResolver cr = mContext.getContentResolver();
         return (Settings.Global.getInt(cr, Settings.Global.DEVICE_PROVISIONED, 0) != 0) &&
                 (Settings.Secure.getInt(cr, Settings.Secure.USER_SETUP_COMPLETE, 0) != 0);
+    }
+
+    private void updateRecentsComponent() {
+        mUsingPieRecents = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.RECENTS_COMPONENT, 0) == 0;
     }
 
     @Override
