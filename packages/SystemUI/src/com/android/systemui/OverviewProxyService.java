@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.database.ContentObserver;
 import android.graphics.Rect;
 import android.os.Binder;
 import android.os.Handler;
@@ -72,16 +73,17 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
     private final Context mContext;
     private final Handler mHandler;
     private final Runnable mConnectionRunnable = this::internalConnectToCurrentUser;
-    private final ComponentName mRecentsComponentName;
+    private ComponentName mRecentsComponentName;
     private final DeviceProvisionedController mDeviceProvisionedController
             = Dependency.get(DeviceProvisionedController.class);
     private final List<OverviewProxyListener> mConnectionCallbacks = new ArrayList<>();
-    private final Intent mQuickStepIntent;
+    private Intent mQuickStepIntent;
 
     private IOverviewProxy mOverviewProxy;
     private int mConnectionBackoffAttempts;
     private @InteractionType int mInteractionFlags;
     private boolean mIsEnabled;
+    private boolean mIsReceiverRegistered;
 
     private ISystemUiProxy mSysUiProxy = new ISystemUiProxy.Stub() {
 
@@ -259,10 +261,10 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
         mContext = context;
         mHandler = new Handler();
         mConnectionBackoffAttempts = 0;
-        mRecentsComponentName = ComponentName.unflattenFromString(context.getString(
-                isPieRecentsEnabled() ? com.android.internal.R.string.config_recentsComponentName : com.android.internal.R.string.config_recentsComponentNameOreo));
-        mQuickStepIntent = new Intent(ACTION_QUICKSTEP)
-                .setPackage(mRecentsComponentName.getPackageName());
+        context.getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                Settings.System.RECENTS_COMPONENT), false,
+                mRecentsComponentObserver, UserHandle.USER_ALL);
+        updateRecentsComponent();
         mInteractionFlags = Prefs.getInt(mContext, Prefs.Key.QUICK_STEP_INTERACTION_FLAGS, 0);
 
         // Listen for the package update changes.
@@ -270,18 +272,48 @@ public class OverviewProxyService implements CallbackController<OverviewProxyLis
                 .isSystemUser(mDeviceProvisionedController.getCurrentUser())) {
             updateEnabledState();
             mDeviceProvisionedController.addCallback(mDeviceProvisionedCallback);
+            registerReceiver();
+        }
+    }
+
+    private ContentObserver mRecentsComponentObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            updateRecentsComponent();
+            updateEnabledState();
+            unregisterReceiver();
+            registerReceiver();
+            startConnectionToCurrentUser();
+        }
+    };
+
+    private void updateRecentsComponent() {
+        boolean isUsingPie = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.RECENTS_COMPONENT, 0) == 0;
+        mRecentsComponentName = ComponentName.unflattenFromString(mContext.getString(
+                isUsingPie ? com.android.internal.R.string.config_recentsComponentName
+                        : com.android.internal.R.string.config_recentsComponentNameOreo));
+        mQuickStepIntent = new Intent(ACTION_QUICKSTEP)
+                .setPackage(mRecentsComponentName.getPackageName());
+    }
+
+    private void unregisterReceiver() {
+        if (mIsReceiverRegistered) {
+            mContext.unregisterReceiver(mLauncherStateChangedReceiver);
+            mIsReceiverRegistered = false;
+        }
+    }
+
+    private void registerReceiver() {
+        if (!mIsReceiverRegistered) {
             IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
             filter.addDataScheme("package");
             filter.addDataSchemeSpecificPart(mRecentsComponentName.getPackageName(),
                     PatternMatcher.PATTERN_LITERAL);
             filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
             mContext.registerReceiver(mLauncherStateChangedReceiver, filter);
+            mIsReceiverRegistered = true;
         }
-    }
-
-    private boolean isPieRecentsEnabled() {
-       return Settings.System.getInt(mContext.getContentResolver(),
-                      Settings.System.RECENTS_COMPONENT, 0) == 0;
     }
 
     public void startConnectionToCurrentUser() {
