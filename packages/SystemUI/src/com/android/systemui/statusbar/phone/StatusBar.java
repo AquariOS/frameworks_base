@@ -2346,6 +2346,11 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
          return ThemeAccentUtils.isUsingBlackTheme(mOverlayManager, mLockscreenUserManager.getCurrentUserId());
     }
 
+    // Check for black and white accent overlays
+    public void unfuckBlackWhiteAccent() {
+        ThemeAccentUtils.unfuckBlackWhiteAccent(mOverlayManager, mLockscreenUserManager.getCurrentUserId());
+    }
+
     @Nullable
     public View getAmbientIndicationContainer() {
         return mAmbientIndicationContainer;
@@ -4323,6 +4328,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         }
         if (isUsingDarkTheme() == false && isUsingBlackTheme() == false) {
             mUiOffloadThread.submit(() -> {
+            unfuckBlackWhiteAccent();
             umm.setNightMode(UiModeManager.MODE_NIGHT_NO);
             });
         }
