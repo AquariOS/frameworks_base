@@ -130,6 +130,7 @@ public class ThemeAccentUtils {
                 try {
                     om.setEnabled(theme,
                         useDarkTheme, userId);
+                    unfuckBlackWhiteAccent(om, userId);
             } catch (RemoteException e) {
             }
         }
@@ -147,6 +148,7 @@ public class ThemeAccentUtils {
                 try {
                     om.setEnabled(theme,
                         useBlackTheme, userId);
+                    unfuckBlackWhiteAccent(om, userId);
             } catch (RemoteException e) {
             }
         }
@@ -191,6 +193,33 @@ public class ThemeAccentUtils {
             }
         }
     }
+
+    // Check for black and white accent overlays
+    public static void unfuckBlackWhiteAccent(IOverlayManager om, int userId) {
+        OverlayInfo themeInfo = null;
+        try {
+            if (isUsingDarkTheme(om, userId) || isUsingBlackTheme(om, userId)) {
+                themeInfo = om.getOverlayInfo(ACCENTS[27],
+                        userId);
+                if (themeInfo != null && themeInfo.isEnabled()) {
+                    om.setEnabled(ACCENTS[27], false /*disable*/, userId); /*black*/
+                    om.setEnabled(ACCENTS[17], false /*disable*/, userId); /*brown*/
+                    om.setEnabled(ACCENTS[28], true, userId);              /*white*/
+                }
+            } else {
+                themeInfo = om.getOverlayInfo(ACCENTS[28],
+                        userId);
+                if (themeInfo != null && themeInfo.isEnabled()) {
+                    om.setEnabled(ACCENTS[28],
+                            false /*disable*/, userId);
+                    om.setEnabled(ACCENTS[27],
+                            true, userId);
+                }
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    } 
 
     // Unload all the theme accents
     public static void unloadAccents(IOverlayManager om, int userId) {
