@@ -11,16 +11,9 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
+
 <resources>
-    <!-- Weather condition icon  -->
-    <dimen name="weather_icon_size">17dp</dimen>
 
-    <!-- Weather condition icon  -->
-    <dimen name="custom_analog_clock_bottom_padding">7dp</dimen>
-
-    <!-- Custom text clock -->
-    <dimen name="customtextclock_fontsize">32dp</dimen>
-    <dimen name="custom_clock_left_padding">55dp</dimen>
-    <dimen name="custom_clock_top_margin">80dp</dimen>
+<string name="custom_text_clock_top_text_default">It\'s</string>
 
 </resources>
