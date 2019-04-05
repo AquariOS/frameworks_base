@@ -76,7 +76,9 @@
                 analog:custom_dial="@drawable/custom_clock_dial"
                 analog:custom_dial_buttons="@drawable/custom_dial_buttons"
                 analog:custom_hand_hour="@drawable/custom_clock_hand_hour"
-                analog:custom_hand_minute="@drawable/custom_clock_hand_minute" />
+                analog:custom_hand_minute="@drawable/custom_clock_hand_minute"
+                analog:custom_dial_dark="@drawable/custom_clock_dial_dark"
+                analog:custom_hand_minute_dark="@drawable/custom_clock_hand_minute_dark" />
             <com.android.keyguard.clocks.CustomAnalogClock
                 android:id="@+id/aqua_clock_one_view"
                 android:layout_width="wrap_content"
@@ -87,7 +89,9 @@
                 analog:custom_dial="@drawable/aqua_clock_dial_one"
                 analog:custom_dial_buttons="@drawable/custom_dial_buttons"
                 analog:custom_hand_hour="@drawable/aqua_clock_hour_one"
-                analog:custom_hand_minute="@drawable/aqua_clock_minute_one" />
+                analog:custom_hand_minute="@drawable/aqua_clock_minute_one"
+                analog:custom_dial_dark="@drawable/aqua_clock_dial_one_dark"
+                analog:custom_hand_minute_dark="@drawable/aqua_clock_minute_one_dark" />
             <com.android.keyguard.clocks.CustomAnalogClock
                 android:id="@+id/aqua_clock_two_view"
                 android:layout_width="wrap_content"
@@ -98,7 +102,9 @@
                 analog:custom_dial="@drawable/aqua_clock_dial_two"
                 analog:custom_dial_buttons="@drawable/custom_dial_buttons"
                 analog:custom_hand_hour="@drawable/aqua_clock_hour_two"
-                analog:custom_hand_minute="@drawable/aqua_clock_minute_two" />
+                analog:custom_hand_minute="@drawable/aqua_clock_minute_two"
+                analog:custom_dial_dark="@drawable/aqua_clock_dial_two_dark"
+                analog:custom_hand_minute_dark="@drawable/aqua_clock_minute_two_dark" />
             <com.android.keyguard.clocks.CustomAnalogClock
                 android:id="@+id/aqua_clock_three_view"
                 android:layout_width="wrap_content"
@@ -109,7 +115,9 @@
                 analog:custom_dial="@drawable/aqua_clock_dial_three"
                 analog:custom_dial_buttons="@drawable/custom_dial_buttons"
                 analog:custom_hand_hour="@drawable/aqua_clock_hour_three"
-                analog:custom_hand_minute="@drawable/aqua_clock_minute_three" />
+                analog:custom_hand_minute="@drawable/aqua_clock_minute_three"
+                analog:custom_dial_dark="@drawable/aqua_clock_dial_three_dark"
+                analog:custom_hand_minute_dark="@drawable/aqua_clock_minute_three_dark" />
             <com.android.keyguard.clocks.CustomAnalogClock
                 android:id="@+id/aqua_clock_four_view"
                 android:layout_width="wrap_content"
@@ -120,7 +128,9 @@
                 analog:custom_dial="@drawable/aqua_clock_dial_four"
                 analog:custom_dial_buttons="@drawable/custom_dial_buttons"
                 analog:custom_hand_hour="@drawable/aqua_clock_hour_four"
-                analog:custom_hand_minute="@drawable/aqua_clock_minute_four" />
+                analog:custom_hand_minute="@drawable/aqua_clock_minute_four"
+                analog:custom_dial_dark="@drawable/aqua_clock_dial_four_dark"
+                analog:custom_hand_minute_dark="@drawable/aqua_clock_minute_four_dark" />
             <View
                 android:id="@+id/clock_separator"
                 android:layout_width="@dimen/widget_separator_width"

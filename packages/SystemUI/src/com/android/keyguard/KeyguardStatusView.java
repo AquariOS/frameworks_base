@@ -22,6 +22,7 @@ import android.app.ActivityManager;
 import android.app.IActivityManager;
 import android.content.Context;
 import android.content.ContentResolver;
+import android.content.om.IOverlayManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -230,12 +231,12 @@ public class KeyguardStatusView extends GridLayout implements
         mClockView.setElegantTextHeight(false);
     }
 
-    public void onAccentChanged() {
-        mCustomClockView.onAccentChanged();
-        mAquaClockOneView.onAccentChanged();
-        mAquaClockTwoView.onAccentChanged();
-        mAquaClockThreeView.onAccentChanged();
-        mAquaClockFourView.onAccentChanged();
+    public void onUpdateThemedResources(IOverlayManager om, boolean isDarkTheme) {
+        mCustomClockView.onUpdateThemedResources(om, isDarkTheme);
+        mAquaClockOneView.onUpdateThemedResources(om, isDarkTheme);
+        mAquaClockTwoView.onUpdateThemedResources(om, isDarkTheme);
+        mAquaClockThreeView.onUpdateThemedResources(om, isDarkTheme);
+        mAquaClockFourView.onUpdateThemedResources(om, isDarkTheme);
     }
 
     /**

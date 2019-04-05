@@ -99,13 +99,9 @@
                 </gradient>
             </aapt:attr>
         </path>
-
-        <!-- Changees center color to light or dark -->
         <path
             android:pathData="M462.1 269.7c0 111.5 -90.3 201.8 -201.8 201.9c-111.5 0 -201.8 -90.3 -201.9 -201.8v-0.1c0 -111.5 90.3 -201.8 201.8 -201.9S462 158.1 462.1 269.7C462.1 269.6 462.1 269.7 462.1 269.7z"
-            android:fillColor="#FFFFFF" />
-        <!-- Changees center color to light or dark -->
-
+            android:fillColor="#000000" />
         <path
             android:pathData="M449.1 269.7c0 104.5 -84.7 189.2 -189.2 189.2S70.7 374.3 70.7 269.8v-0.1c0 -104.5 84.7 -189.2 189.2 -189.2C364.4 80.4 449.1 165.1 449.1 269.7C449.1 269.6 449.1 269.7 449.1 269.7L449.1 269.7z">
             <aapt:attr
@@ -142,7 +138,7 @@
                     android:gradientRadius="8.829071"
                     android:tileMode="clamp">
                     <item
-                        android:color="#585757"
+                        android:color="#F7F7F7"
                         android:offset="0" />
                     <item
                         android:color="#C2C2C2"
@@ -200,25 +196,25 @@
                 android:endY="74.6213"
                 android:tileMode="clamp">
                 <item
-                    android:color="#C2adadad"
+                    android:color="#C2000000"
                     android:offset="0" />
                 <item
-                    android:color="#C2bcbcbc"
+                    android:color="#C2060606"
                     android:offset="0.1222" />
                 <item
-                    android:color="#C2c1c1c1"
+                    android:color="#C2161616"
                     android:offset="0.2832" />
                 <item
-                    android:color="#C2d8d8d8"
+                    android:color="#C2323131"
                     android:offset="0.4659" />
                 <item
-                    android:color="#C2f2f2f2"
-                    android:offset="0.598433" />
+                    android:color="#C2585757"
+                    android:offset="0.6647" />
                 <item
-                    android:color="#C2FFFFFF"
-                    android:offset="0.7543" />
+                    android:color="#C2888787"
+                    android:offset="0.8741" />
                 <item
-                    android:color="#C2FFFFFF"
+                    android:color="#C2A9A8A8"
                     android:offset="1" />
             </gradient>
         </aapt:attr>

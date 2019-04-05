@@ -27,6 +27,8 @@
         <attr name="custom_dial_buttons" format="reference"/>
         <attr name="custom_hand_hour" format="reference"/>
         <attr name="custom_hand_minute" format="reference"/>
+        <attr name="custom_dial_dark" format="reference"/>
+        <attr name="custom_hand_minute_dark" format="reference"/>
     </declare-styleable>
 
 </resources>
