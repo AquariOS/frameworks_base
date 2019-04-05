@@ -16,15 +16,18 @@
 
 package com.android.keyguard.clocks;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.om.IOverlayManager;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.ServiceManager;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.util.AttributeSet;
@@ -32,6 +35,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews.RemoteView;
 
+import com.android.internal.statusbar.ThemeAccentUtils;
 import com.android.systemui.R;
 
 import java.util.TimeZone;
@@ -52,12 +56,16 @@ public class CustomAnalogClock extends View {
 
     private Drawable mHourHand;
     private Drawable mMinuteHand;
+    private Drawable mMinuteHandDark;
     private Drawable mDial;
+    private Drawable mDialDark;
     private Drawable mDialButtons;
 
     private int mHourHandRes;
     private int mMinuteHandRes;
+    private int mMinuteHandDarkRes;
     private int mDialRes;
+    private int mDialDarkRes;
     private int mDialButtonsRes;
 
     private int mDialWidth;
@@ -66,8 +74,15 @@ public class CustomAnalogClock extends View {
     private boolean mAttached;
 
     private float mMinutes;
+    private float mMinutesDark;
     private float mHour;
     private boolean mChanged;
+    private boolean mUseDarkTheme;
+
+    private IOverlayManager mOverlayManager;
+
+
+    private IOverlayManager mOverlayManager;
 
     public CustomAnalogClock(Context context) {
         this(context, null);
@@ -84,12 +99,17 @@ public class CustomAnalogClock extends View {
     public CustomAnalogClock(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
 
+        mOverlayManager = IOverlayManager.Stub.asInterface(
+                ServiceManager.getService(Context.OVERLAY_SERVICE));
+
         final Resources r = context.getResources();
         final TypedArray a = context.obtainStyledAttributes(
                 attrs, R.styleable.CustomAnalogClock, defStyleAttr, defStyleRes);
 
         mDial = a.getDrawable(R.styleable.CustomAnalogClock_custom_dial);
+        mDialDark = a.getDrawable(R.styleable.CustomAnalogClock_custom_dial_dark);
         mDialRes = getDrawableResFromAttributes(a, R.styleable.CustomAnalogClock_custom_dial);
+        mDialDarkRes = getDrawableResFromAttributes(a, R.styleable.CustomAnalogClock_custom_dial_dark);
 
         mDialButtons = a.getDrawable(R.styleable.CustomAnalogClock_custom_dial_buttons);
         mDialButtonsRes = getDrawableResFromAttributes(a, R.styleable.CustomAnalogClock_custom_dial_buttons);
@@ -98,9 +118,16 @@ public class CustomAnalogClock extends View {
         mHourHandRes = getDrawableResFromAttributes(a, R.styleable.CustomAnalogClock_custom_hand_hour);
 
         mMinuteHand = a.getDrawable(R.styleable.CustomAnalogClock_custom_hand_minute);
+        mMinuteHandDark = a.getDrawable(R.styleable.CustomAnalogClock_custom_hand_minute_dark);
         mMinuteHandRes = getDrawableResFromAttributes(a, R.styleable.CustomAnalogClock_custom_hand_minute);
+        mMinuteHandDarkRes = getDrawableResFromAttributes(a, R.styleable.CustomAnalogClock_custom_hand_minute_dark);
 
         a.recycle();
+
+        final boolean useDarkTheme = (ThemeAccentUtils.isUsingDarkTheme(
+                mOverlayManager, ActivityManager.getCurrentUser()) || ThemeAccentUtils.isUsingBlackTheme(
+                mOverlayManager, ActivityManager.getCurrentUser()));
+        onThemeChanged(useDarkTheme, false);
 
         mCalendar = new Time();
 
@@ -311,13 +338,14 @@ public class CustomAnalogClock extends View {
 
     private void updateDrawables() {
         mDial = mContext.getResources().getDrawable(mDialRes);
+        mDialDark = mContext.getResources().getDrawable(mDialDarkRes);
         mDialButtons = mContext.getResources().getDrawable(mDialButtonsRes);
         mHourHand = mContext.getResources().getDrawable(mHourHandRes);
         mMinuteHand = mContext.getResources().getDrawable(mMinuteHandRes);
+        mMinuteHandDark = mContext.getResources().getDrawable(mMinuteHandDarkRes);
         mDialWidth = mDial.getIntrinsicWidth();
         mDialHeight = mDial.getIntrinsicHeight();
         mChanged = true;
         invalidate();
     }
 }
-
