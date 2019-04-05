@@ -19,11 +19,11 @@
     android:height="150dp">
     <path
         android:pathData="M76.4 81.7L75 76 73.4 81.8Z"
-        android:fillColor="#f4f4f4" />
+        android:fillColor="#262626" />
     <path
         android:pathData="M73.6 75c0 0.8 0.7 1.5 1.5 1.5c0.8 0 1.5 -0.7 1.5 -1.5c0 -0.8 -0.7 -1.5 -1.5 -1.5C74.2 73.6 73.6 74.2 73.6 75z"
-        android:fillColor="#f4f4f4" />
+        android:fillColor="#262626" />
     <path
         android:pathData="M75 73.7L76.4 70.3 74.9 37.2 73.6 70.3Z"
-        android:fillColor="#f4f4f4" />
+        android:fillColor="#262626" />
 </vector>
