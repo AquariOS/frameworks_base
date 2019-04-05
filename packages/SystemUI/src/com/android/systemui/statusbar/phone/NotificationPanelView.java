@@ -27,6 +27,7 @@ import android.app.Fragment;
 import android.app.StatusBarManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.om.IOverlayManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -418,8 +419,8 @@ public class NotificationPanelView extends PanelView implements
         }
     }
 
-    public void onAccentChanged() {
-        mKeyguardStatusView.onAccentChanged();
+    public void onUpdateThemedResources(IOverlayManager om, boolean isDarkTheme) {
+        mKeyguardStatusView.onUpdateThemedResources(om, isDarkTheme);
     }
 
     public void onThemeChanged() {

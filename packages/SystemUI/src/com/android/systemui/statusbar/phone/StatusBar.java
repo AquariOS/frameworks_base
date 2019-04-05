@@ -1012,6 +1012,9 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         mGroupManager.setHeadsUpManager(mHeadsUpManager);
         putComponent(HeadsUpManager.class, mHeadsUpManager);
 
+        // everything should be inflated and initialized by this time
+        onUpdateThemedResources(mOverlayManager, isUsingDarkTheme() || isUsingBlackTheme());
+
         mEntryManager.setUpWithPresenter(this, mStackScroller, this, mHeadsUpManager);
         mViewHierarchyManager.setUpWithPresenter(this, mEntryManager, mStackScroller);
 
@@ -3566,7 +3569,15 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
 
         mViewHierarchyManager.updateRowStates();
         mScreenPinningRequest.onConfigurationChanged();
-        mNotificationPanel.onAccentChanged(); // catch system accent overlay changes here
+        onUpdateThemedResources(mOverlayManager, isUsingDarkTheme() || isUsingBlackTheme());
+    }
+
+    /**
+     * Hook into this method to manually update any resources that don't automatically update when a
+     * theme change occurs, i.e. Keyguard
+     */
+    protected void onUpdateThemedResources(IOverlayManager om, boolean isDarkTheme) {
+        mNotificationPanel.onUpdateThemedResources(om, isDarkTheme);
     }
 
     @Override
