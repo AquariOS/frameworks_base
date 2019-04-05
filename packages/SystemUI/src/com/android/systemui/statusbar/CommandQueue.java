@@ -174,6 +174,7 @@ public class CommandQueue extends IStatusBar.Stub {
         default void onFingerprintError(String error) { }
         default void hideFingerprintDialog() { }
         default void handleInDisplayFingerprintView(boolean show, boolean isEnrolling) { }
+
         default void toggleCameraFlash() { }
 
         default void screenPinningStateChanged(boolean enabled) {}
@@ -605,6 +606,13 @@ public class CommandQueue extends IStatusBar.Stub {
         }
     }
 
+    public void toggleCameraFlash() {
+        synchronized (mLock) {
+            mHandler.removeMessages(MSG_TOGGLE_CAMERA_FLASH);
+            mHandler.sendEmptyMessage(MSG_TOGGLE_CAMERA_FLASH);
+         }
+        }
+
     @Override
     public void handleInDisplayFingerprintView(boolean show, boolean isEnrolling) {
         synchronized (mLock) {
@@ -613,14 +621,6 @@ public class CommandQueue extends IStatusBar.Stub {
             args.arg2 = isEnrolling;
             mHandler.obtainMessage(MSG_IN_DISPLAY_FINGERPRINT, args)
                     .sendToTarget();
-        }
-    }
-
-    @Override
-    public void toggleCameraFlash() {
-        synchronized (mLock) {
-            mHandler.removeMessages(MSG_TOGGLE_CAMERA_FLASH);
-            mHandler.sendEmptyMessage(MSG_TOGGLE_CAMERA_FLASH);
         }
     }
 
@@ -855,14 +855,6 @@ public class CommandQueue extends IStatusBar.Stub {
                         mCallbacks.get(i).hideFingerprintDialog();
                     }
                     break;
-                case MSG_IN_DISPLAY_FINGERPRINT:
-                    for (int i = 0; i < mCallbacks.size(); i++) {
-                        mCallbacks.get(i).handleInDisplayFingerprintView(
-                                (boolean)((SomeArgs)msg.obj).arg1,
-                                (boolean)((SomeArgs)msg.obj).arg2);
-                    }
-
-                    break;
                 case MSG_SHOW_CHARGING_ANIMATION:
                     for (int i = 0; i < mCallbacks.size(); i++) {
                         mCallbacks.get(i).showWirelessChargingAnimation(msg.arg1);
@@ -907,6 +899,13 @@ public class CommandQueue extends IStatusBar.Stub {
                     Intent intent = (Intent) msg.obj;
                     for (int i = 0; i < mCallbacks.size(); i++) {
                         mCallbacks.get(i).dispatchNavigationEditorResults(intent);
+                    }
+                    break;
+                case MSG_IN_DISPLAY_FINGERPRINT:
+                    for (int i = 0; i < mCallbacks.size(); i++) {
+                        mCallbacks.get(i).handleInDisplayFingerprintView(
+                                (boolean)((SomeArgs)msg.obj).arg1,
+                                (boolean)((SomeArgs)msg.obj).arg2);
                     }
                     break;
             }

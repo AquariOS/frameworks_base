@@ -18,7 +18,6 @@ package com.android.server.fingerprint;
 
 import android.content.Context;
 import android.content.ComponentName;
-import android.content.res.Resources;
 import android.hardware.biometrics.fingerprint.V2_1.IBiometricsFingerprint;
 import android.hardware.biometrics.BiometricPrompt;
 import android.hardware.biometrics.IBiometricPromptReceiver;
@@ -28,14 +27,15 @@ import android.hardware.fingerprint.IFingerprintServiceReceiver;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.content.pm.PackageManager;
 import android.util.Slog;
 
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 import com.android.internal.statusbar.IStatusBarService;
 
-import vendor.oneplus.fingerprint.extension.V1_0.IVendorFingerprintExtensions;
+import java.util.NoSuchElementException;
+
+import vendor.lineage.biometrics.fingerprint.inscreen.V1_0.IFingerprintInscreen;
 
 /**
  * A class to keep track of the authentication state for a given client.
@@ -60,10 +60,8 @@ public abstract class AuthenticationClient extends ClientMonitor {
     protected boolean mDialogDismissed;
 
     private boolean mDisplayFODView;
-    private IVendorFingerprintExtensions mExtDaemon = null;
+    private IFingerprintInscreen mExtDaemon = null;
     private final String mKeyguardPackage;
-    private static final int DISABLE_FP_LONGPRESS = 4;
-    private static final int ENABLE_FP_LONGPRESS = 3;
 
     // Receives events from SystemUI and handles them before forwarding them to FingerprintDialog
     protected IBiometricPromptReceiver mDialogReceiver = new IBiometricPromptReceiver.Stub() {
@@ -107,7 +105,8 @@ public abstract class AuthenticationClient extends ClientMonitor {
         mStatusBarService = statusBarService;
         mFingerprintManager = (FingerprintManager) getContext()
                 .getSystemService(Context.FINGERPRINT_SERVICE);
-        mDisplayFODView = context.getResources().getBoolean(com.android.internal.R.bool.config_needCustomFODView);
+        mDisplayFODView = context.getResources().getBoolean(
+                com.android.internal.R.bool.config_needCustomFODView);
         mKeyguardPackage = ComponentName.unflattenFromString(context.getResources().getString(
                 com.android.internal.R.string.config_keyguardComponent)).getPackageName();
     }
@@ -247,10 +246,12 @@ public abstract class AuthenticationClient extends ClientMonitor {
             resetFailedAttempts();
             onStop();
         }
-        if(result == true && mDisplayFODView) {
+        if (result && mDisplayFODView) {
             try {
                 mStatusBarService.handleInDisplayFingerprintView(false, false);
-            } catch (RemoteException e) {}
+            } catch (RemoteException e) {
+                // do nothing
+            }
         }
         return result;
     }
@@ -268,17 +269,17 @@ public abstract class AuthenticationClient extends ClientMonitor {
 
         if (mDisplayFODView) {
             try {
-                mExtDaemon = IVendorFingerprintExtensions.getService();
-                Slog.w(TAG, "getOwnerString : " + isKeyguard(getOwnerString()));
+                mExtDaemon = IFingerprintInscreen.getService();
+                mExtDaemon.setLongPressEnabled(isKeyguard(getOwnerString()));
+            } catch (NoSuchElementException | RemoteException e) {
+                // do nothing
+            }
 
-                if (isKeyguard(getOwnerString())) {
-                    mExtDaemon.updateStatus(ENABLE_FP_LONGPRESS);
-                } else {
-                    mExtDaemon.updateStatus(DISABLE_FP_LONGPRESS);
-                }
-
+            try {
                 mStatusBarService.handleInDisplayFingerprintView(true, false);
-            } catch (RemoteException e) {}
+            } catch (RemoteException ex) {
+                // do nothing
+            }
         }
         onStart();
         try {
@@ -324,7 +325,9 @@ public abstract class AuthenticationClient extends ClientMonitor {
         if (mDisplayFODView) {
             try {
                 mStatusBarService.handleInDisplayFingerprintView(false, false);
-            } catch (RemoteException e) {}
+            } catch (RemoteException e) {
+                // do nothing
+            }
         }
 
         onStop();
