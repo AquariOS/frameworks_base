@@ -153,4 +153,8 @@
 
   <!-- Vendor Fingerprint Check -->
   <java-symbol type="bool" name="config_checkVendorFingerprint"/>
+
+  <!-- FoD -->
+  <java-symbol type="bool" name="config_needCustomFODView" />
+  <java-symbol type="bool" name="config_usesOnePlusFOD" />
 </resources>
