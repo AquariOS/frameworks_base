@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "672ce525_024ff7e2",
+        "filename": "core/java/com/android/internal/statusbar/ThemeAccentUtils.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1000008
+      },
+      "writtenOn": "2019-04-06T17:36:48Z",
+      "side": 1,
+      "message": "remove the two \"||\" here to fix compile",
+      "revId": "029c091bfe183f4b53a44844715dde4688c936c3",
+      "serverId": "e852809f-cea0-4215-9787-0665f7b159ff",
+      "unresolved": false
+    }
+  ]
+}
