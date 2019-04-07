@@ -294,10 +294,10 @@ public class ThemeTile extends QSTileImpl<BooleanState> {
 
     private ThemeTileItem getThemeItemForStyleMode() {
         if (ThemeAccentUtils.isUsingDarkTheme(mOverlayManager, mCurrentUserId) || ThemeAccentUtils.isUsingBlackTheme(mOverlayManager, mCurrentUserId)) {
-            return new ThemeTileItem(20, R.color.quick_settings_theme_tile_white,
+            return new ThemeTileItem(27, R.color.quick_settings_theme_tile_white,
                     R.string.quick_settings_theme_tile_color_white);
         } else {
-            return new ThemeTileItem(20, R.color.quick_settings_theme_tile_black,
+            return new ThemeTileItem(27, R.color.quick_settings_theme_tile_black,
                     R.string.quick_settings_theme_tile_color_black);
         }
     }
