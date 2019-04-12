@@ -149,6 +149,7 @@ import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
 import com.android.internal.statusbar.StatusBarIcon;
+import com.android.internal.util.aquarios.AquaUtils;
 import com.android.internal.utils.ActionConstants;
 import com.android.internal.utils.ActionUtils;
 import com.android.internal.utils.SmartPackageMonitor;
@@ -1212,6 +1213,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(DevicePolicyManager.ACTION_SHOW_DEVICE_MONITORING_DIALOG);
+        filter.addAction(AquaUtils.ACTION_DISMISS_KEYGUARD);
         context.registerReceiverAsUser(mBroadcastReceiver, UserHandle.ALL, filter, null, null);
 
         IntentFilter demoFilter = new IntentFilter();
@@ -3474,6 +3476,12 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             }
             else if (DevicePolicyManager.ACTION_SHOW_DEVICE_MONITORING_DIALOG.equals(action)) {
                 mQSPanel.showDeviceMonitoringDialog();
+            }
+            else if (AquaUtils.ACTION_DISMISS_KEYGUARD.equals(action)) {
+                if (intent.hasExtra(AquaUtils.DISMISS_KEYGUARD_EXTRA_INTENT)) {
+                    Intent launchIntent = (Intent) intent.getParcelableExtra(AquaUtils.DISMISS_KEYGUARD_EXTRA_INTENT);
+                    startActivityDismissingKeyguard(launchIntent, true, true);
+                }
             }
         }
     };

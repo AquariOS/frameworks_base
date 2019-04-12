@@ -85,10 +85,6 @@
 
   <java-symbol type="integer" name="config_flashlightProximityTimeout" />
 
-  <!-- Device keyhandlers -->
-  <java-symbol type="array" name="config_deviceKeyHandlerLibs" />
-  <java-symbol type="array" name="config_deviceKeyHandlerClasses" />
-
   <!-- SmartNav -->
   <java-symbol type="anim" name="smartnav_app_in" />
   <java-symbol type="anim" name="smartnav_app_out" />
@@ -147,4 +143,11 @@
 
   <!-- Hardware key binding -->
   <java-symbol type="integer" name="config_deviceHardwareKeys" />
+
+  <!-- DeviceKeyHandler -->
+  <java-symbol type="string" name="config_deviceKeyHandlerLib" />
+  <java-symbol type="string" name="config_deviceKeyHandlerClass" />
+  <!-- DeviceKeyHandler -->
+  <java-symbol type="array" name="config_deviceKeyHandlerLibs" />
+  <java-symbol type="array" name="config_deviceKeyHandlerClasses" />
 </resources>
