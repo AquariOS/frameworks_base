@@ -8,25 +8,35 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.provider.Settings;
 import android.text.format.DateUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
-import android.provider.Settings;
 
+import com.android.internal.util.ArrayUtils;
+import com.android.keyguard.clocks.LangGuard;
+
+import java.lang.String;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import com.android.systemui.R;
 
 public class CustomTextClock extends TextView {
 
-    private final String[] TensString = getResources().getStringArray(R.array.TensString);
-    private final String[] UnitsString = getResources().getStringArray(R.array.UnitsString);
-    private final String[] TensStringH = getResources().getStringArray(R.array.TensStringH);
-    private final String[] UnitsStringH = getResources().getStringArray(R.array.UnitsStringH);
-            
+    private String[] TensString = getResources().getStringArray(R.array.TensString);
+    private String[] UnitsString = getResources().getStringArray(R.array.UnitsString);
+    private String[] TensStringH = getResources().getStringArray(R.array.TensStringH);
+    private String[] UnitsStringH = getResources().getStringArray(R.array.UnitsStringH);
+    private String[] langExceptions = getResources().getStringArray(R.array.langExceptions);
+    private String curLang = Locale.getDefault().getLanguage();
+    private boolean langHasChanged;
+    private String topText = getResources().getString(R.string.custom_text_clock_top_text_default);
+    private String highNoonFirstRow = getResources().getString(R.string.high_noon_first_row);
+    private String highNoonSecondRow = getResources().getString(R.string.high_noon_second_row);
+
     private Time mCalendar;
 
     private boolean mAttached;
@@ -49,7 +59,6 @@ public class CustomTextClock extends TextView {
 
         mCalendar = new Time();
 
-
     }
 
     @Override
@@ -63,7 +72,8 @@ public class CustomTextClock extends TextView {
             filter.addAction(Intent.ACTION_TIME_TICK);
             filter.addAction(Intent.ACTION_TIME_CHANGED);
             filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-
+            filter.addAction(Intent.ACTION_LOCALE_CHANGED);
+            
             // OK, this is gross but needed. This class is supported by the
             // remote views machanism and as a part of that the remote views
             // can be inflated by a context for another user without the app
@@ -97,6 +107,11 @@ public class CustomTextClock extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+            if (langHasChanged) {
+                setText(topText);
+                langHasChanged = false;
+            }
+            setTextColor(ColorText.getWallColor(mContext));
     }
 
     private void onTimeChanged() {
@@ -105,8 +120,6 @@ public class CustomTextClock extends TextView {
 
         int hour = mCalendar.hour;
         int minute = mCalendar.minute;
-
-        Log.d("CustomTextClock", ""+h24);
 
         if (!h24) {
             if (hour > 12) {
@@ -117,22 +130,55 @@ public class CustomTextClock extends TextView {
         switch(handType){
             case 0:
                 if (hour == 12 && minute == 0) {
-                setText(R.string.high_noon_first_row);
+                    setText(highNoonFirstRow);
                 } else {
-                setText(getIntStringHour(hour));
+                    if (curLang == "nl" && minute <= 9 && minute != 0) {
+                        setText(getIntStringMinOneLiner(minute));
+                    } else {
+                        setText(getIntStringHour(hour));
+                     }
                 }
                 break;
+
             case 1:
                 if (hour == 12 && minute == 0) {
-                setText(R.string.high_noon_second_row);
+                    setText(highNoonSecondRow);
                 } else {
-                setText(getIntStringMin(minute));
+                    if (minute == 0) {
+                        setText(UnitsString[0]);
+                    }
+                    if (!LangGuard.isAvailable(langExceptions,curLang) && minute != 0) {
+                        setVisibility(VISIBLE);
+                        setText(getIntStringMinFirstRow(minute));
+                    } 
+                    if (LangGuard.isAvailable(langExceptions,curLang)) {
+                        setVisibility(VISIBLE);
+                        setText(getIntStringMinOneLiner(minute));
+                    }
+                    if (curLang == "nl" && minute <= 9 && minute != 0) {
+                        setVisibility(VISIBLE);
+                        setText(getIntStringHour(hour));
+                    }
                 }
                 break;
+
+            case 3:
+                if (!LangGuard.isAvailable(langExceptions,curLang)) {
+                    if (getIntStringMinSecondRow(minute).contains("Clock") || getIntStringMinSecondRow(minute).contains("null")) {
+                        setVisibility(GONE);
+                    } else { 
+                        setText(getIntStringMinSecondRow(minute));
+                        setVisibility(VISIBLE);
+                    }
+                } 
+                if (LangGuard.isAvailable(langExceptions,curLang)) { 
+                    setVisibility(GONE); 
+                } 
+                break;
+
             default:
                 break;
         }
-
 
         updateContentDescription(mCalendar, getContext());
     }
@@ -143,6 +189,19 @@ public class CustomTextClock extends TextView {
             if (intent.getAction().equals(Intent.ACTION_TIMEZONE_CHANGED)) {
                 String tz = intent.getStringExtra("time-zone");
                 mCalendar = new Time(TimeZone.getTimeZone(tz).getID());
+            }
+
+            if (intent.getAction().equals(Intent.ACTION_LOCALE_CHANGED)) {
+                langHasChanged = true;
+                curLang = Locale.getDefault().getLanguage();
+                topText = getResources().getString(R.string.custom_text_clock_top_text_default);
+                TensString = getResources().getStringArray(R.array.TensString);
+                UnitsString = getResources().getStringArray(R.array.UnitsString);
+                TensStringH = getResources().getStringArray(R.array.TensStringH);
+                UnitsStringH = getResources().getStringArray(R.array.UnitsStringH);
+                highNoonFirstRow = getResources().getString(R.string.high_noon_first_row);
+                highNoonSecondRow = getResources().getString(R.string.high_noon_second_row);
+                langHasChanged = true;
             }
 
             onTimeChanged();
@@ -161,22 +220,65 @@ public class CustomTextClock extends TextView {
     private String getIntStringHour (int num) {
         int tens, units;
         String NumString = "";
+        units = num % 10 ;
+        tens =  num / 10;
+
         if(num >= 20) {
-            units = num % 10 ;
-            tens =  num / 10;
-            if ( units == 0 ) {
+            if ( units == 0 && !LangGuard.isAvailable(langExceptions,curLang)) {
                 NumString = TensStringH[tens];
             } else {
-                NumString = TensStringH[tens]+" "+UnitsStringH[units];
+                if (LangGuard.isAvailable(langExceptions,curLang)) {
+                    NumString = LangGuard.evaluateExHr(curLang, units, TensString, UnitsString, tens, num, UnitsStringH, TensStringH, h24);
+                } else {
+                    NumString = TensString[tens]+" "+UnitsString[units].substring(2, UnitsString[units].length());
+                }
             }
-        } else if (num < 20 ) {
-            NumString = UnitsStringH[num];
+        } else {
+            if (num < 20 && num != 0) {
+                NumString = UnitsStringH[num];
+            }
+            if (num == 0 && curLang == "pl") {
+                NumString = LangGuard.evaluateExHr(curLang, units, TensString, UnitsString, tens, num, UnitsStringH, TensStringH, h24);
+            }        
+            if (num == 0 && curLang != "pl") {
+                NumString = UnitsStringH[num];
+            }
         }
 
         return NumString;
     }
 
-    private String getIntStringMin (int num) {
+    private String getIntStringMinFirstRow (int num) {
+        int tens, units;
+        units = num % 10;
+        tens =  num / 10;
+        String NumString = "";
+        if ( units == 0 ) {
+            NumString = TensString[tens];
+        } else if (num < 10 ) {
+            NumString = UnitsString[num];
+        } else if (num >= 10 && num < 20) {
+            NumString = UnitsString[num];
+        } else if (num >= 20) {
+            NumString= TensString[tens];
+        }
+        return NumString;
+    }
+
+    private String getIntStringMinSecondRow (int num) {   
+        int units = num % 10;
+        String NumString = "";
+        if(num >= 20) {
+            NumString = UnitsString[units].substring(2, UnitsString[units].length());
+            return NumString;
+        } 
+        if (num <= 20) {
+            return "null";
+        }
+        return NumString;
+    }
+
+    private String getIntStringMinOneLiner (int num) {
         int tens, units;
         String NumString = "";
         if(num >= 20) {
@@ -185,14 +287,20 @@ public class CustomTextClock extends TextView {
             if ( units == 0 ) {
                 NumString = TensString[tens];
             } else {
-                NumString = TensString[tens]+" "+UnitsString[units];
+                if (LangGuard.isAvailable(langExceptions,curLang)) {
+                    NumString = LangGuard.evaluateExMin(curLang, units, TensString, UnitsString, tens);
+                } else {
+                    NumString = TensString[tens]+" "+UnitsString[units].substring(2, UnitsString[units].length());
+                }
             }
-        } else if (num < 10 ) {
-            NumString = UnitsString[num];
-        } else if (num >= 10 && num < 20) {
-            NumString = UnitsString[num];
+        } else { 
+            if (num < 10 ) {
+                NumString = UnitsString[num];
+            }
+            if (num >= 10 && num < 20) {
+                NumString = UnitsString[num];
+            }
         }
-
         return NumString;
     }
 
