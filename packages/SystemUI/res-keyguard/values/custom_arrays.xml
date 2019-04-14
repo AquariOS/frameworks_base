@@ -21,7 +21,7 @@
 
     <string-array translatable="true" name="TensString">
         <item></item>
-        <item></item>
+        <item>Ten</item>
         <item>Twenty</item>
         <item>Thirty</item>
         <item>Forty</item>
@@ -83,6 +83,17 @@
         <item>Seventeen</item>
         <item>Eighteen</item>
         <item>Nineteen</item>
+    </string-array>
+
+    <string-array translatable="false" name="langExceptions">
+        <item>nl</item>
+        <item>it</item>
+        <item>tr</item>
+        <item>fr</item>
+        <item>pt</item>
+        <item>pl</item>
+        <item>ja</item>
+        <item>tr</item>
     </string-array>
 
 </resources>
