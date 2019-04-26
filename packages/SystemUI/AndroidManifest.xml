@@ -353,14 +353,6 @@
                   android:exported="true">
         </activity>
 
-        <activity android:name=".tuner.PowerNotificationsTunerActivity"
-                  android:theme="@style/TunerSettings"
-                  android:label="@string/powernotif_tuner_activity"
-                  android:process=":tuner"
-                  android:parentActivityName="com.aquarios.coralreef.fragments.general_notifications.GeneralNotifications"
-                  android:exported="true">
-        </activity>
-
         <activity-alias android:name=".DemoMode"
                   android:targetActivity=".tuner.TunerActivity"
                   android:icon="@drawable/tuner"
