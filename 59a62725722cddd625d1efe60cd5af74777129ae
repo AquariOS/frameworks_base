@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "410a6816_7106dac6",
+        "filename": "core/res/res/layout/transient_notification.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1000008
+      },
+      "writtenOn": "2019-04-26T18:08:32Z",
+      "side": 1,
+      "message": "are the textColor and Background needed for this?",
+      "revId": "59a62725722cddd625d1efe60cd5af74777129ae",
+      "serverId": "e852809f-cea0-4215-9787-0665f7b159ff",
+      "unresolved": false
+    }
+  ]
+}
