@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b32314e_5a0af3d1",
+        "filename": "packages/SystemUI/src/com/android/systemui/qs/QSFooterImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1000008
+      },
+      "writtenOn": "2019-04-26T04:53:33Z",
+      "side": 1,
+      "message": "looks like this snuck in on you. It\u0027s not needed.",
+      "revId": "ddcd4bf66f5d7479066d97d77b587a0b301a7dfa",
+      "serverId": "e852809f-cea0-4215-9787-0665f7b159ff",
+      "unresolved": false
+    }
+  ]
+}
