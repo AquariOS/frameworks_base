@@ -28,8 +28,8 @@
         android:id="@android:id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:paddingVertical="15dp"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="8dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="-16dp"
         android:layout_marginStart="-16dp"
@@ -38,7 +38,7 @@
         android:textAppearance="@style/TextAppearance.Toast"
         android:textColor="@color/primary_text_default_material_light"
         android:shadowColor="#BB000000"
-        android:shadowRadius="2.75"
+        android:shadowRadius="1.75"
         android:background="?android:attr/toastFrameBackground"
         />
 
