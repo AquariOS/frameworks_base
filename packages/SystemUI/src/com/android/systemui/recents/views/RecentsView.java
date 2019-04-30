@@ -23,9 +23,12 @@ import static com.android.systemui.statusbar.phone.StatusBar.SYSTEM_DIALOG_REASO
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.annotation.Nullable;
+import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.ContentResolver;
+import android.content.om.IOverlayManager;
+import android.content.om.OverlayInfo;
 import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.content.res.ColorStateList;
@@ -42,8 +45,10 @@ import android.util.ArraySet;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.net.Uri;
-import android.os.UserHandle;
 import android.os.Handler;
+import android.os.UserHandle;
+import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.provider.Settings;
 import android.util.ArraySet;
 import android.util.AttributeSet;
@@ -141,6 +146,8 @@ public class RecentsView extends FrameLayout {
     private boolean showClearAllRecents;
     View mFloatingButton;
     View mClearRecents;
+    View mClearRecentsWhiteAccent;
+
     private int clearRecentsLocation;
 
     private boolean mAwaitingFirstLayout = true;
@@ -429,8 +436,16 @@ public class RecentsView extends FrameLayout {
         EventBus.getDefault().register(this, RecentsActivity.EVENT_BUS_PRIORITY + 1);
         EventBus.getDefault().register(mTouchHandler, RecentsActivity.EVENT_BUS_PRIORITY + 2);
         mSettingsObserver.observe();
-        mClearRecents.setVisibility(View.VISIBLE);
+        mClearRecents.setVisibility(!isUsingWhiteAccent()
+            ? View.INVISIBLE : View.VISIBLE);
         mClearRecents.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+            EventBus.getDefault().send(new DismissAllTaskViewsEvent());
+            }
+        });
+        mClearRecentsWhiteAccent.setVisibility(isUsingWhiteAccent()
+            ? View.INVISIBLE : View.VISIBLE);
+        mClearRecentsWhiteAccent.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
             EventBus.getDefault().send(new DismissAllTaskViewsEvent());
             }
@@ -1179,9 +1194,30 @@ public class RecentsView extends FrameLayout {
 
    public void update() {
         mFloatingButton = ((View)getParent()).findViewById(R.id.floating_action_button);
-        mClearRecents = (ImageButton) ((View)getParent()).findViewById(R.id.clear_recents);
-        showClearAllRecents = Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.SHOW_CLEAR_ALL_RECENTS, 1, UserHandle.USER_CURRENT) != 0;
-         }
-     }
+            if (!isUsingWhiteAccent()) {
+                mClearRecents = (ImageButton) ((View)getParent())
+                    .findViewById(R.id.clear_recents);
+                mClearRecents.setVisibility(View.VISIBLE);
+            } else {
+                mClearRecentsWhiteAccent = (ImageButton) ((View)getParent())
+                    .findViewById(R.id.clear_recents_white_accent);
+                mClearRecentsWhiteAccent.setVisibility(View.VISIBLE);
+            showClearAllRecents = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.SHOW_CLEAR_ALL_RECENTS, 1, UserHandle.USER_CURRENT) != 0;
+            }
+        }
+    }
+
+    private static boolean isUsingWhiteAccent() {
+        IOverlayManager om = IOverlayManager.Stub.asInterface(
+                ServiceManager.getService(Context.OVERLAY_SERVICE));
+        OverlayInfo themeInfo = null;
+        try {
+            themeInfo = om.getOverlayInfo("com.accents.white",
+                    ActivityManager.getCurrentUser());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return themeInfo != null && themeInfo.isEnabled();
+    }
 }
