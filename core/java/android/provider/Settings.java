@@ -4351,6 +4351,9 @@ public final class Settings {
         /** @hide */
         public static final String AUDIO_PANEL_VIEW_BT_SCO = "audio_panel_view_bt_sco";
 
+        /** @hide */
+        public static final String AUDIO_PANEL_ANIMATION_SIDE = "audio_panel_animation_side";
+
         /**
          * whether to enable or disable vibration on succesful fingerprint auth
          *

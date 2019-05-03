@@ -178,6 +178,7 @@ public class VolumeDialogImpl implements VolumeDialog {
             mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.AUDIO_PANEL_VIEW_ALARM), false, this, UserHandle.USER_ALL);
             mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.AUDIO_PANEL_VIEW_VOICE), false, this, UserHandle.USER_ALL);
             mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.AUDIO_PANEL_VIEW_BT_SCO), false, this, UserHandle.USER_ALL);
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.AUDIO_PANEL_ANIMATION_SIDE), false, this, UserHandle.USER_ALL);
             mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor(Settings.Secure.VOLUME_LINK_NOTIFICATION), false, this, UserHandle.USER_ALL);
             update();
         }
@@ -186,6 +187,9 @@ public class VolumeDialogImpl implements VolumeDialog {
         public void onChange(boolean selfChange) {
             update();
             updateRowsH(getActiveRow());
+            mDialog.dismiss();
+            initDialog();
+            mConfigurableTexts.update();
         }
 
         public void update() {
@@ -195,6 +199,10 @@ public class VolumeDialogImpl implements VolumeDialog {
             isAlarmShowing = Settings.System.getIntForUser(mContext.getContentResolver(), Settings.System.AUDIO_PANEL_VIEW_ALARM, 0, UserHandle.USER_CURRENT) == 1;
             isVoiceShowing = Settings.System.getIntForUser(mContext.getContentResolver(), Settings.System.AUDIO_PANEL_VIEW_VOICE, 0, UserHandle.USER_CURRENT) == 1;
             isBTSCOShowing = Settings.System.getIntForUser(mContext.getContentResolver(), Settings.System.AUDIO_PANEL_VIEW_BT_SCO, 0, UserHandle.USER_CURRENT) == 1;
+            mLeftVolumeRocker = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.AUDIO_PANEL_ANIMATION_SIDE,
+                    mContext.getResources().getBoolean(R.bool.config_audioPanelOnLeftSide) ? 1 : 0,
+                    UserHandle.USER_CURRENT) == 1;
             isNotificationLinked = Settings.Secure.getIntForUser(mContext.getContentResolver(), Settings.Secure.VOLUME_LINK_NOTIFICATION, 1, UserHandle.USER_CURRENT) == 1;
         }
     }
@@ -207,7 +215,6 @@ public class VolumeDialogImpl implements VolumeDialog {
         mKeyguard = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         mAccessibilityMgr = Dependency.get(AccessibilityManagerWrapper.class);
         mDeviceProvisionedController = Dependency.get(DeviceProvisionedController.class);
-        mLeftVolumeRocker = mContext.getResources().getBoolean(R.bool.config_audioPanelOnLeftSide);
 
         settingsObserver = new SettingsObserver(mHandler);
         settingsObserver.observe();
