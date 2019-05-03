@@ -44,6 +44,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.database.ContentObserver;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
@@ -54,6 +55,7 @@ import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.UserHandle;
 import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.provider.Settings;
@@ -155,13 +157,45 @@ public class VolumeDialogImpl implements VolumeDialog {
 
     private boolean mLeftVolumeRocker;
 
+    private class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.AUDIO_PANEL_ANIMATION_SIDE),
+                    false, this, UserHandle.USER_ALL);
+            update();
+        }
+
+        public void onChange(boolean selfChange) {
+            update();
+            mDialog.dismiss();
+            initDialog();
+            mConfigurableTexts.update();
+        }
+
+        public void update() {
+            mLeftVolumeRocker = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.AUDIO_PANEL_ANIMATION_SIDE,
+                    mContext.getResources().getBoolean(R.bool.config_audioPanelOnLeftSide) ? 1 : 0,
+                    UserHandle.USER_CURRENT) == 1;
+        }
+    }
+
+    private SettingsObserver settingsObserver;
+
     public VolumeDialogImpl(Context context) {
         mContext = new ContextThemeWrapper(context, com.android.systemui.R.style.qs_theme);
         mController = Dependency.get(VolumeDialogController.class);
         mKeyguard = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         mAccessibilityMgr = Dependency.get(AccessibilityManagerWrapper.class);
         mDeviceProvisionedController = Dependency.get(DeviceProvisionedController.class);
-        mLeftVolumeRocker = mContext.getResources().getBoolean(R.bool.config_audioPanelOnLeftSide);
+
+        settingsObserver = new SettingsObserver(mHandler);
+        settingsObserver.observe();
     }
 
     public void init(int windowType, Callback callback) {
