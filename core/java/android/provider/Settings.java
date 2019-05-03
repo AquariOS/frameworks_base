@@ -4782,6 +4782,13 @@ public final class Settings {
         public static final String NETWORK_TRAFFIC_HIDEARROW = "network_traffic_hidearrow";
 
         /**
+         * Allows user to place volume panel on left/right side
+         * @hide
+         */
+        public static final String AUDIO_PANEL_ANIMATION_SIDE = "audio_panel_animation_side";
+
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
