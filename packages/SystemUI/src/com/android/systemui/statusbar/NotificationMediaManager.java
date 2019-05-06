@@ -17,6 +17,7 @@ package com.android.systemui.statusbar;
 
 import android.app.Notification;
 import android.content.Context;
+import android.graphics.drawable.Icon;
 import android.media.MediaMetadata;
 import android.media.session.MediaController;
 import android.media.session.MediaSession;
@@ -60,7 +61,7 @@ public class NotificationMediaManager implements Dumpable {
     private MediaController mMediaController;
     private String mMediaNotificationKey;
     private MediaMetadata mMediaMetadata;
-    private final List<MediaUpdateListener> mListeners = new ArrayList<MediaUpdateListener>();
+    private List<MediaUpdateListener> mListeners = new ArrayList<>();
 
     private String mNowPlayingNotificationKey;
 
@@ -146,6 +147,17 @@ public class NotificationMediaManager implements Dumpable {
 
     public MediaMetadata getMediaMetadata() {
         return mMediaMetadata;
+    }
+
+    public Icon getMediaIcon() {
+        if (mMediaNotificationKey == null) return null;
+
+        synchronized (mEntryManager.getNotificationData()) {
+            NotificationData.Entry mediaNotification = mEntryManager
+                    .getNotificationData().get(mMediaNotificationKey);
+            if (mediaNotification == null || mediaNotification.expandedIcon == null) return null;
+            return mediaNotification.expandedIcon.getSourceIcon();
+        }
     }
 
     public void findAndUpdateMediaNotifications() {
@@ -414,14 +426,16 @@ public class NotificationMediaManager implements Dumpable {
                 mEntryManager.setEntryToRefresh(null, true);
                 setMediaNotificationText(null, false);
             }
-
             if (!dontPulse) {
-                updateListenersMediaUpdated(true);
+                for (MediaUpdateListener listener : mListeners) {
+                    listener.onMediaUpdated(true);
+                }
             }
         } else {
             mEntryManager.setEntryToRefresh(null, true);
             setMediaNotificationText(null, false);
-            updateListenersMediaUpdated(false);
+            for (MediaUpdateListener listener : mListeners) {
+                listener.onMediaUpdated(true);
         }
     }
 
@@ -439,9 +453,7 @@ public class NotificationMediaManager implements Dumpable {
 
     public void setPulseColors(boolean isColorizedMEdia, int[] colors) {
         for (MediaUpdateListener listener : mListeners) {
-            if (listener != null) {
-                listener.setPulseColors(isColorizedMEdia, colors);
-            }
+            listener.setPulseColors(isColorizedMEdia, colors);
         }
     }
 
