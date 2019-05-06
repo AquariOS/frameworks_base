@@ -356,6 +356,8 @@ Navigator.OnVerticalChangedListener, KeyguardMonitor.Callback, NotificationMedia
 
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_BOOT_COMPLETED);
         filter.addAction(Intent.ACTION_USER_SWITCHED);
         filter.addAction(PowerManager.ACTION_POWER_SAVE_MODE_CHANGING);
         filter.addAction(AudioManager.STREAM_MUTE_CHANGED_ACTION);
@@ -364,6 +366,7 @@ Navigator.OnVerticalChangedListener, KeyguardMonitor.Callback, NotificationMedia
         notifyNavigationBarScreenOn();
         mOverviewProxyService.addCallback(mOverviewProxyListener);
         mNavigationBarView.notifyInflateFromUser();
+        mPulseController.notifyScreenOn(true);
         setFullGestureMode();
     }
 
@@ -1228,6 +1231,9 @@ Navigator.OnVerticalChangedListener, KeyguardMonitor.Callback, NotificationMedia
                 updateAccessibilityServicesState(mAccessibilityManager);
             }
             mPulseController.onReceive(intent);
+            if (mNavigationBarView != null) {
+                mNavigationBarView.onReceive(intent);
+            }
         }
     };
 
@@ -1434,6 +1440,7 @@ Navigator.OnVerticalChangedListener, KeyguardMonitor.Callback, NotificationMedia
             mNavigationBarView.setComponents(mRecents, mDivider, mStatusBar.getPanel());
             mNavigationBarView.setOnVerticalChangedListener(this::onVerticalChanged);
             mNavigationBarView.notifyInflateFromUser();
+            mPulseController.notifyScreenOn(true);
             mLightBarController
                     .setNavigationBar(mNavigationBarView.getLightTransitionsController());
             if (isUsingStockNav()) {
