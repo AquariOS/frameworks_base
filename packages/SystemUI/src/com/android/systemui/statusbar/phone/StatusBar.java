@@ -189,6 +189,7 @@ import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.navigation.Navigator;
+import com.android.systemui.navigation.pulse.PulseController;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper.SnoozeOption;
@@ -1259,6 +1260,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
 
     protected void removeNavigationBar() {
         if (mNavigationBar != null && mNavigationBarView != null) {
+            Dependency.get(PulseController.class).doUnlinkVisualizer();
             FragmentHostManager fragmentHost = FragmentHostManager.get(mNavigationBarView);
             if (mNavigationBarView.isAttachedToWindow()) {
                 mWindowManager.removeViewImmediate(mNavigationBarView);

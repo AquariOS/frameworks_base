@@ -20,28 +20,36 @@ import android.annotation.AttrRes;
 import android.annotation.NonNull;
 import android.annotation.Nullable;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
+import com.android.systemui.Dependency;
+import com.android.systemui.navigation.pulse.PulseController;
+import com.android.systemui.navigation.pulse.PulseController.PulseHost;
 import com.android.systemui.statusbar.policy.DeadZone;
 
-public class NavigationBarFrame extends FrameLayout {
+public class NavigationBarFrame extends FrameLayout implements PulseHost {
 
     private DeadZone mDeadZone = null;
     private boolean mEnabled = false;
+    private PulseController mPulse;
 
     public NavigationBarFrame(@NonNull Context context) {
-        super(context);
+        this(context, null);
     }
 
     public NavigationBarFrame(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public NavigationBarFrame(@NonNull Context context, @Nullable AttributeSet attrs,
             @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setWillNotDraw(false);
+        mPulse = Dependency.get(PulseController.class);
+        mPulse.setHost(this);
     }
 
     public void setDeadZone(@NonNull DeadZone deadZone) {
@@ -60,5 +68,17 @@ public class NavigationBarFrame extends FrameLayout {
             }
         }
         return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        mPulse.onSizeChanged(w, h, oldw, oldh);
+        super.onSizeChanged(w, h, oldw, oldh);
+    }
+
+    @Override
+    public void onDraw(Canvas canvas) {
+        mPulse.onDraw(canvas);
+        super.onDraw(canvas);
     }
 }
