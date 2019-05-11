@@ -310,8 +310,8 @@ public class ActionHandler {
             } else if (TextUtils.equals(action, SYSTEMUI_TASK_TORCH)
                  && !ActionUtils.deviceSupportsFlashLight(context)) {
                 continue;
-            } else if (TextUtils.equals(action, SYSTEMUI_TASK_CAMERA)
-                    && !context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            } else if (TextUtils.equals(action, SYSTEMUI_TASK_CAMERA)) {
+//                    && !context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
                 continue;
             } else if (TextUtils.equals(action, SYSTEMUI_TASK_EDITING_SMARTBAR)) {
                 // don't allow smartbar editor on Fling
