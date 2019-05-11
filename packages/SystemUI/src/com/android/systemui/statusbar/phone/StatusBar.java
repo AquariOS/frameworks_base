@@ -4314,7 +4314,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
 
     private void getCurrentThemeSetting() {
         mCurrentTheme = Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.SYSTEM_THEME_STYLE, 2, mLockscreenUserManager.getCurrentUserId());
+                Settings.System.SYSTEM_THEME_STYLE, 0, mLockscreenUserManager.getCurrentUserId());
     }
 
     private boolean themeNeedsRefresh(){
