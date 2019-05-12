@@ -31,8 +31,4 @@
         <attr name="custom_hand_minute_dark" format="reference"/>
     </declare-styleable>
 
-    <declare-styleable name="CustomTextClock">
-        <attr name="handType"/>
-    </declare-styleable>
-
 </resources>
