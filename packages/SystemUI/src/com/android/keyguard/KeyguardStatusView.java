@@ -766,6 +766,7 @@ public class KeyguardStatusView extends GridLayout implements
         mClockSeparator.setBackgroundColor(blendedTextColor);
         if (mClockSelection == 9) {
             mTextClock.setTextColor(blendedTextColor);
+            mTextClock.setDarkAmount(mDarkAmount);
         }
         updateVisibilities();
         updateSettings();
