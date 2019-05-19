@@ -169,4 +169,7 @@
     <string name="high_noon_first_row">High</string>
     <string name="high_noon_second_row">Noon</string>
 
+    <!-- VPN icon switch -->
+    <string name="status_bar_vpn">VPN</string>
+
 </resources>
