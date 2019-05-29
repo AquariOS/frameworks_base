@@ -22,6 +22,8 @@ import android.app.ActivityManager;
 import android.app.IActivityManager;
 import android.content.Context;
 import android.content.ContentResolver;
+import android.content.FontInfo;
+import android.content.IFontService;
 import android.content.om.IOverlayManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -31,6 +33,7 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.support.v4.graphics.ColorUtils;
@@ -70,6 +73,7 @@ public class KeyguardStatusView extends GridLayout implements
     private static final String TAG = "KeyguardStatusView";
     private static final int MARQUEE_DELAY_MS = 2000;
     private static final String FONT_FAMILY = "sans-serif-light";
+    private static final String GOOGLE_SANS_FONT_FAMILY = "google-sans";
 
     private final LockPatternUtils mLockPatternUtils;
     private final IActivityManager mIActivityManager;
@@ -405,6 +409,11 @@ public class KeyguardStatusView extends GridLayout implements
         }
         if (mLogoutView != null) {
             mLogoutView.setTypeface(tf);
+        }
+        if (mTextClock != null) {
+            mTextClock.setTypeface(
+                    isSystemFont() ? Typeface.create(GOOGLE_SANS_FONT_FAMILY, Typeface.NORMAL)
+                            : tf);
         }
     }
 
@@ -851,6 +860,17 @@ public class KeyguardStatusView extends GridLayout implements
         @Override
         public boolean shouldFinish(View view) {
             return view == getParent();
+        }
+    }
+
+    private static boolean isSystemFont() {
+        try {
+            IFontService fontService = IFontService.Stub
+                    .asInterface(ServiceManager.getService("dufont"));
+            FontInfo currentInfo = fontService.getFontInfo();
+            return currentInfo.packageName.contentEquals(FontInfo.DEFAULT_FONT_PACKAGE);
+        } catch (RemoteException e) {
+            return true;
         }
     }
 }
