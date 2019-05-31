@@ -21,6 +21,7 @@ import static android.provider.Settings.Secure.STATUSBAR_CLOCK_DATE_DISPLAY;
 import static android.provider.Settings.Secure.STATUSBAR_CLOCK_DATE_STYLE;
 import static android.provider.Settings.Secure.STATUSBAR_CLOCK_DATE_FORMAT;
 import static android.provider.Settings.Secure.STATUSBAR_CLOCK_DATE_POSITION;
+import static android.provider.Settings.Secure.STATUSBAR_CLOCK_HIDDEN_BY_HOME;
 
 import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
@@ -40,6 +41,7 @@ import android.text.format.DateFormat;
 import android.text.style.CharacterStyle;
 import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.TextView;
@@ -48,6 +50,7 @@ import com.android.settingslib.Utils;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.FontSizeUtils;
+import com.android.systemui.LauncherWatcher;
 import com.android.systemui.R;
 import com.android.systemui.SysUiServiceProvider;
 import com.android.systemui.settings.CurrentUserTracker;
@@ -115,6 +118,8 @@ public class Clock extends TextView implements DemoMode, Tunable, CommandQueue.C
     private int mAmPmStyle;
     private final boolean mShowDark;
     private boolean mQsHeader;
+    private boolean mHideClockOnHome;
+    private boolean mIsHomeShowingNow;
 
     /**
      * Whether we should use colors that adapt based on wallpaper/the scrim behind quick settings
@@ -126,6 +131,18 @@ public class Clock extends TextView implements DemoMode, Tunable, CommandQueue.C
      * Color to be set on this {@link TextView}, when wallpaperTextColor is <b>not</b> utilized.
      */
     private int mNonAdaptedColor;
+
+    private LauncherWatcher.Callbacks mHomeWatcher = new LauncherWatcher.Callbacks() {
+        @Override
+        public void onHomeVisibilityChanged(boolean isVisible) {
+            mIsHomeShowingNow = isVisible;
+            if (Clock.this.isClockVisible() && Clock.this.getAlpha() != 1f) {
+                Clock.this.animate().cancel();
+                Clock.this.setAlpha(1f);
+            }
+            updateClockVisibility();
+        }
+    };
 
     public Clock(Context context) {
         this(context, null);
@@ -154,6 +171,10 @@ public class Clock extends TextView implements DemoMode, Tunable, CommandQueue.C
                 mCurrentUserId = newUserId;
             }
         };
+        Dependency.get(LauncherWatcher.class).addCallbacks(mHomeWatcher);
+        // initialize as true to keep CollapsedStatusBarFragment from animating us
+        // throwing off visibility
+        mIsHomeShowingNow = true;
     }
 
     @Override
@@ -208,7 +229,8 @@ public class Clock extends TextView implements DemoMode, Tunable, CommandQueue.C
                     null, Dependency.get(Dependency.TIME_TICK_HANDLER));
             Dependency.get(TunerService.class).addTunable(this,
                     STATUSBAR_CLOCK_AM_PM_STYLE, STATUSBAR_CLOCK_DATE_DISPLAY,
-                    STATUSBAR_CLOCK_DATE_STYLE, STATUSBAR_CLOCK_DATE_FORMAT, STATUSBAR_CLOCK_DATE_POSITION);
+                    STATUSBAR_CLOCK_DATE_STYLE, STATUSBAR_CLOCK_DATE_FORMAT,
+                    STATUSBAR_CLOCK_DATE_POSITION, STATUSBAR_CLOCK_HIDDEN_BY_HOME);
             SysUiServiceProvider.getComponent(getContext(), CommandQueue.class).addCallbacks(this);
             if (mShowDark) {
                 Dependency.get(DarkIconDispatcher.class).addDarkReceiver(this);
@@ -290,18 +312,22 @@ public class Clock extends TextView implements DemoMode, Tunable, CommandQueue.C
     }
 
     private void updateClockVisibility() {
-        boolean visible = mClockVisibleByPolicy && mClockVisibleByUser;
+        boolean visible = mClockVisibleByPolicy && mClockVisibleByUser && !isClockHiddenByHome();
         Dependency.get(IconLogger.class).onIconVisibility("clock", visible);
         int visibility = visible ? View.VISIBLE : View.GONE;
         setVisibility(visibility);
     }
 
     public boolean isClockVisible() {
-        return mClockVisibleByPolicy && mClockVisibleByUser;
+        return mClockVisibleByPolicy && mClockVisibleByUser && !isClockHiddenByHome();
     }
 
     public void setClockHideableByUser(boolean value) {
         mClockHideableByUser = value;
+    }
+
+    private boolean isClockHiddenByHome() {
+        return mHideClockOnHome && mIsHomeShowingNow;
     }
 
     final void updateClock() {
@@ -317,7 +343,8 @@ public class Clock extends TextView implements DemoMode, Tunable, CommandQueue.C
                 || STATUSBAR_CLOCK_DATE_DISPLAY.equals(key)
                 || STATUSBAR_CLOCK_DATE_STYLE.equals(key)
                 || STATUSBAR_CLOCK_DATE_FORMAT.equals(key)
-                || STATUSBAR_CLOCK_DATE_POSITION.equals(key)) {
+                || STATUSBAR_CLOCK_DATE_POSITION.equals(key)
+                || STATUSBAR_CLOCK_HIDDEN_BY_HOME.equals(key)) {
             updateSettings(key, newValue);
         }
     }
@@ -555,8 +582,14 @@ public class Clock extends TextView implements DemoMode, Tunable, CommandQueue.C
                 }
                 mClockDatePosition = Integer.parseInt(newValue);
                 break;
-        }
 
+            case (STATUSBAR_CLOCK_HIDDEN_BY_HOME):
+                if (newValue == null) {
+                    newValue = "0";
+                }
+                mHideClockOnHome = !newValue.equals("0");
+                break;
+        }
         if (mCalendar != null) {
             updateClock();
         }
