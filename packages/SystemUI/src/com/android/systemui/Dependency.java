@@ -332,6 +332,8 @@ public class Dependency extends SystemUI {
         mProviders.put(PulseController.class,
                 () -> new PulseController(mContext, getDependency(MAIN_HANDLER)));
 
+        mProviders.put(LauncherWatcher.class, () -> new LauncherWatcher(mContext));
+
         // Put all dependencies above here so the factory can override them if it wants.
         SystemUIFactory.getInstance().injectDependencies(mProviders, mContext);
 
