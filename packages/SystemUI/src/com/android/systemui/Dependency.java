@@ -328,6 +328,8 @@ public class Dependency extends SystemUI {
         mProviders.put(IStatusBarService.class, () -> IStatusBarService.Stub.asInterface(
                 ServiceManager.getService(Context.STATUS_BAR_SERVICE)));
 
+        mProviders.put(LauncherWatcher.class, () -> new LauncherWatcher(mContext));
+
         // Put all dependencies above here so the factory can override them if it wants.
         SystemUIFactory.getInstance().injectDependencies(mProviders, mContext);
 
