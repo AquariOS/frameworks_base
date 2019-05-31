@@ -9177,6 +9177,13 @@ public final class Settings {
          * @hide
          */
         public static final String STATUSBAR_CLOCK_DATE_POSITION = "statusbar_clock_date_position";
+
+        /**
+         * Hide clock when Home is showing
+         * @hide
+         */
+        public static final String STATUSBAR_CLOCK_HIDDEN_BY_HOME = "statusbar_clock_hidden_by_home";
+
          /** @hide */
         public static final Validator STATUSBAR_CLOCK_DATE_POSITION_VALIDATOR =
                 new SettingsValidators.InclusiveIntegerRangeValidator(0, 1);
