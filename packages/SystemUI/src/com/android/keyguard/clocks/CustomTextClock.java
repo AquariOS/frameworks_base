@@ -14,6 +14,11 @@ import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import android.graphics.Color;
+import java.lang.NullPointerException;
+import java.lang.IllegalStateException;
+import android.graphics.Paint;
+import android.os.ParcelFileDescriptor;
 
 import com.android.internal.util.ArrayUtils;
 import com.android.keyguard.clocks.LangGuard;
@@ -43,6 +48,8 @@ public class CustomTextClock extends TextView {
 
     private int handType;
 
+    private Context mContext;
+
     private boolean h24;
 
     public CustomTextClock(Context context) {
@@ -57,6 +64,7 @@ public class CustomTextClock extends TextView {
 
         handType = a.getInteger(R.styleable.CustomTextClock_HandType, 2);
 
+        mContext = context;
         mCalendar = new Time();
 
     }
@@ -107,11 +115,13 @@ public class CustomTextClock extends TextView {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (handType == 2) {
             if (langHasChanged) {
                 setText(topText);
                 langHasChanged = false;
             }
             setTextColor(ColorText.getWallColor(mContext));
+		}
     }
 
     private void onTimeChanged() {
