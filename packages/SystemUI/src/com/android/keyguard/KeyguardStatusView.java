@@ -623,7 +623,6 @@ public class KeyguardStatusView extends GridLayout implements
                 mAquaClockTwoView.setVisibility(View.GONE);
                 mAquaClockThreeView.setVisibility(View.GONE);
                 mAquaClockFourView.setVisibility(View.GONE);
-                mKeyguardSlice.setPadding(0,0,0,0);
                 break;
         }
     }
@@ -678,6 +677,9 @@ public class KeyguardStatusView extends GridLayout implements
                 params.addRule(RelativeLayout.BELOW, R.id.clock_view);
                 mClockView.setSingleLine(false);
                 mClockView.setGravity(Gravity.CENTER);
+                break;
+            case 9: // custom text clock
+                params.addRule(RelativeLayout.BELOW, R.id.custom_textclock_view);
                 break;
         }
 
