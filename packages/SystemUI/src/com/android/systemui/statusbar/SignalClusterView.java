@@ -111,6 +111,8 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     private final int mSecondaryTelephonyPadding;
     private final int mEndPadding;
     private final int mEndPaddingNothingVisible;
+    private final int mMobileImsStartPaddingWifiShowing;
+    private final int mMobileImsStartPaddingWifiNotShowing;
     private final float mIconScaleFactor;
 
     private boolean mBlockAirplane;
@@ -142,6 +144,10 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         mEndPadding = res.getDimensionPixelSize(R.dimen.signal_cluster_battery_padding);
         mEndPaddingNothingVisible = res.getDimensionPixelSize(
                 R.dimen.no_signal_cluster_battery_padding);
+        mMobileImsStartPaddingWifiShowing = res
+                .getDimensionPixelSize(R.dimen.volte_padding_start_wifi_showing);
+        mMobileImsStartPaddingWifiNotShowing = res
+                .getDimensionPixelSize(R.dimen.volte_padding_start_wifi_not_showing);
 
         TypedValue typedValue = new TypedValue();
         res.getValue(R.dimen.status_bar_icon_scale_factor, typedValue, true);
@@ -546,6 +552,10 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         } else {
             mWifiSignalSpacer.setVisibility(View.GONE);
         }
+
+        int imsImageViewStartPadding = mWifiVisible ? mMobileImsStartPaddingWifiShowing
+                : mMobileImsStartPaddingWifiNotShowing;
+        mMobileImsImageView.setPaddingRelative(imsImageViewStartPadding, 0, 0, 0);
 
         boolean anythingVisible = mWifiVisible || mIsAirplaneMode
                 || anyMobileVisible || mVpnVisible || mEthernetVisible;
