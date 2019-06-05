@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d2e43f1_98259e40",
+        "filename": "packages/SystemUI/src/com/android/systemui/statusbar/NotificationMediaManager.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2019-06-05T09:04:38Z",
+      "side": 1,
+      "message": "Typo: isColorizedMedia?",
+      "revId": "da6fe540ab64758cd0378753006c194f116bfc59",
+      "serverId": "e852809f-cea0-4215-9787-0665f7b159ff",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaa8e38b_d25ae4ff",
+        "filename": "packages/SystemUI/src/com/android/systemui/statusbar/NotificationMediaManager.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1000011
+      },
+      "writtenOn": "2019-06-05T09:04:38Z",
+      "side": 1,
+      "message": "Typo: isColorizedMedia?",
+      "revId": "da6fe540ab64758cd0378753006c194f116bfc59",
+      "serverId": "e852809f-cea0-4215-9787-0665f7b159ff",
+      "unresolved": false
+    }
+  ]
+}
