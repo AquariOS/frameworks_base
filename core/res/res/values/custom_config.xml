@@ -97,8 +97,6 @@
     <!-- Show a custom view for FOD -->
     <bool name="config_needCustomFODView">false</bool>
 
-    <bool name="config_usesOnePlusFOD">false</bool>
-
     <!-- Whether the device supports Smart Pixels -->
     <bool name="config_enableSmartPixels">false</bool>
 
