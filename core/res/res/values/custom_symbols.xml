@@ -154,10 +154,6 @@
   <!-- Vendor Fingerprint Check -->
   <java-symbol type="bool" name="config_checkVendorFingerprint"/>
 
-  <!-- FoD -->
-  <java-symbol type="bool" name="config_needCustomFODView" />
-  <java-symbol type="bool" name="config_usesOnePlusFOD" />
-
   <!-- Recents/Launcher3 icon pack support -->
   <!-- Icon packs -->
   <java-symbol type="drawable" name="adaptive_icon_drawable_wrapper" />
@@ -169,5 +165,4 @@
   <java-symbol type="string" name="battery_charged_channel_name" />
   <java-symbol type="string" name="notify_battery_fully_charged_title" />
   <java-symbol type="string" name="notify_battery_fully_charged_text" />
-
 </resources>
