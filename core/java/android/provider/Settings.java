@@ -4200,6 +4200,16 @@ public final class Settings {
                 ANY_STRING_VALIDATOR;
 
         /**
+         * Enable face auto unlock on secure lock screens
+         *
+         * @hide
+         */
+        public static final String OMNI_DISPLAY_MODE = "omni_display_mode";
+
+        private static final Validator OMNI_DISPLAY_MODE_VALIDATOR =
+                ANY_INTEGER_VALIDATOR;
+
+        /**
          * Custom button brightness value for manual mode
          *
          * @hide
@@ -4968,6 +4978,7 @@ public final class Settings {
             OMNI_DEVICE_PROXI_CHECK_ENABLED,
             OMNI_DEVICE_FEATURE_SETTINGS,
             DOZE_ON_CHARGE,
+            OMNI_DISPLAY_MODE,
         };
 
         /**
@@ -5110,6 +5121,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(OMNI_DEVICE_PROXI_CHECK_ENABLED);
             PRIVATE_SETTINGS.add(OMNI_DEVICE_FEATURE_SETTINGS);
             PRIVATE_SETTINGS.add(DOZE_ON_CHARGE);
+            PRIVATE_SETTINGS.add(OMNI_DISPLAY_MODE);
         }
 
         /**
@@ -5219,6 +5231,7 @@ public final class Settings {
             VALIDATORS.put(OMNI_DEVICE_PROXI_CHECK_ENABLED, OMNI_DEVICE_PROXI_CHECK_ENABLED_VALIDATOR);
             VALIDATORS.put(OMNI_DEVICE_FEATURE_SETTINGS, OMNI_DEVICE_FEATURE_SETTINGS_VALIDATOR);
             VALIDATORS.put(DOZE_ON_CHARGE, DOZE_ON_CHARGE_VALIDATOR);
+            VALIDATORS.put(OMNI_DISPLAY_MODE, OMNI_DISPLAY_MODE_VALIDATOR);
         }
 
         /**
