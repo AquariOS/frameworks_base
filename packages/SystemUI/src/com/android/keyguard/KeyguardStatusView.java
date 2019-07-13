@@ -262,7 +262,6 @@ public class KeyguardStatusView extends GridLayout implements
         int height = mClockView.getHeight();
         layoutParams.bottomMargin = (int) -(height - (clockScale * height));
         mClockView.setLayoutParams(layoutParams);
-        updateSettings();
 
         // Custom analog clock
         RelativeLayout.LayoutParams customlayoutParams =
@@ -473,6 +472,20 @@ public class KeyguardStatusView extends GridLayout implements
         if (mOwnerInfo == null) return;
         String info = mLockPatternUtils.getDeviceOwnerInfo();
         if (info == null) {
+
+            final ContentResolver resolver = mContext.getContentResolver();
+            boolean mTextClockSelected = Settings.System.getIntForUser(resolver,
+                    Settings.System.LOCKSCREEN_CLOCK_SELECTION, 0, UserHandle.USER_CURRENT) == 8;
+
+            // If text style clock, align the textView to start, else keep it centered.
+            if (mTextClockSelected) {
+                mOwnerInfo.setPaddingRelative((int) mContext.getResources()
+                    .getDimension(R.dimen.custom_clock_left_padding) + 8, 0, 0, 0);
+                mOwnerInfo.setGravity(Gravity.START);
+            } else {
+                mOwnerInfo.setPaddingRelative(0, 0, 0, 0);
+                mOwnerInfo.setGravity(Gravity.CENTER);
+            }
             // Use the current user owner information if enabled.
             final boolean ownerInfoEnabled = mLockPatternUtils.isOwnerInfoEnabled(
                     KeyguardUpdateMonitor.getCurrentUser());
@@ -508,121 +521,73 @@ public class KeyguardStatusView extends GridLayout implements
     }
 
     private void updateVisibilities() {
+        final int clockVisibilityCheck = mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
+                       View.GONE) : View.VISIBLE;
+        mClockView.setVisibility(View.GONE);
+        mCustomClockView.setVisibility(View.GONE);
+        mAquaClockOneView.setVisibility(View.GONE);
+        mAquaClockTwoView.setVisibility(View.GONE);
+        mAquaClockThreeView.setVisibility(View.GONE);
+        mAquaClockFourView.setVisibility(View.GONE);
+        mTextClock.setVisibility(View.GONE);
+        mKeyguardSlice.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
         switch (mClockSelection) {
             case 0: // default digital
             default:
-                mClockView.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
-                mCustomClockView.setVisibility(View.GONE);
-                mAquaClockOneView.setVisibility(View.GONE);
-                mAquaClockTwoView.setVisibility(View.GONE);
-                mAquaClockThreeView.setVisibility(View.GONE);
-                mAquaClockFourView.setVisibility(View.GONE);
-                mTextClock.setVisibility(View.GONE);
-                mKeyguardSlice.setPadding(0,0,0,0);
+                mClockView.setVisibility(clockVisibilityCheck);
+                mClockView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimensionPixelSize(R.dimen.widget_big_font_size));
+                mClockView.setLineSpacing(0,1f);
                 break;
             case 1: // digital (bold)
-                mClockView.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
-                mCustomClockView.setVisibility(View.GONE);
-                mAquaClockOneView.setVisibility(View.GONE);
-                mAquaClockTwoView.setVisibility(View.GONE);
-                mAquaClockThreeView.setVisibility(View.GONE);
-                mAquaClockFourView.setVisibility(View.GONE);
-                mTextClock.setVisibility(View.GONE);
-                mKeyguardSlice.setPadding(0,0,0,0);
+                mClockView.setVisibility(clockVisibilityCheck);
+                mClockView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimensionPixelSize(R.dimen.widget_big_font_size));
+                mClockView.setLineSpacing(0,1f);
+                
                 break;
             case 2: // custom analog
-                mCustomClockView.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
-                mClockView.setVisibility(View.GONE);
-                mAquaClockOneView.setVisibility(View.GONE);
-                mAquaClockTwoView.setVisibility(View.GONE);
-                mAquaClockThreeView.setVisibility(View.GONE);
-                mAquaClockFourView.setVisibility(View.GONE);
-                mTextClock.setVisibility(View.GONE);
-                mKeyguardSlice.setPadding(0,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
-                    getResources().getDimensionPixelSize(R.dimen.custom_analog_clock_bottom_padding), 
-                    getResources().getDisplayMetrics()),0,0
-                );
+                mCustomClockView.setVisibility(clockVisibilityCheck);
+                mClockView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimensionPixelSize(R.dimen.widget_big_font_size));
+                mClockView.setLineSpacing(0,1f);
                 break;
             case 3: // aqua analog one
-                mAquaClockOneView.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
+                mAquaClockOneView.setVisibility(clockVisibilityCheck);
+                mKeyguardSlice.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
                 mClockView.setVisibility(View.GONE);
-                mCustomClockView.setVisibility(View.GONE);
-                mAquaClockTwoView.setVisibility(View.GONE);
-                mAquaClockThreeView.setVisibility(View.GONE);
-                mAquaClockFourView.setVisibility(View.GONE);
-                mTextClock.setVisibility(View.GONE);
-                mKeyguardSlice.setPadding(0,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
-                    getResources().getDimensionPixelSize(R.dimen.custom_analog_clock_bottom_padding), 
-                    getResources().getDisplayMetrics()),0,0
-                );
                 break;
             case 4: // aqua analog two
-                mAquaClockTwoView.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
-                mClockView.setVisibility(View.GONE);
-                mCustomClockView.setVisibility(View.GONE);
-                mAquaClockOneView.setVisibility(View.GONE);
-                mAquaClockThreeView.setVisibility(View.GONE);
-                mAquaClockFourView.setVisibility(View.GONE);
-                mTextClock.setVisibility(View.GONE);
-                mKeyguardSlice.setPadding(0,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
-                    getResources().getDimensionPixelSize(R.dimen.custom_analog_clock_bottom_padding), 
-                    getResources().getDisplayMetrics()),0,0
-                );
+                mAquaClockTwoView.setVisibility(clockVisibilityCheck);
+                mClockView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimensionPixelSize(R.dimen.widget_big_font_size));
                 break;
             case 5: // aqua analog three
-                mAquaClockThreeView.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
-                mClockView.setVisibility(View.GONE);
-                mCustomClockView.setVisibility(View.GONE);
-                mAquaClockOneView.setVisibility(View.GONE);
-                mAquaClockTwoView.setVisibility(View.GONE);
-                mAquaClockFourView.setVisibility(View.GONE);
-                mTextClock.setVisibility(View.GONE);
-                mKeyguardSlice.setPadding(0,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
-                    getResources().getDimensionPixelSize(R.dimen.custom_analog_clock_bottom_padding), 
-                    getResources().getDisplayMetrics()),0,0
-                );
+                mAquaClockThreeView.setVisibility(clockVisibilityCheck);
+                mClockView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimensionPixelSize(R.dimen.widget_big_font_size));
                 break;
             case 6: // aqua analog four
-                mAquaClockFourView.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
-                mClockView.setVisibility(View.GONE);
-                mCustomClockView.setVisibility(View.GONE);
-                mAquaClockOneView.setVisibility(View.GONE);
-                mAquaClockTwoView.setVisibility(View.GONE);
-                mAquaClockThreeView.setVisibility(View.GONE);
-                mTextClock.setVisibility(View.GONE);
-                mKeyguardSlice.setPadding(0,(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
-                    getResources().getDimensionPixelSize(R.dimen.custom_analog_clock_bottom_padding), 
-                    getResources().getDisplayMetrics()),0,0
-                );
+                mAquaClockFourView.setVisibility(clockVisibilityCheck);
+                mClockView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimensionPixelSize(R.dimen.widget_big_font_size));
                 break;
             case 7: // sammy
-                mClockView.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
-                mCustomClockView.setVisibility(View.GONE);
-                mAquaClockOneView.setVisibility(View.GONE);
-                mAquaClockTwoView.setVisibility(View.GONE);
-                mAquaClockThreeView.setVisibility(View.GONE);
-                mAquaClockFourView.setVisibility(View.GONE);
-                mTextClock.setVisibility(View.GONE);
-                mKeyguardSlice.setPadding(0,0,0,0);
+                mClockView.setVisibility(clockVisibilityCheck);
+                mClockView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimensionPixelSize(R.dimen.widget_big_font_size));
                 break;
             case 8: // sammy (bold)
-                mClockView.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
-                mCustomClockView.setVisibility(View.GONE);
-                mAquaClockOneView.setVisibility(View.GONE);
-                mAquaClockTwoView.setVisibility(View.GONE);
-                mAquaClockThreeView.setVisibility(View.GONE);
-                mAquaClockFourView.setVisibility(View.GONE);
-                mTextClock.setVisibility(View.GONE);
-                mKeyguardSlice.setPadding(0,0,0,0);
+                mClockView.setVisibility(clockVisibilityCheck);
+                mClockView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimensionPixelSize(R.dimen.widget_big_font_size));
+                mClockView.setLineSpacing(0,1f);
                 break;
             case 9: // custom text clock
                 mTextClock.setVisibility(View.VISIBLE);
-                mClockView.setVisibility(View.GONE);
-                mCustomClockView.setVisibility(View.GONE);
-                mAquaClockOneView.setVisibility(View.GONE);
-                mAquaClockTwoView.setVisibility(View.GONE);
-                mAquaClockThreeView.setVisibility(View.GONE);
-                mAquaClockFourView.setVisibility(View.GONE);
+                mClockView.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                getResources().getDimensionPixelSize(R.dimen.widget_big_font_size));
+                mClockView.setLineSpacing(0,1f);
                 break;
         }
     }
@@ -694,16 +659,17 @@ public class KeyguardStatusView extends GridLayout implements
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)
                     mKeyguardSlice.getLayoutParams();
             params.addRule(RelativeLayout.BELOW, R.id.clock_view);
-            mClockView.setSingleLine(true);
-            mClockView.setGravity(Gravity.CENTER);
-            mClockView.setVisibility(mShowClock ? View.VISIBLE : View.GONE);
             mCustomClockView.setVisibility(View.GONE);
             mAquaClockOneView.setVisibility(View.GONE);
             mAquaClockTwoView.setVisibility(View.GONE);
             mAquaClockThreeView.setVisibility(View.GONE);
             mAquaClockFourView.setVisibility(View.GONE);
             mTextClock.setVisibility(View.GONE);
-
+            mClockView.setSingleLine(true);
+            mClockView.setGravity(Gravity.CENTER);
+            mClockView.setVisibility(mDarkAmount != 1 ? (mShowClock ? View.VISIBLE :
+                    View.GONE) : View.VISIBLE);
+            mClockView.refresh();
         } else {
             setStyle();
             refreshTime();

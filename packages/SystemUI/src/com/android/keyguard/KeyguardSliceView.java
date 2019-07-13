@@ -174,7 +174,7 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         }
 
         final ContentResolver resolver = mContext.getContentResolver();
-        boolean mClockSelection = Settings.System.getIntForUser(resolver,
+        boolean mTextClockSelected = Settings.System.getIntForUser(resolver,
                 Settings.System.LOCKSCREEN_CLOCK_SELECTION, 0, UserHandle.USER_CURRENT) == 9;
 
         ListContent lc = new ListContent(getContext(), mSlice);
@@ -206,7 +206,7 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         final int subItemsCount = subItems.size();
         final int blendedColor = getTextColor();
         final int startIndex = mHasHeader ? 1 : 0; // First item is header; skip it
-        if (mClockSelection) {
+        if (mTextClockSelected) {
             mRow.setPaddingRelative((int) mContext.getResources().getDimension(R.dimen.custom_clock_left_padding), 0, 0, 0);
             mRow.setGravity(Gravity.START);
         }
