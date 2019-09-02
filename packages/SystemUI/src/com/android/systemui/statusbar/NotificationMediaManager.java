@@ -427,15 +427,12 @@ public class NotificationMediaManager implements Dumpable {
                 setMediaNotificationText(null, false);
             }
             if (!dontPulse) {
-                for (MediaUpdateListener listener : mListeners) {
-                    listener.onMediaUpdated(true);
-                }
+                updateListenersMediaUpdated(true);
             }
         } else {
             mEntryManager.setEntryToRefresh(null, true);
             setMediaNotificationText(null, false);
-            for (MediaUpdateListener listener : mListeners) {
-                listener.onMediaUpdated(true);
+            updateListenersMediaUpdated(false);
         }
     }
 
