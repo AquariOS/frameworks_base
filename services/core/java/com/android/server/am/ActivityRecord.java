@@ -2370,6 +2370,10 @@ final class ActivityRecord extends ConfigurationContainer implements AppWindowCo
                 }
                 maxAspectRatio = mFullScreenAspectRatio;
             }
+          }
+
+        if (service.mWindowManager.isGestureButtonEnabled()) {
+            return;
         }
 
         final ActivityStack stack = getStack();
