@@ -5040,12 +5040,38 @@ public final class Settings {
          */
         public static final String NOTIFICATION_SOUND_VIB_SCREEN_ON = "notification_sound_vib_screen_on";
 
-
         /**
          * Whether to vibrate on notifications
          * @hide
          */
         public static final String VIBRATE_ON_NOTIFICATIONS = "vibrate_on_notifications";
+
+        /**
+         * Whether the phone ringtone should be played in an increasing manner
+         * 0 = 0ff, 1 = on
+         */
+        public static final String INCREASING_RING = "increasing_ring";
+
+        /** @hide */
+        public static final Validator INCREASING_RING_VALIDATOR = BOOLEAN_VALIDATOR;
+
+        /**
+         * Start volume fraction for increasing ring volume
+         */
+        public static final String INCREASING_RING_START_VOLUME = "increasing_ring_start_vol";
+
+        /** @hide */
+        public static final Validator INCREASING_RING_START_VOLUME_VALIDATOR =
+                new SettingsValidators.InclusiveFloatRangeValidator(0, 1);
+
+        /**
+         * Ramp up time (seconds) for increasing ring
+         */
+        public static final String INCREASING_RING_RAMP_UP_TIME = "increasing_ring_ramp_up_time";
+
+        /** @hide */
+        public static final Validator INCREASING_RING_RAMP_UP_TIME_VALIDATOR =
+                new SettingsValidators.InclusiveIntegerRangeValidator(5, 60);
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -5255,6 +5281,9 @@ public final class Settings {
             PRIVATE_SETTINGS.add(BACK_GESTURE_HEIGHT);
             PRIVATE_SETTINGS.add(BACK_GESTURE_BLOCK_IME);
             PRIVATE_SETTINGS.add(NAVIGATION_BAR_ARROW_KEYS);
+            PRIVATE_SETTINGS.add(INCREASING_RING);
+            PRIVATE_SETTINGS.add(INCREASING_RING_START_VOLUME);
+            PRIVATE_SETTINGS.add(INCREASING_RING_RAMP_UP_TIME);
         }
 
         /**
@@ -5358,6 +5387,9 @@ public final class Settings {
             VALIDATORS.put(BACK_GESTURE_HEIGHT, BACK_GESTURE_HEIGHT_VALIDATOR);
             VALIDATORS.put(BACK_GESTURE_BLOCK_IME, BACK_GESTURE_BLOCK_IME_VALIDATOR);
             VALIDATORS.put(NAVIGATION_BAR_ARROW_KEYS, NAVIGATION_BAR_ARROW_KEYS_VALIDATOR);
+            VALIDATORS.put(INCREASING_RING, INCREASING_RING_VALIDATOR);
+            VALIDATORS.put(INCREASING_RING_START_VOLUME, INCREASING_RING_START_VOLUME_VALIDATOR);
+            VALIDATORS.put(INCREASING_RING_RAMP_UP_TIME, INCREASING_RING_RAMP_UP_TIME_VALIDATOR);
         }
 
         /**
