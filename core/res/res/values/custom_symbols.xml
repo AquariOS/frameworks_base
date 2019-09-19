@@ -64,4 +64,7 @@
   <!-- Whether device has dash charging support -->
   <java-symbol type="bool" name="config_hasDashCharger" />
 
+  <!-- Last app switch animations -->
+  <java-symbol type="anim" name="smartaction_app_in" />
+  <java-symbol type="anim" name="smartaction_app_out" />
 </resources>
