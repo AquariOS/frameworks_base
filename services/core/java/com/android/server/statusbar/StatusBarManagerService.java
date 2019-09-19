@@ -25,6 +25,7 @@ import android.app.Notification;
 import android.app.StatusBarManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.hardware.biometrics.IBiometricServiceReceiverInternal;
 import android.hardware.display.DisplayManager;
@@ -911,6 +912,77 @@ public class StatusBarManagerService extends IStatusBarService.Stub implements D
                     vis & StatusBarManager.DISABLE_MASK,
                     mSysUiVisToken,
                     cause, 1);
+        }
+    }
+
+    @Override
+    public void toggleRecentApps() {
+        enforceStatusBarService();
+
+        if (mBar != null) {
+            try {
+                mBar.toggleRecentApps();
+            } catch (RemoteException ex) {
+            }
+        }
+    }
+
+    @Override
+    public void toggleSplitScreen() {
+        enforceStatusBarService();
+
+        if (mBar != null) {
+            try {
+                mBar.toggleSplitScreen();
+            } catch (RemoteException ex) {
+            }
+        }
+    }
+
+    @Override
+    public void preloadRecentApps() {
+        enforceStatusBarService();
+
+        if (mBar != null) {
+            try {
+                mBar.preloadRecentApps();
+            } catch (RemoteException ex) {
+            }
+        }
+    }
+
+    @Override
+    public void cancelPreloadRecentApps() {
+        enforceStatusBarService();
+
+        if (mBar != null) {
+            try {
+                mBar.cancelPreloadRecentApps();
+            } catch (RemoteException ex) {
+            }
+        }
+    }
+
+    @Override
+    public void startAssist(Bundle args) {
+        enforceStatusBarService();
+
+        if (mBar != null) {
+            try {
+                mBar.startAssist(args);
+            } catch (RemoteException e) {
+            }
+        }
+    }
+
+    @Override
+    public void toggleFlashlight() {
+        enforceStatusBarService();
+        if (mBar != null) {
+            try {
+                mBar.toggleFlashlight();
+            } catch (RemoteException ex) {
+            }
         }
     }
 
