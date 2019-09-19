@@ -17,6 +17,7 @@
 package com.android.internal.statusbar;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.hardware.biometrics.IBiometricServiceReceiverInternal;
 import android.os.Bundle;
@@ -180,4 +181,5 @@ oneway interface IStatusBar
      * AquaUtils
      */
     void toggleCameraFlash();
+    void toggleFlashlight();
 }

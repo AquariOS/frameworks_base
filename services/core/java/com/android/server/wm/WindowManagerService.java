@@ -7119,6 +7119,16 @@ public class WindowManagerService extends IWindowManager.Stub
         mPolicy.requestUserActivityNotification();
     }
 
+	/**
+	 * Allow ActionHandler to send custom actions to window manager
+	 *
+	 * @hide
+	 */
+	@Override
+	public void sendCustomAction(Intent intent) {
+		mPolicy.sendCustomAction(intent);
+	}
+
     void markForSeamlessRotation(WindowState w, boolean seamlesslyRotated) {
         if (seamlesslyRotated == w.mSeamlesslyRotated || w.mForceSeamlesslyRotate) {
             return;

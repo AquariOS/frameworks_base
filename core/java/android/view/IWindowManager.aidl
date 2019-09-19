@@ -21,6 +21,7 @@ import com.android.internal.policy.IKeyguardDismissCallback;
 import com.android.internal.policy.IShortcutService;
 
 import android.app.IAssistDataReceiver;
+import android.content.Intent;
 import android.content.res.CompatibilityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -638,4 +639,9 @@ interface IWindowManager
      * native InputManager before proceeding with tests.
      */
     void syncInputTransactions();
+
+    /**
+     * Allow ActionHandler to send custom actions to window manager
+     */
+    void sendCustomAction(in Intent intent);
 }
