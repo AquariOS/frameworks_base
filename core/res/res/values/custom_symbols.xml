@@ -73,4 +73,11 @@
   <!-- Whether device has Soli support -->
   <java-symbol type="bool" name="config_has_Soli" />
 
+  <!-- Last app switch animations -->
+  <java-symbol type="anim" name="smartaction_app_in" />
+  <java-symbol type="anim" name="smartaction_app_out" />
+
+  <!-- Kill app message -->
+  <java-symbol type="string" name="app_killed_message" />
+
 </resources>

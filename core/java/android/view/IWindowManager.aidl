@@ -644,4 +644,9 @@ interface IWindowManager
      * native InputManager before proceeding with tests.
      */
     void syncInputTransactions();
+
+    /**
+     * Allow ActionHandler to send custom actions to window manager
+     */
+    void sendCustomAction(in Intent intent);
 }
