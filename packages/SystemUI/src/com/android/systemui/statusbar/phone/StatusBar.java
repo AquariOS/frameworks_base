@@ -2084,6 +2084,9 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.BACK_SWIPE_EXTENDED),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.GESTURE_DOUBLETAP_SLEEP_STATUSBAR),
+                    false, this, UserHandle.USER_ALL);
         }
 
         @Override
@@ -2098,8 +2101,10 @@ public class StatusBar extends SystemUI implements DemoMode,
                     Settings.System.LOCKSCREEN_MEDIA_BLUR))) {
                 setLockScreenMediaBlurLevel();
             } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.DOUBLE_TAP_SLEEP_LOCKSCREEN))) {
-                setLockscreenDoubleTapToSleep();
+                    Settings.System.DOUBLE_TAP_SLEEP_LOCKSCREEN)) ||
+                    uri.equals(Settings.System.getUriFor(
+                    Settings.System.GESTURE_DOUBLETAP_SLEEP_STATUSBAR))) {
+                setDoubleTapToSleep();
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN))) {
                 setStatusBarWindowViewOptions();
@@ -2123,7 +2128,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             setFpToDismissNotifications();
             setPulseOnNewTracks();
             setLockScreenMediaBlurLevel();
-            setLockscreenDoubleTapToSleep();
+            setDoubleTapToSleep();
             setStatusBarWindowViewOptions();
             setQsPanelOptions();
             setHeadsUpStoplist();
@@ -2155,9 +2160,9 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
     }
 
-    private void setLockscreenDoubleTapToSleep() {
+    private void setDoubleTapToSleep() {
         if (mStatusBarWindow != null) {
-            mStatusBarWindow.setLockscreenDoubleTapToSleep();
+            mStatusBarWindow.setDoubleTapToSleep();
         }
     }
 

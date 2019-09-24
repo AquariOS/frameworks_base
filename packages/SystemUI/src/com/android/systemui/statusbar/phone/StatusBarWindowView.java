@@ -927,12 +927,18 @@ public class StatusBarWindowView extends FrameLayout implements Tunable {
         }
     };
 
-    public void setLockscreenDoubleTapToSleep() {
+    public void setDoubleTapToSleep() {
         ContentResolver resolver = mContext.getContentResolver();
         boolean isDoubleTapEnabled = Settings.System.getIntForUser(resolver,
                 Settings.System.DOUBLE_TAP_SLEEP_LOCKSCREEN, 1, UserHandle.USER_CURRENT) == 1;
+        boolean doubleTapToSleepEnabled = Settings.System.getIntForUser(resolver,
+                Settings.System.GESTURE_DOUBLETAP_SLEEP_STATUSBAR, 1, UserHandle.USER_CURRENT) == 1;
         if (mNotificationPanel != null) {
-            mNotificationPanel.setLockscreenDoubleTapToSleep(isDoubleTapEnabled);
+            mNotificationPanel.setDoubleTapToSleep(isDoubleTapEnabled);
+            mNotificationPanel.updateDoubleTapToSleep(doubleTapToSleepEnabled);
+        }
+        if (mDragDownHelper != null) {
+            mDragDownHelper.updateDoubleTapToSleep(doubleTapToSleepEnabled);
         }
     }
 

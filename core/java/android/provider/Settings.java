@@ -4521,6 +4521,16 @@ public final class Settings {
          */
         public static final String AMBIENT_WAKE_GESTURES = "ambient_wake_gestures";
 
+        /**
+         *  Enable statusbar double tap gesture on to put device to sleep
+         * @hide
+         */
+        public static final String GESTURE_DOUBLETAP_SLEEP_STATUSBAR = "gesture_doubletap_sleep_statusbar";
+
+        /** @hide */
+        private static final Validator DOUBLE_TAP_SLEEP_STATUSBAR_VALIDATOR =
+                BOOLEAN_VALIDATOR;
+
         /** @hide */
         public static final String BACK_GESTURE_HEIGHT = "back_gesture_height";
 
@@ -5162,6 +5172,7 @@ public final class Settings {
             VIBRATE_WHEN_RINGING,
             RINGTONE,
             LOCK_TO_APP_ENABLED,
+            GESTURE_DOUBLETAP_SLEEP_STATUSBAR,
             GESTURE_PILL_TOGGLE,
             NOTIFICATION_SOUND,
             ACCELEROMETER_ROTATION,
@@ -5297,6 +5308,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(SIP_ASK_ME_EACH_TIME);
             PRIVATE_SETTINGS.add(POINTER_SPEED);
             PRIVATE_SETTINGS.add(LOCK_TO_APP_ENABLED);
+            PRIVATE_SETTINGS.add(GESTURE_DOUBLETAP_SLEEP_STATUSBAR);
             PRIVATE_SETTINGS.add(GESTURE_PILL_TOGGLE);
             PRIVATE_SETTINGS.add(EGG_MODE);
             PRIVATE_SETTINGS.add(DISPLAY_COLOR_MODE);
@@ -5403,6 +5415,7 @@ public final class Settings {
             VALIDATORS.put(SIP_ASK_ME_EACH_TIME, SIP_ASK_ME_EACH_TIME_VALIDATOR);
             VALIDATORS.put(POINTER_SPEED, POINTER_SPEED_VALIDATOR);
             VALIDATORS.put(LOCK_TO_APP_ENABLED, LOCK_TO_APP_ENABLED_VALIDATOR);
+            VALIDATORS.put(GESTURE_DOUBLETAP_SLEEP_STATUSBAR, DOUBLE_TAP_SLEEP_STATUSBAR_VALIDATOR);     
             VALIDATORS.put(GESTURE_PILL_TOGGLE, GESTURE_PILL_TOGGLE_VALIDATOR);
             VALIDATORS.put(EGG_MODE, EGG_MODE_VALIDATOR);
             VALIDATORS.put(WIFI_STATIC_IP, WIFI_STATIC_IP_VALIDATOR);
