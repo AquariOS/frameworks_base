@@ -243,14 +243,14 @@ public class EdgeBackGestureHandler implements DisplayListener {
         updateCurrentUserResources(currentUserContext.getResources());
     }
 
+    public void onSettingsChanged() {
+        updateEdgeHeightValue();
+    }
+
     public void onSystemUiVisibilityChanged(int systemUiVisibility) {
         mIsInTransientImmersiveStickyState =
                 (systemUiVisibility & SYSTEM_UI_FLAG_IMMERSIVE_STICKY) != 0
                 && (systemUiVisibility & NAVIGATION_BAR_TRANSIENT) != 0;
-    }
-
-    public void onSettingsChanged() {
-        updateEdgeHeightValue();
     }
 
     private void disposeInputChannel() {
