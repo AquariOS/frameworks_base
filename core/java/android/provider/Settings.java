@@ -4606,6 +4606,12 @@ public final class Settings {
          */
         public static final String SCREENRECORD_LOW_QUALITY = "screenrecord_low_quality";
 
+        /** Whether to pulse ambient on new music tracks
+         *
+         * @hide
+         */
+        public static final String PULSE_ON_NEW_TRACKS = "pulse_on_new_tracks";
+
         /**
          * Change volume up and down handlign based on rotation
          * @hide
