@@ -7432,5 +7432,5 @@ message MetricsEvent {
 
     // AquariOS Constant
     AQUA = 2019;
-  }
+    AQUA_TILE_LOCATION_DETAIL = 2020;  }
 }
