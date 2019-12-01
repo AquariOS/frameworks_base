@@ -104,6 +104,7 @@ import com.android.systemui.SystemUIFactory;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.util.NotificationChannels;
+import com.aquarios.support.utils.AquaUtils;
 
 import libcore.io.IoUtils;
 
@@ -649,7 +650,6 @@ class GlobalScreenshot {
 
     private MediaActionSound mCameraSound;
 
-
     /**
      * @param context everything needs a context :(
      */
@@ -780,6 +780,7 @@ class GlobalScreenshot {
     void takeScreenshotPartial(final Consumer<Uri> finisher, final boolean statusBarVisible,
             final boolean navBarVisible) {
         mWindowManager.addView(mScreenshotLayout, mWindowLayoutParams);
+        AquaUtils.setPartialScreenshot(true);
         mScreenshotSelectorView.setSelectionListener(
                 new ScreenshotSelectorView.OnSelectionListener() {
             @Override
@@ -828,6 +829,7 @@ class GlobalScreenshot {
     }
 
     void hideScreenshotSelector() {
+        AquaUtils.setPartialScreenshot(false);
         mWindowManager.removeView(mScreenshotLayout);
         mScreenshotSelectorView.stopSelection();
         mScreenshotSelectorView.setVisibility(View.GONE);
@@ -846,6 +848,8 @@ class GlobalScreenshot {
             } catch (IllegalArgumentException ignored) {
             }
         }
+        // called when unbinding screenshot service
+        AquaUtils.setPartialScreenshot(false);
     }
 
     /**
