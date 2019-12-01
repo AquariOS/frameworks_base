@@ -180,4 +180,5 @@ oneway interface IStatusBar
      * AquaUtils
      */
     void toggleCameraFlash();
+    void setPartialScreenshot(boolean active);
 }
