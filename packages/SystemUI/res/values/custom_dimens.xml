@@ -49,8 +49,11 @@
     <dimen name="global_screenshot_selector_corner_width">8dp</dimen>
     <dimen name="global_screenshot_selector_touch_width">30dp</dimen>
 
+    <!-- Lockscreen bottom shortcuts -->
     <dimen name="lockscreen_shortcuts_preview_paddingVertical">30dp</dimen>
     <dimen name="lockscreen_shortcuts_preview_paddingHorizontal">50dp</dimen>
     <dimen name="keyguard_affordance_icon_preview_padding">15dp</dimen>
+    <dimen name="keyguard_affordance_padding">10dp</dimen>
+    <dimen name="keyguard_affordance_margin">15dp</dimen>
 
 </resources>
