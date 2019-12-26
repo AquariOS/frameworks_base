@@ -48,4 +48,7 @@
   <!-- Wallpaper component -->
   <string name="default_wallpaper_component_custom" translatable="false">@null</string>
 
+  <!-- Whether device has Soli support -->
+  <bool name="config_has_Soli">false</bool>
+
 </resources>
