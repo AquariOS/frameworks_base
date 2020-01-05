@@ -16,8 +16,10 @@
 
 package com.android.internal.util.aquarios;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -25,36 +27,91 @@ import android.content.res.Resources;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
-import android.net.ConnectivityManager;
-import android.net.ConnectivityManager;
-import android.os.UserHandle;
 import android.hardware.input.InputManager;
+import android.os.BatteryManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.os.SystemClock;
-import android.util.DisplayMetrics;
-import android.view.DisplayInfo;
+import android.media.AudioManager;
+import android.view.IWindowManager;
 import android.view.InputDevice;
+import android.view.WindowManagerGlobal;
+import android.net.ConnectivityManager;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
-import android.view.IWindowManager;
-import android.view.WindowManager;
-import android.view.WindowManagerGlobal;
+
+import com.android.internal.R;
+import com.android.internal.statusbar.IStatusBarService;
 
 import java.util.Locale;
+import java.util.Arrays;
 
 public class AquaUtils {
 
-    private static int sDeviceType = -1;
-    private static final int DEVICE_PHONE = 0;
-    private static final int DEVICE_HYBRID = 1;
-    private static final int DEVICE_TABLET = 2;
+    public static final String INTENT_SCREENSHOT = "action_handler_screenshot";
+    public static final String INTENT_REGION_SCREENSHOT = "action_handler_region_screenshot";
+
+    private static IStatusBarService mStatusBarService = null;
+    private static IStatusBarService getStatusBarService() {
+        synchronized (AquaUtils.class) {
+            if (mStatusBarService == null) {
+                mStatusBarService = IStatusBarService.Stub.asInterface(
+                        ServiceManager.getService("statusbar"));
+            }
+            return mStatusBarService;
+        }
+    }
 
     public static boolean isChineseLanguage() {
        return Resources.getSystem().getConfiguration().locale.getLanguage().startsWith(
                Locale.CHINESE.getLanguage());
+    }
+
+    public static boolean isAppInstalled(Context context, String appUri) {
+        try {
+            PackageManager pm = context.getPackageManager();
+            pm.getPackageInfo(appUri, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean isAvailableApp(String packageName, Context context) {
+       Context mContext = context;
+       final PackageManager pm = mContext.getPackageManager();
+       try {
+           pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+           int enabled = pm.getApplicationEnabledSetting(packageName);
+           return enabled != PackageManager.COMPONENT_ENABLED_STATE_DISABLED &&
+               enabled != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER;
+       } catch (NameNotFoundException e) {
+           return false;
+       }
+    }
+
+    public static boolean isPackageInstalled(Context context, String pkg, boolean ignoreState) {
+        if (pkg != null) {
+            try {
+                PackageInfo pi = context.getPackageManager().getPackageInfo(pkg, 0);
+                if (!pi.applicationInfo.enabled && !ignoreState) {
+                    return false;
+                }
+            } catch (NameNotFoundException e) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static boolean isPackageInstalled(Context context, String pkg) {
+        return isPackageInstalled(context, pkg, true);
     }
 
     public static boolean deviceSupportsFlashLight(Context context) {
@@ -85,104 +142,133 @@ public class AquaUtils {
         return (cm.isNetworkSupported(ConnectivityManager.TYPE_MOBILE) == false);
     }
 
-    public static boolean isPackageInstalled(Context context, String pkg, boolean ignoreState) {
-        if (pkg != null) {
+    public static void switchScreenOff(Context context) {
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        if (pm!= null && pm.isScreenOn()) {
+            pm.goToSleep(SystemClock.uptimeMillis());
+        }
+    }
+
+    // Screen on
+    public static void switchScreenOn(Context context) {
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        if (pm == null) return;
+        pm.wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:CAMERA_GESTURE_PREVENT_LOCK");
+    }
+
+    public static void toggleCameraFlash() {
+        IStatusBarService service = getStatusBarService();
+        if (service != null) {
             try {
-                PackageInfo pi = context.getPackageManager().getPackageInfo(pkg, 0);
-                if (!pi.applicationInfo.enabled && !ignoreState) {
-                    return false;
-                }
-            } catch (NameNotFoundException e) {
-                return false;
+                service.toggleCameraFlash();
+            } catch (RemoteException e) {
+                // do nothing.
             }
         }
-
-        return true;
     }
 
-    public static boolean isPackageInstalled(Context context, String pkg) {
-        return isPackageInstalled(context, pkg, true);
+    public static void takeScreenshot(boolean full) {
+        IWindowManager wm = WindowManagerGlobal.getWindowManagerService();
+        try {
+            wm.sendCustomAction(new Intent(full? INTENT_SCREENSHOT : INTENT_REGION_SCREENSHOT));
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static int getScreenType(Context context) {
-        if (sDeviceType == -1) {
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            DisplayInfo outDisplayInfo = new DisplayInfo();
-            wm.getDefaultDisplay().getDisplayInfo(outDisplayInfo);
-            int shortSize = Math.min(outDisplayInfo.logicalHeight, outDisplayInfo.logicalWidth);
-            int shortSizeDp = shortSize * DisplayMetrics.DENSITY_DEFAULT
-                    / outDisplayInfo.logicalDensityDpi;
-            if (shortSizeDp < 600) {
-                // 0-599dp: "phone" UI with a separate status & navigation bar
-                sDeviceType =  DEVICE_PHONE;
-            } else if (shortSizeDp < 720) {
-                // 600-719dp: "phone" UI with modifications for larger screens
-                sDeviceType = DEVICE_HYBRID;
-            } else {
-                // 720dp: "tablet" UI with a single combined status & navigation bar
-                sDeviceType = DEVICE_TABLET;
+    public static void clearAllNotifications() {
+        IStatusBarService service = getStatusBarService();
+        if (service != null) {
+            try {
+                service.onClearAllNotifications(ActivityManager.getCurrentUser());
+            } catch (RemoteException e) {
+                // do nothing.
             }
         }
-        return sDeviceType;
     }
 
-    public static boolean isPhone(Context context) {
-        return getScreenType(context) == DEVICE_PHONE;
+    public static void toggleNotifications() {
+        IStatusBarService service = getStatusBarService();
+        if (service != null) {
+            try {
+                service.expandNotificationsPanel();
+            } catch (RemoteException e) {
+                // do nothing.
+            }
+        }
     }
 
-    public static boolean isHybrid(Context context) {
-        return getScreenType(context) == DEVICE_HYBRID;
+    // Toggle qs panel
+    public static void toggleQsPanel() {
+        IStatusBarService service = getStatusBarService();
+        if (service != null) {
+            try {
+                service.expandSettingsPanel(null);
+            } catch (RemoteException e) {
+                // do nothing.
+            }
+        }
     }
 
-    public static boolean isTablet(Context context) {
-        return getScreenType(context) == DEVICE_TABLET;
+    // Cycle ringer modes
+    public static void toggleRingerModes (Context context) {
+        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        switch (am.getRingerMode()) {
+            case AudioManager.RINGER_MODE_SILENT:
+                am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                break;
+            case AudioManager.RINGER_MODE_VIBRATE:
+                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                break;
+            case AudioManager.RINGER_MODE_NORMAL:
+                am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                break;
+        }
     }
 
-    // Omni Switch Constants
+    // Method to detect battery temperature
+    public static String batteryTemperature(Context context, Boolean ForC) {
+        Intent intent = context.registerReceiver(null, new IntentFilter(
+                Intent.ACTION_BATTERY_CHANGED));
+        float  temp = ((float) (intent != null ? intent.getIntExtra(
+                BatteryManager.EXTRA_TEMPERATURE, 0) : 0)) / 10;
+        // Round up to nearest number
+        int c = (int) ((temp) + 0.5f);
+        float n = temp + 0.5f;
+        // Use boolean to determine celsius or fahrenheit
+        return String.valueOf((n - c) % 2 == 0 ? (int) temp :
+                ForC ? c * 9/5 + 32:c);
+    }
 
-    /**
-     * Package name of the omnniswitch app
-     */
-    public static final String APP_PACKAGE_NAME = "org.omnirom.omniswitch";
+    // Method to detect countries that use Fahrenheit
+    public static boolean mccCheck(Context context) {
+        // MCC's belonging to countries that use Fahrenheit
+        String[] mcc = {"364", "552", "702", "346", "550", "376", "330",
+                "310", "311", "312", "551"};
 
-    /**
-     * Intent broadcast action for showing the omniswitch overlay
-     */
-    public static final String ACTION_SHOW_OVERLAY = APP_PACKAGE_NAME + ".ACTION_SHOW_OVERLAY";
+        TelephonyManager tel = (TelephonyManager) context.getSystemService(
+                Context.TELEPHONY_SERVICE);
+        String networkOperator = tel.getNetworkOperator();
 
-    /**
-     * Intent broadcast action for hiding the omniswitch overlay
-     */
-    public static final String ACTION_HIDE_OVERLAY = APP_PACKAGE_NAME + ".ACTION_HIDE_OVERLAY";
+        // Check the array to determine celsius or fahrenheit.
+        // Default to celsius if can't access MCC
+        return !TextUtils.isEmpty(networkOperator) && Arrays.asList(mcc).contains(
+                networkOperator.substring(0, /*Filter only 3 digits*/ 3));
+    }
 
-    /**
-     * Intent broadcast action for toogle the omniswitch overlay
-     */
-    public static final String ACTION_TOGGLE_OVERLAY = APP_PACKAGE_NAME + ".ACTION_TOGGLE_OVERLAY";
+    public static void toggleVolumePanel(Context context) {
+        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        am.adjustVolume(AudioManager.ADJUST_SAME, AudioManager.FLAG_SHOW_UI);
+    }
 
-    /**
-     * Intent broadcast action for restoring the home stack
-     */
-    public static final String ACTION_RESTORE_HOME_STACK = APP_PACKAGE_NAME + ".ACTION_RESTORE_HOME_STACK";
-
-    /**
-     * Intent for launching the omniswitch settings actvity
-     */
-    public static Intent INTENT_LAUNCH_APP = new Intent(Intent.ACTION_MAIN)
-            .setClassName(APP_PACKAGE_NAME, APP_PACKAGE_NAME + ".SettingsActivity");
-
-    /**
-     * @hide
-     */
     public static void sendKeycode(int keycode) {
         long when = SystemClock.uptimeMillis();
         final KeyEvent evDown = new KeyEvent(when, when, KeyEvent.ACTION_DOWN, keycode, 0,
                 0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
-                KeyEvent.FLAG_FROM_SYSTEM,
+                KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY,
                 InputDevice.SOURCE_KEYBOARD);
         final KeyEvent evUp = KeyEvent.changeAction(evDown, KeyEvent.ACTION_UP);
-
-        final Handler handler = new Handler(Looper.getMainLooper());
+         final Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -197,12 +283,5 @@ public class AquaUtils {
                         InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
             }
         }, 20);
-    }
-
-    public static void goToSleep(Context context) {
-        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        if(pm != null) {
-            pm.goToSleep(SystemClock.uptimeMillis());
-        }
     }
 }
