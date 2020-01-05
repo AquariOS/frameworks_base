@@ -274,13 +274,15 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener,
     private void setShown(boolean isShown) {
         if (mShown != isShown) {
             View clockView = mClockController.getClock();
-            boolean isRightClock = clockView.getId() == R.id.clock_right;
+            boolean isShowingClock = clockView.getId() == R.id.clock_right
+                    || clockView.getId() == R.id.clock
+                    || clockView.getId() == R.id.clock_center;
             mShown = isShown;
             if (isShown) {
                 updateParentClipping(false /* shouldClip */);
                 mHeadsUpStatusBarView.setVisibility(View.VISIBLE);
                 show(mHeadsUpStatusBarView);
-                if (!isRightClock && ((Clock)clockView).isClockVisible()) {
+                if (!isShowingClock && ((Clock)clockView).isClockVisible()) {
                     hide(clockView, View.INVISIBLE);
                 }
                 if (mCenteredIconView.getVisibility() != View.GONE) {
@@ -290,7 +292,7 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener,
                     hide(mOperatorNameView, View.INVISIBLE);
                 }
             } else {
-                if (!isRightClock && ((Clock)clockView).isClockVisible()) {
+                if (!isShowingClock && ((Clock)clockView).isClockVisible()) {
                     show(clockView);
                 }
                 if (mCenteredIconView.getVisibility() != View.GONE) {
