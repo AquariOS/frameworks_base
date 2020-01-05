@@ -218,7 +218,6 @@ import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.util.ArrayUtils;
 import com.android.server.ExtconStateObserver;
 import com.android.server.ExtconUEventObserver;
-import com.android.internal.util.aquarios.AquaUtils;
 import com.android.server.GestureLauncherService;
 import com.android.server.LocalServices;
 import com.android.server.SystemServiceManager;
@@ -235,6 +234,8 @@ import com.android.server.wm.DisplayPolicy;
 import com.android.server.wm.DisplayRotation;
 import com.android.server.wm.WindowManagerInternal;
 import com.android.server.wm.WindowManagerInternal.AppTransitionListener;
+
+import com.aquarios.support.utils.AquaUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
