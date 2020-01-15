@@ -4746,6 +4746,12 @@ public final class Settings {
          */
          public static final String NETWORK_TRAFFIC_FONT_SIZE = "network_traffic_font_size";
 
+       /**
+        * Whether to persist settings icon on non-expanded panel or not
+        * @hide
+        */
+        public static final String SETTING_BUTTON_TOGGLE = "setting_button_toggle";
+
         /**
          * Whether to show the battery bar
          * @hide
