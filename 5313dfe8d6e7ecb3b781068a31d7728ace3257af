@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88f467b3_009d994d",
+        "filename": "services/core/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1000008
+      },
+      "writtenOn": "2020-01-15T17:07:29Z",
+      "side": 1,
+      "message": "Try adding a comma at the end of this.",
+      "revId": "5313dfe8d6e7ecb3b781068a31d7728ace3257af",
+      "serverId": "e852809f-cea0-4215-9787-0665f7b159ff",
+      "unresolved": false
+    }
+  ]
+}
