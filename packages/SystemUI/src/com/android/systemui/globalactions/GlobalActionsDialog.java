@@ -54,6 +54,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.PowerManager;
+import android.os.Process;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemProperties;
@@ -154,6 +155,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
     private static final String GLOBAL_ACTION_KEY_REBOOT_BOOTLOADER = "reboot_bootloader";
     private static final String GLOBAL_ACTION_KEY_FLASHLIGHT = "flashlight";
     private static final String GLOBAL_ACTION_KEY_SCREENRECORD = "screenrecord";
+    private static final String GLOBAL_ACTION_KEY_REBOOT_SOFT = "reboot_soft";
 
     private final Context mContext;
     private final GlobalActionsManager mWindowManagerFuncs;
@@ -375,6 +377,11 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
                 if (isActionVisible(a)) {
                     items.add(a);
                 }
+             } else if (advancedRebootEnabled(mContext) && GLOBAL_ACTION_KEY_REBOOT_SOFT.equals(actionKey)) {
+                RebootBootloaderAction a = new RebootBootloaderAction();
+                if (isActionVisible(a)) {
+                    items.add(a);
+                }
             }
         }
         return items;
@@ -444,6 +451,8 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
                 mItems.add(new RebootRecoveryAction());
             } else if (advancedRebootEnabled(mContext) && GLOBAL_ACTION_KEY_REBOOT_BOOTLOADER.equals(actionKey)) {
                 mItems.add(new RebootBootloaderAction());
+            } else if (advancedRebootEnabled(mContext) && GLOBAL_ACTION_KEY_REBOOT_SOFT.equals(actionKey)) {
+                mItems.add(new SoftRebootAction());
             } else if (GLOBAL_ACTION_KEY_SCREENSHOT.equals(actionKey)) {
                 if (Settings.System.getInt(mContext.getContentResolver(),
                         Settings.System.GLOBAL_ACTIONS_SCREENSHOT, 0) == 1) {
@@ -612,6 +621,32 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener,
         public void onPress() {
             // shutdown by making sure radio and power are handled accordingly.
             mWindowManagerFuncs.shutdown();
+        }
+    }
+
+    private final class SoftRebootAction extends SinglePressAction {
+        private SoftRebootAction() {
+            super(com.android.systemui.R.drawable.ic_soft_reboot, com.android.systemui.R.string.global_action_reboot_soft);
+        }
+
+        @Override
+        public boolean showDuringKeyguard() {
+            return true;
+        }
+
+        @Override
+        public boolean showDuringRestrictedKeyguard() {
+            return false;
+        }
+
+        @Override
+        public boolean showBeforeProvisioning() {
+            return true;
+        }
+
+        @Override
+        public void onPress() {
+            Process.killProcess(Process.myPid());
         }
     }
 
