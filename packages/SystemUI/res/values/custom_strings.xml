@@ -133,4 +133,8 @@
     <string name="smartspace_now">Now</string>
     <string name="smartspace_pill_text_format">%1$s: %2$s</string>
 
+    <!-- Partial screenshot -->
+    <string name="global_screenshot_selector_capture_description">Capture partial screenshot</string>
+    <string name="global_screenshot_selector_cancel_description">Cancel partial screenshot</string>
+
 </resources>
