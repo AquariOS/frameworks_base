@@ -83,7 +83,11 @@ public class EdgeBackGestureHandler implements DisplayListener {
         @Override
         public void onImeVisibilityChanged(boolean imeVisible, int imeHeight) {
             // No need to thread jump, assignments are atomic
-            mImeHeight = imeVisible ? imeHeight : 0;
+            if (mBlockImeSpace) {
+                mImeHeight = imeVisible ? imeHeight : 0;
+            } else {
+                mImeHeight = 0;
+            }
             // TODO: Probably cancel any existing gesture
         }
 
@@ -172,6 +176,8 @@ public class EdgeBackGestureHandler implements DisplayListener {
     private int mLeftInset;
     private int mRightInset;
     private int mEdgeHeight;
+    // should back gesture be movewd above ime if its visible
+    private boolean mBlockImeSpace = true;
 
     public EdgeBackGestureHandler(Context context, OverviewProxyService overviewProxyService) {
         final Resources res = context.getResources();
@@ -192,6 +198,7 @@ public class EdgeBackGestureHandler implements DisplayListener {
         mMinArrowPosition = res.getDimensionPixelSize(R.dimen.navigation_edge_arrow_min_y);
         mFingerOffset = res.getDimensionPixelSize(R.dimen.navigation_edge_finger_offset);
         updateCurrentUserResources(res);
+        onSettingsChanged();
     }
 
     public void updateCurrentUserResources(Resources res) {
@@ -245,6 +252,8 @@ public class EdgeBackGestureHandler implements DisplayListener {
 
     public void onSettingsChanged() {
         updateEdgeHeightValue();
+        mBlockImeSpace = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.BACK_GESTURE_BLOCK_IME, 1, UserHandle.USER_CURRENT) == 1;
     }
 
     public void onSystemUiVisibilityChanged(int systemUiVisibility) {
