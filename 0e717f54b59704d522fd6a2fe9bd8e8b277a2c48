@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1672b435_b25393ac",
+        "filename": "core/res/res/values/custom_config.xml",
+        "patchSetId": 6
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1000002
+      },
+      "writtenOn": "2020-01-29T04:03:09Z",
+      "side": 0,
+      "message": "why are we removing this?",
+      "revId": "0e717f54b59704d522fd6a2fe9bd8e8b277a2c48",
+      "serverId": "e852809f-cea0-4215-9787-0665f7b159ff",
+      "unresolved": true
+    }
+  ]
+}
