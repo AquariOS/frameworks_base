@@ -17,4 +17,7 @@
     <!-- screenrecord -->
     <dimen name="screenrecord_dot_size">48dp</dimen>
 
+    <!-- Pixel's Smart Space -->
+    <dimen name="smartspace_icon_shadow">1dp</dimen>
+
 </resources>

@@ -68,6 +68,7 @@ android_library {
         "VendorSupportLib"
     ],
     manifest: "AndroidManifest.xml",
+    additional_manifests: ["AquaManifest.xml"],
 
     libs: [
         "telephony-common",
