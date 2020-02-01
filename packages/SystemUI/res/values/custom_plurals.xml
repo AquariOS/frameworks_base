@@ -1,4 +1,5 @@
 <resources>
+    <!-- Pixel's Smart Space -->
     <plurals name="smartspace_hours">
         <item quantity="one">%d hr</item>
         <item quantity="other">%d hr</item>
