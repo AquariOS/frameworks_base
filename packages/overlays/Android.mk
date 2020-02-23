@@ -48,6 +48,7 @@ LOCAL_REQUIRED_MODULES := \
 	IconShapeSquircleOverlay \
 	IconShapeTeardropOverlay \
 	IconShapeCircleOverlay \
+	IconShapeHexagonOverlay \
 	NavigationBarMode3ButtonOverlay \
 	NavigationBarMode2ButtonOverlay \
 	NavigationBarModeGesturalOverlay \
