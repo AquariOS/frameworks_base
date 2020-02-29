@@ -1989,6 +1989,15 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LONG_BACK_SWIPE_TIMEOUT),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LEFT_LONG_BACK_SWIPE_ACTION),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.RIGHT_LONG_BACK_SWIPE_ACTION),
+                    false, this, UserHandle.USER_ALL);
         }
 
         @Override
@@ -2011,6 +2020,13 @@ public class StatusBar extends SystemUI implements DemoMode,
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.QS_FOOTER_WARNINGS))) {
                 setQsPanelOptions();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.LONG_BACK_SWIPE_TIMEOUT)) ||
+                    uri.equals(Settings.System.getUriFor(
+                    Settings.System.LEFT_LONG_BACK_SWIPE_ACTION)) ||
+                    uri.equals(Settings.System.getUriFor(
+                    Settings.System.RIGHT_LONG_BACK_SWIPE_ACTION))) {
+                setGestureNavOptions();
             }
             update();
         }
@@ -2026,6 +2042,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             setHeadsUpBlacklist();
             setUseLessBoringHeadsUp();
             setScreenBrightnessMode();
+            setGestureNavOptions();
         }
     }
 
@@ -2095,6 +2112,13 @@ public class StatusBar extends SystemUI implements DemoMode,
         mBrightnessControl = Settings.System.getIntForUser(
             mContext.getContentResolver(), Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL, 0,
             UserHandle.USER_CURRENT) == 1;
+    }
+
+    private void setGestureNavOptions() {
+        if (getNavigationBarView() != null) {
+            getNavigationBarView().onSettingsChanged();
+            getNavigationBarView().setLongSwipeOptions();
+        }
     }
 
     /**
