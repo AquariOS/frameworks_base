@@ -136,6 +136,8 @@ public class QuickStatusBarHeader extends RelativeLayout implements
     private DateView mDateView;
     private BatteryMeterView mBatteryRemainingIcon;
 
+    private boolean isSettingButtonEnabled = false;
+
     private class SettingsObserver extends ContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
@@ -149,11 +151,16 @@ public class QuickStatusBarHeader extends RelativeLayout implements
             resolver.registerContentObserver(Settings.System
                     .getUriFor(Settings.System.STATUS_BAR_BATTERY_STYLE), false,
                     this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System
+                    .getUriFor(Settings.System.SETTING_BUTTON_TOGGLE), false,
+                    this, UserHandle.USER_ALL);
             }
 
         @Override
         public void onChange(boolean selfChange) {
             updateSettings();
+            updateResources();
+            updateMinimumHeight();
         }
     }
 
@@ -181,6 +188,11 @@ public class QuickStatusBarHeader extends RelativeLayout implements
         mDualToneHandler = new DualToneHandler(
                 new ContextThemeWrapper(context, R.style.QSHeaderTheme));
         mSettingsObserver.observe();
+    }
+
+    private boolean isSettingButtonEnabled() {
+        return Settings.System.getInt(mContext.getContentResolver(),
+            Settings.System.SETTING_BUTTON_TOGGLE, 0) == 1;
     }
 
     @Override
@@ -325,8 +337,14 @@ public class QuickStatusBarHeader extends RelativeLayout implements
     private void updateMinimumHeight() {
         int sbHeight = mContext.getResources().getDimensionPixelSize(
                 com.android.internal.R.dimen.status_bar_height);
-        int qqsHeight = mContext.getResources().getDimensionPixelSize(
-                R.dimen.qs_quick_header_panel_height);
+        int qqsHeight = 0;
+        if (isSettingButtonEnabled) {
+            qqsHeight = mContext.getResources().getDimensionPixelSize(
+                    R.dimen.qs_quick_header_panel_height_extra);
+        } else {
+            qqsHeight = mContext.getResources().getDimensionPixelSize(
+                    R.dimen.qs_quick_header_panel_height);
+        }
 
         setMinimumHeight(sbHeight + qqsHeight);
     }
@@ -349,9 +367,15 @@ public class QuickStatusBarHeader extends RelativeLayout implements
             lp.height = resources.getDimensionPixelSize(
                     com.android.internal.R.dimen.quick_qs_offset_height);
         } else {
-            lp.height = Math.max(getMinimumHeight(),
-                    resources.getDimensionPixelSize(
-                            com.android.internal.R.dimen.quick_qs_total_height));
+            if (isSettingButtonEnabled) {
+                lp.height = Math.max(getMinimumHeight(),
+                        resources.getDimensionPixelSize(
+                                com.android.internal.R.dimen.quick_qs_total_height_extra));
+            } else {
+                lp.height = Math.max(getMinimumHeight(),
+                        resources.getDimensionPixelSize(
+                                com.android.internal.R.dimen.quick_qs_total_height));
+            }
         }
 
         setLayoutParams(lp);

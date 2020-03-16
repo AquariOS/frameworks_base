@@ -91,4 +91,8 @@
 
   <!-- Pocket bridge -->
   <java-symbol type="string" name="config_pocketBridgeSysfsInpocket" />
+
+  <!-- QS -->
+  <java-symbol type="dimen" name="quick_qs_total_height_extra" />
+
 </resources>
