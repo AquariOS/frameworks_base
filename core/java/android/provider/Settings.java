@@ -4708,7 +4708,10 @@ public final class Settings {
         public static final String LOCKSCREEN_BATTERY_INFO = "lockscreen_battery_info";
 
         /**
-         * Wheter to show network traffic indicator in statusbar
+         * Where to display the network traffic indicator
+         * 	0: None/disabled
+         * 	1: Statusbar
+         * 	2: Expanded header
          * @hide
          */
         public static final String NETWORK_TRAFFIC_STATE = "network_traffic_state";
@@ -4720,9 +4723,9 @@ public final class Settings {
         public static final String NETWORK_TRAFFIC_AUTOHIDE_THRESHOLD = "network_traffic_autohide_threshold";
 
         /**
-	 ** What to show in network traffic indicator in statusbar
-	 ** @hide
-	 **/
+         * Type of speed indicator to display for network traffic
+         * @hide
+         */
         public static final String NETWORK_TRAFFIC_TYPE = "network_traffic_type";
 
         /**

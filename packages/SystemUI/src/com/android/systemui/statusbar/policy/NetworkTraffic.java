@@ -53,7 +53,7 @@ public class NetworkTraffic extends TextView {
         decimalFormat.setMaximumFractionDigits(1);
     }
 
-    private boolean mIsEnabled;
+    private int mIsEnabled;
     private boolean mAttached;
     private long totalRxBytes;
     private long totalTxBytes;
@@ -157,7 +157,9 @@ public class NetworkTraffic extends TextView {
                     setGravity(Gravity.RIGHT | Gravity.CENTER_VERTICAL);
                     setText(output);
                 }
-                mTrafficVisible = true;
+                if (netTrafficEnabled()) {
+					mTrafficVisible = true;
+				}
             }
             updateVisibility();
             updateTextSize();
@@ -321,7 +323,7 @@ public class NetworkTraffic extends TextView {
 
     private void updateSettings() {
  	    updateTextSize();
-        if (mIsEnabled) {
+        if (mIsEnabled != 0) {
             if (mAttached) {
                 totalRxBytes = TrafficStats.getTotalRxBytes();
                 lastUpdateTime = SystemClock.elapsedRealtime();
@@ -339,7 +341,7 @@ public class NetworkTraffic extends TextView {
         ContentResolver resolver = mContext.getContentResolver();
         mIsEnabled = Settings.System.getIntForUser(resolver,
                 Settings.System.NETWORK_TRAFFIC_STATE, 0,
-                UserHandle.USER_CURRENT) == 1;
+                UserHandle.USER_CURRENT);
         mTrafficType = Settings.System.getIntForUser(resolver,
                 Settings.System.NETWORK_TRAFFIC_TYPE, 0,
                 UserHandle.USER_CURRENT);
@@ -362,7 +364,7 @@ public class NetworkTraffic extends TextView {
 
     private void updateTrafficDrawable() {
         int intTrafficDrawable;
-        if (mIsEnabled && mShowArrow) {
+        if ((mIsEnabled != 0) && mShowArrow) {
             if (mTrafficType == UP) {
                 if (oBytes) {
                     intTrafficDrawable = R.drawable.stat_sys_network_traffic;
@@ -418,12 +420,24 @@ public class NetworkTraffic extends TextView {
     }
 
     private void updateVisibility() {
-        if (mIsEnabled && mTrafficVisible) {
-            setVisibility(View.VISIBLE);
-        } else {
-            setText("");
-            setVisibility(View.GONE);
-        }
+        switch (mIsEnabled) {
+            case 0: // Network traffic disabled
+                setText("");
+                setVisibility(View.GONE);
+                break;
+            case 1: // Network traffic in statusbar
+                setText("");
+                setVisibility(View.GONE);
+                break;
+            case 2: // Network traffic in header
+                setVisibility(View.VISIBLE);
+                break;
+	    }
+	}
+
+    private boolean netTrafficEnabled() {
+        return Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.NETWORK_TRAFFIC_STATE, 0, UserHandle.USER_CURRENT) != 0;
     }
 
     public void onDensityOrFontScaleChanged() {
