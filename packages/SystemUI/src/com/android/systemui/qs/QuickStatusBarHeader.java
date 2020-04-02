@@ -86,7 +86,7 @@ import javax.inject.Named;
  * contents.
  */
 public class QuickStatusBarHeader extends RelativeLayout implements
-        View.OnClickListener, NextAlarmController.NextAlarmChangeCallback,
+        View.OnClickListener, View.OnLongClickListener, NextAlarmController.NextAlarmChangeCallback,
         ZenModeController.Callback, Tunable {
     private static final String TAG = "QuickStatusBarHeader";
     private static final boolean DEBUG = false;
@@ -236,6 +236,7 @@ public class QuickStatusBarHeader extends RelativeLayout implements
 
         mClockView = findViewById(R.id.clock);
         mClockView.setOnClickListener(this);
+        mClockView.setOnLongClickListener(this);
         mClockView.setClockHideableByUser(false);
         mClockView.setQsHeader();
         mDateView = findViewById(R.id.date);
@@ -550,6 +551,21 @@ public class QuickStatusBarHeader extends RelativeLayout implements
             mActivityStarter.postStartActivityDismissingKeyguard(new Intent(
                     Settings.ACTION_SOUND_SETTINGS), 0);
         }
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        if (v == mClockView) {
+            startDateTimeSettingsActivity();
+        }
+        return false;
+    }
+
+    private void startDateTimeSettingsActivity() {
+        Intent nIntent = new Intent(Intent.ACTION_MAIN);
+        nIntent.setClassName("com.android.settings",
+            "com.android.settings.Settings$DateTimeSettingsActivity");
+        mActivityStarter.startActivity(nIntent, true /* dismissShade */);
     }
 
     @Override
