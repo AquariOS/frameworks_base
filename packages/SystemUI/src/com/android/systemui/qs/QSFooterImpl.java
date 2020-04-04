@@ -33,6 +33,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.os.UserManager;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.View;
@@ -76,6 +78,7 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
     private final ActivityStarter mActivityStarter;
     private final UserInfoController mUserInfoController;
     private final DeviceProvisionedController mDeviceProvisionedController;
+    private final Vibrator mVibrator;
     private SettingsButton mSettingsButton;
     protected View mSettingsContainer;
     private PageIndicator mPageIndicator;
@@ -131,6 +134,7 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
         mActivityStarter = activityStarter;
         mUserInfoController = userInfoController;
         mDeviceProvisionedController = deviceProvisionedController;
+        mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
     }
 
     @VisibleForTesting
@@ -411,6 +415,7 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
         nIntent.setClassName("com.android.settings",
             "com.android.settings.Settings$CoralReefActivity");
         mActivityStarter.startActivity(nIntent, true /* dismissShade */);
+        mVibrator.vibrate(VibrationEffect.createOneShot(50, VibrationEffect.DEFAULT_AMPLITUDE));
     }
 
     private void startSettingsActivity() {
