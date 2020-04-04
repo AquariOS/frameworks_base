@@ -367,7 +367,7 @@ public class NotificationInterruptionStateProvider {
         isImportantHeadsUp = notificationPackageName.contains("dialer") ||
                 notificationPackageName.contains("messaging") ||
                 notificationPackageName.contains("clock");
-        return mLessBoringHeadsUp && !isImportantHeadsUp;
+        return !mStatusBarStateController.isDozing() && mLessBoringHeadsUp && !isImportantHeadsUp;
     }
 
     /**
