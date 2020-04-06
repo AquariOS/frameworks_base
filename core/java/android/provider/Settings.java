@@ -4758,10 +4758,10 @@ public final class Settings {
         public static final String GLOBAL_ACTIONS_EMERGENCY = "global_actions_emergency";
 
         /**
-         * Screenrecord: enable mic
+         * Screenrecord: audio source
          * @hide
          */
-        public static final String SCREENRECORD_ENABLE_MIC = "screenrecord_enable_mic";
+        public static final String SCREENRECORD_AUDIO_SOURCE = "screenrecord_audio_source";
 
         /**
          * Screenrecord: show taps

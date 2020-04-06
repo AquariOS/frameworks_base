@@ -40,8 +40,11 @@
     <string name="screenrecord_dialog_settings">Settings</string>
     <string name="screenrecord_dialog_start">Start</string>
     <string name="screenrecord_dialog_cancel">Cancel</string>
-    <string name="screenrecord_audio_title">Record audio</string>
-    <string name="screenrecord_audio_summary">Record audio while recording</string>
+    <string name="screenrecord_audio_title">Audio source</string>
+    <string name="screenrecord_audio_summary">Choose audio input type, or disable for none.</string>
+    <string name="screenrecord_audio_recording_internal">Internal</string>
+    <string name="screenrecord_audio_recording_microphone">Microphone</string>
+    <string name="screenrecord_audio_recording_off">Disabled</string>
     <string name="screenrecord_taps_title">Show screen touches</string>
     <string name="screenrecord_taps_summary">Show visual feedback while recording</string>
     <string name="screenrecord_stopdot_title">Show stop dot</string>
