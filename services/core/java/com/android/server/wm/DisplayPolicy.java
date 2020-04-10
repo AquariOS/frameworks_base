@@ -177,6 +177,8 @@ import com.android.server.statusbar.StatusBarManagerInternal;
 import com.android.server.wallpaper.WallpaperManagerInternal;
 import com.android.server.wm.utils.InsetUtils;
 
+import com.aquarios.support.utils.AquaUtils;
+
 import java.io.PrintWriter;
 
 /**
@@ -2692,6 +2694,17 @@ public class DisplayPolicy {
         final int landscapeRotation = displayRotation.getLandscapeRotation();
         final int seascapeRotation = displayRotation.getSeascapeRotation();
         final int uiMode = mService.mPolicy.getUiMode();
+        final boolean showNavbar = AquaUtils.shouldShowGestureNav(mContext);
+        final int navbarHeight = showNavbar ?
+                res.getDimensionPixelSize(R.dimen.navigation_bar_height) : 0;
+        final int navbarHeightLandscape = showNavbar ?
+                res.getDimensionPixelSize(R.dimen.navigation_bar_height_landscape) : 0;
+        final int navbarFrameHeight = showNavbar ?
+                res.getDimensionPixelSize(R.dimen.navigation_bar_frame_height) : 0;
+        final int navbarFrameHeightLandscape = showNavbar ?
+                res.getDimensionPixelSize(R.dimen.navigation_bar_frame_height_landscape) : 0;
+        final int navbarWidth = showNavbar ?
+                res.getDimensionPixelSize(R.dimen.navigation_bar_width) : 0;
 
         if (hasStatusBar()) {
             mStatusBarHeightForRotation[portraitRotation] =
@@ -2710,25 +2723,25 @@ public class DisplayPolicy {
         // Height of the navigation bar when presented horizontally at bottom
         mNavigationBarHeightForRotationDefault[portraitRotation] =
         mNavigationBarHeightForRotationDefault[upsideDownRotation] =
-                res.getDimensionPixelSize(R.dimen.navigation_bar_height);
+                navbarHeight;
         mNavigationBarHeightForRotationDefault[landscapeRotation] =
         mNavigationBarHeightForRotationDefault[seascapeRotation] =
-                res.getDimensionPixelSize(R.dimen.navigation_bar_height_landscape);
+                navbarHeightLandscape;
 
         // Height of the navigation bar frame when presented horizontally at bottom
         mNavigationBarFrameHeightForRotationDefault[portraitRotation] =
         mNavigationBarFrameHeightForRotationDefault[upsideDownRotation] =
-                res.getDimensionPixelSize(R.dimen.navigation_bar_frame_height);
+                navbarFrameHeight;
         mNavigationBarFrameHeightForRotationDefault[landscapeRotation] =
         mNavigationBarFrameHeightForRotationDefault[seascapeRotation] =
-                res.getDimensionPixelSize(R.dimen.navigation_bar_frame_height_landscape);
+                navbarFrameHeightLandscape;
 
         // Width of the navigation bar when presented vertically along one side
         mNavigationBarWidthForRotationDefault[portraitRotation] =
         mNavigationBarWidthForRotationDefault[upsideDownRotation] =
         mNavigationBarWidthForRotationDefault[landscapeRotation] =
         mNavigationBarWidthForRotationDefault[seascapeRotation] =
-                res.getDimensionPixelSize(R.dimen.navigation_bar_width);
+                navbarWidth;
 
         if (ALTERNATE_CAR_MODE_NAV_SIZE) {
             // Height of the navigation bar when presented horizontally at bottom

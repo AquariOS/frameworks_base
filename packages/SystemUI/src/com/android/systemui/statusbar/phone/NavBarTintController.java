@@ -30,6 +30,8 @@ import android.view.View;
 import com.android.systemui.R;
 import com.android.systemui.shared.system.QuickStepContract;
 
+import com.aquarios.support.utils.AquaUtils;
+
 import java.io.PrintWriter;
 
 /**
@@ -79,7 +81,8 @@ public class NavBarTintController implements View.OnAttachStateChangeListener,
         mLightBarController = lightBarController;
 
         final Resources res = navigationBarView.getResources();
-        mNavBarHeight = res.getDimensionPixelSize(R.dimen.navigation_bar_height);
+        mNavBarHeight = AquaUtils.shouldShowGestureNav(navigationBarView.getContext()) ? 
+                res.getDimensionPixelSize(R.dimen.navigation_bar_height) : 0;
         mNavColorSampleMargin =
                 res.getDimensionPixelSize(R.dimen.navigation_handle_sample_horizontal_margin);
         mLuminanceThreshold = res.getFloat(R.dimen.navigation_luminance_threshold);
