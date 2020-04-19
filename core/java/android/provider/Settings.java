@@ -5102,6 +5102,11 @@ public final class Settings {
                 BOOLEAN_VALIDATOR;
 
         /**
+         * Whether QS MultiUser Switch (avatar) is visible
+         */
+        public static final String QS_MULTIUSER_SWITCH_VISIBILITY = "qs_multiuser_switch_visibility";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *

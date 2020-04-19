@@ -20,6 +20,7 @@ import static android.app.StatusBarManager.DISABLE2_QUICK_SETTINGS;
 
 import static com.android.systemui.util.InjectionInflationController.VIEW_CONTEXT;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -106,6 +107,7 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
     private OnClickListener mExpandClickListener;
 
     private boolean isSettingButtonEnabled = false;
+    private boolean hasMultiUserSwitch;
 
     /*private final ContentObserver mDeveloperSettingsObserver = new ContentObserver(
             new Handler(mContext.getMainLooper())) {
@@ -332,7 +334,7 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
         mSettingsContainer.findViewById(R.id.tuner_icon).setVisibility(
                 TunerService.isTunerEnabled(mContext) ? View.VISIBLE : View.INVISIBLE);
         final boolean isDemo = UserManager.isDeviceInDemoMode(mContext);
-        mMultiUserSwitch.setVisibility(showUserSwitcher() ? View.VISIBLE : View.INVISIBLE);
+        mMultiUserSwitch.setVisibility((showUserSwitcher() && multiUserSwitchVisible()) ? View.VISIBLE : View.INVISIBLE);
         mEditContainer.setVisibility(isDemo || !mExpanded ? View.INVISIBLE : View.VISIBLE);
         mEdit.setVisibility(isEditEnabled() ? View.VISIBLE : View.GONE);
         mSettingsButton.setVisibility(!isSettingButtonEnabled() ? isDemo || !mExpanded ? View.GONE : View.VISIBLE : View.VISIBLE);
@@ -434,5 +436,10 @@ public class QSFooterImpl extends FrameLayout implements QSFooter,
                     Mode.SRC_IN);
         }
         mMultiUserAvatar.setImageDrawable(picture);
+    }
+
+    private boolean multiUserSwitchVisible() {
+        return Settings.System.getIntForUser(mContext.getContentResolver(),
+            Settings.System.QS_MULTIUSER_SWITCH_VISIBILITY, 0, UserHandle.USER_CURRENT) == 1;
     }
 }
