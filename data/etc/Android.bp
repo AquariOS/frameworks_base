@@ -141,3 +141,10 @@ prebuilt_etc {
     sub_dir: "permissions",
     src: "com.android.timezone.updater.xml",
 }
+
+prebuilt_etc {
+    name: "com.google.android.settings.intelligence",
+    product_specific: true,
+    sub_dir: "permissions",
+    src: "com.google.android.settings.intelligence.xml",
+}
