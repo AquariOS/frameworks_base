@@ -2087,6 +2087,9 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.GESTURE_DOUBLETAP_SLEEP_STATUSBAR),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_TILE_TITLE_VISIBILITY),
+                    false, this, UserHandle.USER_ALL);
         }
 
         @Override
@@ -2120,6 +2123,9 @@ public class StatusBar extends SystemUI implements DemoMode,
                     uri.equals(Settings.System.getUriFor(
                     Settings.System.RIGHT_LONG_BACK_SWIPE_ACTION))) {
                 setGestureNavOptions();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_TILE_TITLE_VISIBILITY))) {
+                setQsPanelOptions();
             }
             update();
         }
