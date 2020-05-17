@@ -125,4 +125,5 @@ interface IStatusBarService
     void startAssist(in Bundle args);
     void setPartialScreenshot(boolean active);
     void killForegroundApp();
+    void screenPinningStateChanged(boolean enabled);
 }
