@@ -35,22 +35,22 @@
     <string name="global_action_screenrecord">Screenrecord</string>
 
     <!-- Screen recorder -->
-    <string name="screenrecord_dialog_title">Start recording</string>
-    <string name="screenrecord_dialog_summary">Android system can capture any sensitive information visible on your screen while recording (also includes audio if enabled). This includes passwords, payment information, etc..</string>
+    <string name="screenrecord_dialog_title">Screen recorder</string>
+    <string name="screenrecord_dialog_summary">Android system can capture any sensitive information visible on your screen while recording (such as passwords, payment information, etc.). This includes audio as well.</string>
     <string name="screenrecord_dialog_settings">Settings</string>
     <string name="screenrecord_dialog_start">Start</string>
     <string name="screenrecord_dialog_cancel">Cancel</string>
     <string name="screenrecord_audio_title">Audio source</string>
-    <string name="screenrecord_audio_summary">Choose audio input type, or disable for none.</string>
+    <string name="screenrecord_audio_summary">Select audio input type</string>
     <string name="screenrecord_audio_recording_internal">Internal</string>
-    <string name="screenrecord_audio_recording_microphone">Microphone</string>
-    <string name="screenrecord_audio_recording_off">Disabled</string>
+    <string name="screenrecord_audio_recording_microphone">Mic</string>
+    <string name="screenrecord_audio_recording_off">None</string>
     <string name="screenrecord_taps_title">Show screen touches</string>
-    <string name="screenrecord_taps_summary">Show visual feedback while recording</string>
+    <string name="screenrecord_taps_summary">Displays screen surface touches</string>
     <string name="screenrecord_stopdot_title">Show stop dot</string>
-    <string name="screenrecord_stopdot_summary">Show a red dot to stop recording with a single tap. Long-press dot to move to the opposite side.</string>
-    <string name="screenrecord_video_bitrate_title">Video Bitrate</string>
-    <string name="screenrecord_video_bitrate_summary">Choose desired video quality. The higher the quality, the larger the file size.</string>
+    <string name="screenrecord_stopdot_summary">Tap red dot to stop recording. \nLong-press to change dot location</string>
+    <string name="screenrecord_video_bitrate_title">Video bitrate</string>
+    <string name="screenrecord_video_bitrate_summary">Select desired video quality</string>
 
     <!-- Screenshot toast -->
     <string name="delete_screenshot_toast">Screenshot deleted</string>
